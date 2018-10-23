@@ -1,0 +1,16 @@
+# Task Schedule:
+
+## 1. Find ways on how to create a sheep and create a sheep (Man Hours: 10)
+Link: https://sheepbaboons.atlassian.net/browse/SHEEP-1
+1a. Explore animation capabilities of three.js
+1b. Experiment with three.js examples on models, animations 
+1c. Find if 3-d models already exist for a sheep or similar animals and how they are used
+1d. How to manipulate existing 3-d models or create new ones(Explore json, js models)
+
+
+## 2. Show me a color change on the bracelet and collar belt on actual activity change (Man Hours: 6)
+Link: https://sheepbaboons.atlassian.net/browse/SHEEP-7
+2a. Create and correctly position bracelets and collar belts on the sheep
+2b. Understand the trigger points of activites and when to change color
+2c. Determine activity change levels- prepare a color scale and display legend for the colors
+2c. Display color changes based on the activity changes
