@@ -1,0 +1,33 @@
+
+
+
+
+1.	Plotting GPS Readings (Man Hours: 4)
+Link: https://sheepbaboons.atlassian.net/browse/SHEEP-5
+
+1a	Understand the Gps Readings	
+
+1b	Figure out ways to plot the 2d data into a 3d space	
+
+
+
+
+
+
+
+
+
+2.	Use accelerometer readings to generate movement of sheep (Man Hours: 12)
+Link: https://sheepbaboons.atlassian.net/browse/SHEEP-17
+
+2a	Understand the accelerometer readings.	
+
+2b	Figure out ways to use these accelerometer 3d readings and GPS readings to show movement and speed on a cube 	
+
+2c	Incorporate the code made above to show the movement of sheep.	
+
+
+
+
+
+
