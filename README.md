@@ -1,5 +1,5 @@
-### Repo Name: SheepBaboons
-### Team members: Namaswi Chandarana, Reena Mary Puthota, Sai Sharan Nagulapalli
+#### Repo Name: SheepBaboons
+#### Team members: Namaswi Chandarana, Reena Mary Puthota, Sai Sharan Nagulapalli
 
 ## P01 Notes: 
 #### Workbook Link: https://docs.google.com/document/d/1LPiBV2_vX27m1RwGzXGYXjE1L5RPrvvzpQYtD9NgpiU/edit#
