@@ -1,0 +1,15 @@
+1. Interface Design with Bootstrap(Man Hours: 4)
+link: https://sheepbaboons.atlassian.net/browse/SHEEP-3
+
+1a.	Create template for the whole website with navbar and other sections using BootStrap
+1b.	Create 3D space for the visualization
+1c.	Create Filter Controls section
+
+2.	Use Gyroscope readings to have angular movement at pivot(Man Hours: 12)
+link: https://sheepbaboons.atlassian.net/browse/SHEEP-6
+
+2a. Understand the gyroscope readings from RA and research how to implement pivotal movement
+2c.	Study the structure of sheep and implement pivot movements on the sheep body	
+2d.	Work with translation and rotation consistency when the object(animal) is moving	
+2e.	Work on implementing the movements dynamically from the data	
+2f.	Implement the same for all other animals
