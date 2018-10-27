@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SheepBaboons</title>
+  <link rel="icon" href="./assets/images/cute-sheep.png" type="image/gif" sizes="16x16">
+
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+
+  <!-- CSS Source -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+
+  <!-- JS Libraries -->
+  <script src="./assets/js/lib/jquery-3.3.1.min.js"></script>
+  <script src="./assets/js/lib/three.js"></script>
+  <script src="./assets/css/js/bootstrap.min.js"></script>
+  <script src="./assets/js/lib/d3.v5.min.js"></script>
+  <script src="./assets/js/lib/OrbitControls.js"></script>
+
+  <!-- JS Source -->
+
+</head>
+
+<body>
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light ">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="./assets/images/cute-sheep.png" />
+        SheepBaboons
+      </a>
+    </div>
+  </nav>
+  <div class="row">
+    <section id="filter-section" class="col-md-12 pb-2 pt-4" style="background: #efefef;">
+      <div class="container">
+        <form>
+          <div class="form-row">
+            <div class="form-group col-md-4 px-3">
+              <label for="sampleRate"> Sample Rate: <span id="rate"></span></label>
+              <input id="sampleRate" type="range" min="1" max="100" value="50" class="slider mt-2" />
+            </div>
+
+            <div class="form-group col-md-4 px-3">
+              <label for="selectAnimal"> Select Animal </label>
+              <select id="selectAnimal" class="form-control">
+                <option selected> </option>
+                <option> Sheep ID1 </option>
+                <option> Sheep ID2 </option>
+                <option> Sheep ID3 </option>
+                <option> Baboon ID1 </option>
+                <option> Baboon ID2 </option>
+                <option> Baboon ID3 </option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-4 px-3">
+              <label for="reset"> &nbsp; </label>
+              <button type="submit" id="reset" class="btn btn-success form-control"> Reset Filters </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <div class="row">
+    <section id="svg-section" class="col-md-12 px-3" style="background: rgb(207,219,219);height:800px;">
+    </section>
+  </div>
+
+  <div class="row">
+    <section id="footer" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:200px;">
+    </section>
+  </div>
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark ">
+    <div class="container">
+
+    </div>
+  </nav> -->
+</body>
+<script>
+  var slider = document.getElementById("sampleRate");
+  var output = document.getElementById("rate");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  }
+</script>
+
+</html>
