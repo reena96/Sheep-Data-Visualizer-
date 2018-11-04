@@ -17,13 +17,17 @@ var App = App || {};
     });
 
     // initialize the FIELD system
-    var fieldSystem = new FieldSystem();
-    //sheepeSystem.initialize('data/058.csv');
+    var sheepSystem = new SheepSystem();
+    sheepSystem.initialize();
 
     //add the FIELD system to the scene
-    App.scene.addObject(fieldSystem.getFieldSystem());
+   var  sheepfield=sheepSystem.getFieldSystem();
+  //  console.log(sheepfield);
+    App.scene.addObject(sheepfield);
 
     // render the scene
+
+
     App.scene.render();
 
   };
