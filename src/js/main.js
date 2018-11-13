@@ -46,47 +46,15 @@ var sheepfield2;
  //var  gps_data=sheepSystem.loadAllData("data/gps_processed_C2.csv");
 //App.scene.addObject(sheepfield);
 //console.log(sheepfield);
+sheepfield1.scale.set(0.01,0.01,0.01);
+sheepfield2.scale.set(0.01,0.01,0.01);
 App.scene.addObject(sheepfield1);
 App.scene.addObject(sheepfield2);
+
+
 App.scene.render();
 define_data("data/gps_processed_C2.csv");
-//moveSheep();
- // d3.queue()
- //   .defer(d3.csv, "data/gps_processed_C2.csv")
- //   //.defer(d3.tsv, "/data/animals.tsv")
- //   .await(analyze);
- //
- // function analyze(error, data) {
- //   if(error) { console.log(error); }
- //  // console.log(data);
- //
- //   for (i = 0; i < data.length; i++) {
- //     console.log(sheepfield.position);
- //  //for (var j = 0; j < 1000000; j++) {}
- //  //animate(data[i]['Latitude']*10, 0 , (data[i]['Longitude']-36)*10);
- //
- //  //App.scene.rendersheep(sheepfield,data[i]['Latitude']*10,0,(data[i]['Longitude']-36)*10);
- //    sheepfield.position.set(data[i]['Latitude']*10, 0 , (data[i]['Longitude']-36)*10);
- //    //App.scene.render();
- //    for (var j = 0; j < 10000000; j++) {}
- //
- //   }
 
-
- // render the scene
-//  App.scene.render();
- //}
-
-
-
-
-  //
-  //   App.scene.addObject(sheepfield);
-  //
-  // // render the scene
-  //  App.scene.render();
-
-    //sheepfield.translateX(2)
 
   };
 
@@ -114,19 +82,29 @@ function define_data(file){
  }
 
 }
-function addtovariable(data){
 
-
-}
 function moveSheep(data,data1){
   if (count==0){
   dataset1=data;
   dataset2=data1;}
   //console.log(count);
 
-
-   sheepfield1.position.set(dataset1[count]['Latitude']*15, 0 , (dataset1[count]['Longitude']-36)*15);
-   sheepfield2.position.set(dataset2[count]['Latitude']*5, 0 , (dataset2[count]['Longitude']-36)*5);
+  //console.log(dataset1[count]);
+  //console.log(dataset2[count]);
+  if (count>0){
+  var geometry = new THREE.CircleGeometry( 0.009, 32 );
+  var material1 = new THREE.MeshBasicMaterial( { color: "blue" } );
+  var circle1 = new THREE.Mesh( geometry, material1 );
+  var material2 = new THREE.MeshBasicMaterial( { color: "red" } );
+  var circle2 = new THREE.Mesh( geometry, material2 );
+  circle1.position.set(dataset1[count-1]['Latitude']*20, 0 , (dataset1[count-1]['Longitude']-36)*20);
+  circle2.position.set(dataset2[count-1]['Latitude']*20, 0 , (dataset2[count-1]['Longitude']-36)*20);
+  App.scene.addObject(circle1);
+  App.scene.addObject(circle2);
+//  App.scene.render();
+}
+   sheepfield1.position.set(dataset1[count]['Latitude']*20, 0 , (dataset1[count]['Longitude']-36)*20);
+   sheepfield2.position.set(dataset2[count]['Latitude']*20, 0 , (dataset2[count]['Longitude']-36)*20);
    //sheepfield.translateX(0.1);
    //console.log(count);
    count=count+1;

@@ -21,8 +21,8 @@ var Scene = function(options) {
 
   // setup the camera
   self.camera =  new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  self.camera.position.set(0, 7, 20);
-  self.camera.lookAt(0, 0, 0);
+  self.camera.position.set(5, 0.5, 30);
+  self.camera.lookAt(5, 0, 30);
   var axesHelper = new THREE.AxesHelper( 5 );
   self.scene.add(axesHelper);
 
