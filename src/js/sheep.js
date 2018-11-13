@@ -23,6 +23,7 @@ var lat={};
 var long={};
 var timestamp={};
 
+
 var sceneObject = new THREE.Group();
 
 var scene;
@@ -33,7 +34,7 @@ function init() {
   width = window.innerWidth,
   height = window.innerHeight;
 
-  scene = new THREE.Scene();
+  scene = new THREE.Group();
   // camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
   // camera.lookAt(scene.position);
   // camera.position.set(0, 0.7, 8);
@@ -60,7 +61,7 @@ function init() {
   // document.addEventListener('touchstart', onTouchStart);
 	// document.addEventListener('touchend', onTouchEnd);
   // window.addEventListener('resize', onResize);
-  console.log(scene);
+  //console.log(scene);
 }
 
 function addLights() {
@@ -443,6 +444,9 @@ class Sky {
 // }
 
 
+
+
+
 var SheepSystem = function() {
 
 
@@ -453,13 +457,20 @@ var SheepSystem = function() {
 
   // publicly available functions
   var publiclyAvailable = {
-
+        
     // load the data and setup the system
     initialize: function() {
-      //self.loadData(file);
+      // var data=[];
+      // data=loadData(file);
+      //console.log(gps_data);
+    //  console.log(file);
       console.log("init");
       self.init();
-     self.animate();
+      self.animate();
+
+
+      //return data;
+
     },
 
     // accessor for the particle system

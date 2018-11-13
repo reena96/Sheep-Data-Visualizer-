@@ -21,9 +21,10 @@ var Scene = function(options) {
 
   // setup the camera
   self.camera =  new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  self.camera.position.set(0, 0.7, 8);
-  //self.camera.lookAt(0, 0, 0);
-
+  self.camera.position.set(5, 0.5, 30);
+  self.camera.lookAt(5, 0, 30);
+  var axesHelper = new THREE.AxesHelper( 5 );
+  self.scene.add(axesHelper);
 
   // var light = new THREE.DirectionalLight(0xffffff, 1.5);
   // // Position the light out from the scene, pointing at the origin
