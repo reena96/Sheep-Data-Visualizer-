@@ -11,7 +11,7 @@ var Scene = function(options) {
 
   // scale the width and height to the screen size
   var width = d3.select('.fieldDiv').node().clientWidth;
-  var height = width * 0.85;
+  var height = width * 0.4;
 
   // width = window.innerWidth,
   // height = window.innerHeight;
