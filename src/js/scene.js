@@ -20,9 +20,9 @@ var Scene = function(options) {
   self.scene = new THREE.Scene();
 
   // setup the camera
-  self.camera =  new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  self.camera.position.set(5, 0.5, 30);
-  self.camera.lookAt(5, 0, 30);
+  self.camera =  new THREE.PerspectiveCamera(6, width / height, 0.1, 1000);
+  self.camera.position.set(10, 1, 30);
+  self.camera.lookAt(10, 100, 30);
   var axesHelper = new THREE.AxesHelper( 5 );
   self.scene.add(axesHelper);
 
@@ -82,6 +82,18 @@ var Scene = function(options) {
     render: function() {
       requestAnimationFrame(self.public.render);
       self.renderer.render(self.scene, self.camera);
+    },
+
+    findobj: function(obj){
+      return self.scene.getObjectByName(obj)
+    },
+    remove: function(obj) {
+
+      self.scene.remove(obj);
+    },
+    lookAt: function(obj) {
+      //console.log(obj.position);
+      //self.camera.lookAt(obj);
     }
 
   };
