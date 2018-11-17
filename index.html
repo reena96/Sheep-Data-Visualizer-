@@ -25,8 +25,7 @@
   <script src="./lib/jquery-3.3.1.min.js"></script>
   <script src="./lib/three.js"></script>
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="./lib/d3/d3.v5.min.js"></script>
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script charset="utf-8" type="text/javascript" src="./lib/d3/d3.v4.min.js"></script>
   <script src="./lib/OrbitControls.js"></script>
   <script src="./lib/fbx/FBXLoader.js"></script> <!-- For loading sheep.fbx model -->
   <script src="./lib/fbx/inflate.min.js"></script>
@@ -42,7 +41,7 @@
 
 </head>
 
-<body onload="App.start();">
+<body onload="App.start();" style="background: rgb(207,219,219);">
   <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light ">
     <div class="container">
       <a class="navbar-brand" href="#">
@@ -58,7 +57,7 @@
           <div class="form-row">
             <div class="form-group col-md-4 px-3">
               <label for="sampleRate"> Sample Rate: <span id="rate"></span></label>
-              <input id="sampleRate" type="range" min="1" max="100" value="50" class="slider mt-2" />
+              <input id="sampleRate" type="range" min="1" max="10" value="5" class="slider mt-2" />
             </div>
 
             <div class="form-group col-md-4 px-3">
@@ -85,38 +84,28 @@
   </div>
 
   <div class="row">
-    <section id="svg-section" class="col-md-12 px-3" style="background: rgb(207,219,219);height:800px;">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="fieldDiv col-md-6">
-            <div id="scene" class="world">
-
+      <section id="svg-section" class="col-md-12 px-3" style="background: rgb(207,219,219);margin:0 auto;">
+        <div class="container-fluid" style="text-align: center">
+          <div class="row">
+            <div class="fieldDiv col-md-10 px-3" style="margin:0 auto;">
+              <div id="scene" class="world">
+              </div>
             </div>
-
           </div>
         </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="row">
-    <section id="footer" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:200px;">
-    </section>
-  </div>
-  <!-- <nav class="navbar navbar-expand-lg navbar-dark ">
-    <div class="container">
-
+      </section>
     </div>
-  </nav> -->
+
+
+  <div class="row" id="graph">
+    <section id="footer" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:100px;">
+    </section>
+  </div>
 </body>
 <script>
   var slider = document.getElementById("sampleRate");
   var output = document.getElementById("rate");
   output.innerHTML = slider.value;
-
-  slider.oninput = function () {
-    output.innerHTML = this.value;
-  }
 </script>
 
 </html>

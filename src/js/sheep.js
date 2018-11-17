@@ -474,7 +474,7 @@ var SheepSystem = function() {
     },
 
     // accessor for the particle system
-    getFieldSystem: function() {
+    getSheepSystem: function() {
       console.log("return");
       //console.log(scene);
       return scene;

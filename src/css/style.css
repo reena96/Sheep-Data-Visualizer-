@@ -7,6 +7,19 @@
     width: 50px;
   }
 
+  .fieldDiv{
+    border: #281c97;
+    border-style: solid;
+
+  }
+
+  .svg-section{
+    border: #281c97;
+    border-style: solid;
+
+  }
+
+
   .slidecontainer {
     width: 100%;
   }

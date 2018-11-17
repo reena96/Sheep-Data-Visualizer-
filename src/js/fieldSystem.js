@@ -42,7 +42,7 @@ var FieldSystem = function() {
     },
 
     // accessor for the particle system
-    getFieldSystem: function() {
+    getSheepSystem: function() {
       return sceneObject;
     }
   };
