@@ -68,16 +68,16 @@ var Scene = function (options) {
   self.controls.enableKeys = false;
   // self.controls.minPolarAngle = Math.PI/5; // radians
   // self.controls.maxPolarAngle = Math.PI/(1.97);
-  self.controls.minPolarAngle = 1.54;
+  self.controls.minPolarAngle = 1.51;
+  self.controls.maxPolarAngle = 1.57;
   // var angleRadians = Math.atan2(remote.y - origin.y, remote.x - origin.x);
   self.controls.enableRotate = true;
-  self.controls.maxPolarAngle = 1.60;
   self.controls.zoomSpeed = 0.1;
   self.controls.rotateSpeed = 0.1;
   self.controls.panSpeed = 0.1;
   self.controls.minDistance = 21;
   self.controls.maxDistance = 36;
-  self.controls.minAzimuthAngle = 0.24; // radians (check angle by controls.getAzimuthalAngle())
+  self.controls.minAzimuthAngle = 0.25; // radians (check angle by controls.getAzimuthalAngle())
   self.controls.maxAzimuthAngle = 0.4; // radians
 
 
@@ -96,8 +96,8 @@ var Scene = function (options) {
       self.controls.update();
       // console.log("current azimuthal angle");
       // console.log(self.controls.getAzimuthalAngle());
-      console.log("current Polar angle");
-      console.log(self.controls.getPolarAngle());
+      // console.log("current Polar angle");
+      // console.log(self.controls.getPolarAngle());
       self.renderer.render(self.scene, self.camera);
     },
 
