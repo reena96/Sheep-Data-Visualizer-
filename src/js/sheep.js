@@ -148,7 +148,7 @@ function render() {
 class Sheep {
   constructor() {
     this.group = new THREE.Group();
-    this.group.position.y = 0.4;
+    this.group.position.y = 30;
 
     this.woolMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
