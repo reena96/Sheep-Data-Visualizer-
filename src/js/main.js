@@ -31,11 +31,7 @@ var sheep2;
 
     // initialize the FIELD system
     var sheepSystem1 = new SheepSystem();
-
     sheepSystem1.initialize();
-
-
-    //add the FIELD system to the scene
     sheep1 = sheepSystem1.getSheepSystem();
     var sheepSystem2 = new SheepSystem();
     sheepSystem2.initialize();

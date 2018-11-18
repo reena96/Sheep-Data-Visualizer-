@@ -4,7 +4,7 @@
 var App = App || {};
 
 /* Create the scene class */
-var Scene = function(options) {
+var Scene = function (options) {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
@@ -20,10 +20,10 @@ var Scene = function(options) {
   self.scene = new THREE.Scene();
 
   // setup the camera
-  self.camera =  new THREE.PerspectiveCamera(6, width / height, 0.1, 1000);
+  self.camera = new THREE.PerspectiveCamera(6, width / height, 0.1, 1000);
   self.camera.position.set(10, 1, 30);
   self.camera.lookAt(10, 100, 30);
-  var axesHelper = new THREE.AxesHelper( 5 );
+  var axesHelper = new THREE.AxesHelper(5);
   self.scene.add(axesHelper);
 
   // var light = new THREE.DirectionalLight(0xffffff, 1.5);
@@ -63,35 +63,52 @@ var Scene = function(options) {
   /* add the checkboard floor to the scene */
   //add camera controls
   self.controls = new THREE.OrbitControls(self.camera, self.renderer.domElement);
-  self.controls.maxZoom = 0;
+  // self.controls.maxZoom = 0.2;  //min zoom and max zoom DO NOT WORK WITH Perspective camera
+  // self.controls.minZoom = 0.2;
   self.controls.enableKeys = false;
-
-  self.controls.update();
+  // self.controls.minPolarAngle = Math.PI/5; // radians
+  // self.controls.maxPolarAngle = Math.PI/(1.97);
+  self.controls.minPolarAngle = 1.54;
+  // var angleRadians = Math.atan2(remote.y - origin.y, remote.x - origin.x);
+  self.controls.enableRotate = true;
+  self.controls.maxPolarAngle = 1.60;
+  self.controls.zoomSpeed = 0.1;
+  self.controls.rotateSpeed = 0.1;
+  self.controls.panSpeed = 0.1;
+  self.controls.minDistance = 21;
+  self.controls.maxDistance = 36;
+  self.controls.minAzimuthAngle = 0.24; // radians (check angle by controls.getAzimuthalAngle())
+  self.controls.maxAzimuthAngle = 0.4; // radians
 
 
   self.public = {
 
-    resize: function() {
+    resize: function () {
 
     },
 
-    addObject: function(obj) {
+    addObject: function (obj) {
       self.scene.add(obj);
     },
 
-    render: function() {
+    render: function () {
       requestAnimationFrame(self.public.render);
+      self.controls.update();
+      // console.log("current azimuthal angle");
+      // console.log(self.controls.getAzimuthalAngle());
+      console.log("current Polar angle");
+      console.log(self.controls.getPolarAngle());
       self.renderer.render(self.scene, self.camera);
     },
 
-    findobj: function(obj){
+    findobj: function (obj) {
       return self.scene.getObjectByName(obj)
     },
-    remove: function(obj) {
+    remove: function (obj) {
 
       self.scene.remove(obj);
     },
-    lookAt: function(obj) {
+    lookAt: function (obj) {
       //console.log(obj.position);
       //self.camera.lookAt(obj);
     }
