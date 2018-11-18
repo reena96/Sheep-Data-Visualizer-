@@ -219,14 +219,10 @@ function moveSheep(data1, data2,sliderVal) {
     var circle2 = new THREE.Mesh(geometry, material2);
     circle1.name="paths1"+String(count);
     circle2.name="paths2"+String(count);
-    //console.log(circle1.name);
-
-
     // console.log("Rolled up data");
     // console.log(sampledData);
-
-    circle1.position.set(dataset1[count - 1]['Latitude'] * 20, 0, (dataset1[count - 1]['Longitude'] - 36) * 20);
-    circle2.position.set(dataset2[count - 1]['Latitude'] * 20, 0, (dataset2[count - 1]['Longitude'] - 36) * 20);
+    circle1.position.copy(sheep1.position);
+    circle2.position.copy(sheep2.position);
     App.scene.addObject(circle1);
     App.scene.addObject(circle2);
     //  App.scene.render();
