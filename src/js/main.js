@@ -43,8 +43,8 @@ var sheep2;
     //var  gps_data=sheepSystem.loadAllData("data/gps_processed_C2.csv");
     //App.scene.addObject(sheepfield);
     //console.log(sheepfield);
-    sheep1.scale.set(0.02, 0.02, 0.02);
-    sheep2.scale.set(0.02, 0.02, 0.02);
+    sheep1.scale.set(0.0025, 0.0025, 0.0025);
+    sheep2.scale.set(0.0025, 0.0025, 0.0025);
     App.scene.addObject(sheep1);
     App.scene.addObject(sheep2);
 
@@ -106,13 +106,14 @@ function define_data(file) {
       d3.selectAll("#graph").remove();
       drawLineGraphAcc(sampledData1Acc);
       drawLineGraphAcc(sampledData2Acc);
-      moveSheep(sampledData1, sampledData2,sliderVal);
+      moveSheep(sampledData1, sampledData2,sampledData1Acc,sampledData2Acc,sliderVal);
 
 
     }
     drawLineGraphAcc(data3);
     drawLineGraphAcc(data4);
-    moveSheep(data1, data2);
+    //console.log(data4);
+    moveSheep(data1, data2,data3,data4,5);
   }
 
 }
@@ -144,6 +145,9 @@ function sampleDataAcc(arr, n) {
         ACC_X: arr[i].ACC_X,
         ACC_Y: arr[i].ACC_Y,
         ACC_Z: arr[i].ACC_Z,
+        MAG_X: arr[i].MAG_X,
+        MAG_Y: arr[i].MAG_Y,
+        MAG_Z: arr[i].MAG_Z,
       };
     result.push(object);
   }
@@ -196,11 +200,15 @@ var valueline = d3.line()
         .attr("class", "y axis")
         .call(yAxis);
 }
-
-function moveSheep(data1, data2,sliderVal) {
+var dataset1Dev;
+var dataset2Dev;
+function moveSheep(data1, data2,sampledData1Acc,sampledData2Acc,sliderVal) {
   if (count == 0) {
     dataset1 = data1;
     dataset2 = data2;
+    console.log(sampledData1Acc);
+    dataset1Dev = sampledData1Acc;
+    dataset2Dev = sampledData2Acc;
     count_remove=1;
     remove("paths1");
     count_remove=1;
@@ -212,7 +220,7 @@ function moveSheep(data1, data2,sliderVal) {
   //console.log(dataset1[count]);
   //console.log(dataset2[count]);
   if (count > 0) {
-    var geometry = new THREE.CircleGeometry(0.005, 32);
+    var geometry = new THREE.CircleGeometry(0.001, 32);
     var material1 = new THREE.MeshBasicMaterial({ color: "blue" });
     var circle1 = new THREE.Mesh(geometry, material1);
     var material2 = new THREE.MeshBasicMaterial({ color: "red" });
@@ -221,17 +229,28 @@ function moveSheep(data1, data2,sliderVal) {
     circle2.name="paths2"+String(count);
     // console.log("Rolled up data");
     // console.log(sampledData);
-    circle1.position.copy(sheep1.position);
-    circle2.position.copy(sheep2.position);
+    circle1.position.set(dataset1[count-1]['Latitude'] * 20, 0.075, (dataset1[count-1]['Longitude'] - 36) * 20);
+    circle2.position.set(dataset2[count-1]['Latitude'] * 20, 0.075, (dataset2[count-1]['Longitude'] - 36) * 20);
     App.scene.addObject(circle1);
     App.scene.addObject(circle2);
     //  App.scene.render();
   }
   sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
   sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
-  App.scene.lookAt(sheep2)
-  //sheepfield.translateX(0.1);
-  //console.log(count);
+  var direction=getDirection(dataset1Dev[count]);
+  //Magnetometer Readings
+  var angle=direction*Math.PI/180;
+  console.log(angle);
+  sheep1.rotation.y=(angle*-1);
+  var direction=getDirection(dataset2Dev[count]);
+  var angle=direction*Math.PI/180;
+  console.log(angle);
+  sheep2.rotation.y=(angle*-1);
+
+
+  // sheep1.rotateY(angleyz);
+  // sheep1.rotateZ(anglexz);
+
   count = count + 1;
   for (var j = 0; j < 10000000; j++) { }
   window.requestAnimationFrame(moveSheep);
@@ -252,4 +271,23 @@ function remove(id) {
 
     remove(id);
   }
+}
+
+function getDirection(data){
+  var direction;
+  if(data['MAG_Y']>0){
+    direction=90-(Math.atan(data['MAG_X']/data['MAG_Y'])*(180/Math.PI));
+  }
+  else if (data['MAG_Y']<0) {
+      direction=270-(Math.atan(data['MAG_X']/data['MAG_Y'])*180/Math.PI);
+  }
+  else  {
+    if(data['MAG_X']<0){
+      direction=180;
+    }
+    else{
+      direction=0;
+    }
+  }
+  return direction;
 }
