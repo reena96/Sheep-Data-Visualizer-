@@ -20,9 +20,9 @@ var Scene = function (options) {
   self.scene = new THREE.Scene();
 
   // setup the camera
-  self.camera = new THREE.PerspectiveCamera(3, width / height, 0.1, 1000);
-  self.camera.position.set(10, 1, 30);
-  self.camera.lookAt(10, 100, 30);
+  self.camera = new THREE.PerspectiveCamera(0.5, width / height, 0.1, 100);
+  self.camera.position.set(10, 50, 10);
+  //self.camera.lookAt(10, 100, 30);
   var axesHelper = new THREE.AxesHelper(5);
   self.scene.add(axesHelper);
 
@@ -109,8 +109,13 @@ var Scene = function (options) {
       self.scene.remove(obj);
     },
     lookAt: function (obj) {
-      //console.log(obj.position);
-      //self.camera.lookAt(obj);
+    //  console.log(self.camera.position);
+
+      self.controls.target=obj;
+      self.camera.position.set(10, 10, 10);
+      self.controls.update();
+      //self.controls.object.position.set(10, 10, 10);
+      //self.camera.updateProjectionMatrix();
     }
 
   };

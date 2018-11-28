@@ -240,13 +240,13 @@ function moveSheep(data1, data2,sampledData1Acc,sampledData2Acc,sliderVal) {
   var direction=getDirection(dataset1Dev[count]);
   //Magnetometer Readings
   var angle=direction*Math.PI/180;
-  console.log(angle);
+  //console.log(angle);
   sheep1.rotation.y=(angle*-1);
   var direction=getDirection(dataset2Dev[count]);
   var angle=direction*Math.PI/180;
-  console.log(angle);
+  //console.log(angle);
   sheep2.rotation.y=(angle*-1);
-
+  App.scene.lookAt(sheep2.position);
 
   // sheep1.rotateY(angleyz);
   // sheep1.rotateZ(anglexz);
