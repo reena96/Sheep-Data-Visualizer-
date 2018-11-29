@@ -30,6 +30,8 @@
   <script src="./lib/fbx/FBXLoader.js"></script> <!-- For loading sheep.fbx model -->
   <script src="./lib/fbx/inflate.min.js"></script>
   <script src="./lib/WebGL.js"></script>
+  <script type="text/javascript" src="src/js/stats.js"></script>
+	<script type="text/javascript" src="physi.js"></script>
 
   <!-- JS Source -->
   <script src="./src/js/scene.js"></script>
@@ -62,14 +64,13 @@
 
             <div class="form-group col-md-4 px-3">
               <label for="selectAnimal"> Select Animal </label>
-              <select id="selectAnimal" class="form-control">
-                <option selected> </option>
-                <option> Sheep ID1 </option>
-                <option> Sheep ID2 </option>
-                <option> Sheep ID3 </option>
-                <option> Baboon ID1 </option>
-                <option> Baboon ID2 </option>
-                <option> Baboon ID3 </option>
+              <select id="selectAnimal" class="form-control" >
+                <option id="both" selected>Both </option>
+
+                <option id="sheep2"> Sheep ID2 </option>
+                <option id="sheep3"> Sheep ID3 </option>
+
+
               </select>
             </div>
 

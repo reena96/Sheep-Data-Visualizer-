@@ -37,8 +37,7 @@ var sheep2;
     sheepSystem2.initialize();
     sheep2 = sheepSystem2.getSheepSystem();
 
-    console.log(sheep1);
-    console.log(sheep2);
+
     //  console.log(sheepfield);
     //var  gps_data=sheepSystem.loadAllData("data/gps_processed_C2.csv");
     //App.scene.addObject(sheepfield);
@@ -50,7 +49,16 @@ var sheep2;
 
 
     App.scene.render();
-    define_data("data/gps_processed_C2.csv");
+    define_data();
+    //console.log();
+    var animal_select=document.getElementById("selectAnimal")
+    animal_select.addEventListener("click", function() {
+    define_data();
+    sheep1.position.set(0,0,0);
+    sheep2.position.set(0,0,0);
+    count=0;
+});
+
 
 
   };
@@ -61,30 +69,17 @@ var dataset1 = [];
 var dataset2 = [];
 
 var sampledData1;
-function define_data(file) {
+function define_data() {
+  console.log("define_data");
+ if (document.getElementById("both").selected == true){
   d3.queue()
     .defer(d3.csv, "data/gps_processed_C2.csv")
     .defer(d3.csv, "data/gps_processed_C3.csv")
     .defer(d3.csv, "data/9dof_processed_C2.csv")
     .defer(d3.csv, "data/9dof_processed_C3.csv")
-    //.defer(d3.tsv, "/data/animals.tsv")
 
-    .await(analyze);
-
-     // // To get data by uniquestamps and their corresponding avg lat, long
-    // sampledData1 = d3.nest()
-    //   .key(function (d) {
-    //     return d.TIMESTAMP;
-    //   })
-    //   .rollup(function (v) {
-    //     return {
-    //       count: v.length,
-    //       latitude: d3.mean(v, function (d) { return d.Latitude; }),
-    //       longitude: d3.mean(v, function (d) { return d.Longitude; })
-    //     };
-    //   })
-    //   .entries(data1);
-  function analyze(error, data1, data2,data3,data4) {
+    .await(analyzeboth);
+  function analyzeboth(error, data1, data2,data3,data4) {
     if (error) { console.log(error); }
 
 // Sampling Data
@@ -115,7 +110,53 @@ function define_data(file) {
     //console.log(data4);
     moveSheep(data1, data2,data3,data4,5);
   }
+}
+else{
+ if (document.getElementById("sheep2").selected == true) {
+   console.log("sheep2");
+  d3.queue()
+    .defer(d3.csv, "data/gps_processed_C2.csv")
+    .defer(d3.csv, "data/9dof_processed_C2.csv")
+    .await(analyze);
+  }
+  else{
+    d3.queue()
+      .defer(d3.csv, "data/gps_processed_C3.csv")
+      .defer(d3.csv, "data/9dof_processed_C3.csv")
+      .await(analyze);
+  }
 
+    function analyze(error, data1, data2) {
+      if (error) { console.log(error); }
+
+  // Sampling Data
+      var slider = document.getElementById("sampleRate");
+      var output = document.getElementById("rate");
+      output.innerHTML = slider.value;
+      console.log(output.innerHTML);
+
+      slider.oninput = function () {
+        output.innerHTML = this.value;
+        console.log("Slider Value now");
+        var sliderVal = parseInt(this.value);
+        count=0;
+        var sampledData1 = sampleData(data1, sliderVal);
+      //  var sampledData2 = sampleData(data2, sliderVal);
+        var sampledData1Acc = sampleDataAcc(data2, sliderVal);
+        //var sampledData2Acc = sampleDataAcc(data4, sliderVal);
+        //console.log(sampledData2Acc);
+        d3.selectAll("#graph").remove();
+        drawLineGraphAcc(sampledData1Acc);
+        //drawLineGraphAcc(sampledData2Acc);
+        moveSheepAlone(sampledData1,sampledData1Acc,sliderVal);
+
+      }
+      drawLineGraphAcc(data2);
+      //drawLineGraphAcc(data4);
+      //console.log(data4);
+      moveSheepAlone(data1, data2,5);
+    }
+}
 }
 
 function sampleData(arr, n) {
@@ -240,13 +281,13 @@ function moveSheep(data1, data2,sampledData1Acc,sampledData2Acc,sliderVal) {
   var direction=getDirection(dataset1Dev[count]);
   //Magnetometer Readings
   var angle=direction*Math.PI/180;
-  console.log(angle);
+  //console.log(angle);
   sheep1.rotation.y=(angle*-1);
   var direction=getDirection(dataset2Dev[count]);
   var angle=direction*Math.PI/180;
-  console.log(angle);
+  //console.log(angle);
   sheep2.rotation.y=(angle*-1);
-
+  App.scene.lookAt(sheep2.position);
 
   // sheep1.rotateY(angleyz);
   // sheep1.rotateZ(anglexz);
@@ -290,4 +331,59 @@ function getDirection(data){
     }
   }
   return direction;
+}
+
+function moveSheepAlone(data1,sampledData1Acc,sliderVal) {
+  if (count == 0) {
+    dataset1 = data1;
+    //dataset2 = data2;
+    //console.log(sampledData1Acc);
+    dataset1Dev = sampledData1Acc;
+    //dataset2Dev = sampledData2Acc;
+    count_remove=1;
+    remove("paths1");
+    count_remove=1;
+    remove("paths2");
+  }
+
+  if (count > 0) {
+    var geometry = new THREE.CircleGeometry(0.001, 32);
+    var material1 = new THREE.MeshBasicMaterial({ color: "blue" });
+    var circle1 = new THREE.Mesh(geometry, material1);
+    var material2 = new THREE.MeshBasicMaterial({ color: "red" });
+    var circle2 = new THREE.Mesh(geometry, material2);
+    circle1.name="paths1"+String(count);
+    //circle2.name="paths2"+String(count);
+    // console.log("Rolled up data");
+    // console.log(sampledData);
+    circle1.position.set(dataset1[count-1]['Latitude'] * 20, 0.075, (dataset1[count-1]['Longitude'] - 36) * 20);
+    //circle2.position.set(dataset2[count-1]['Latitude'] * 20, 0.075, (dataset2[count-1]['Longitude'] - 36) * 20);
+    App.scene.addObject(circle1);
+    App.scene.addObject(circle2);
+    //  App.scene.render();
+  }
+  sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+  //sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
+  var direction=getDirection(dataset1Dev[count]);
+  //Magnetometer Readings
+  var angle=direction*Math.PI/180;
+  //console.log(angle);
+  sheep1.rotation.y=(angle*-1);
+  //var direction=getDirection(dataset2Dev[count]);
+  //var angle=direction*Math.PI/180;
+  //console.log(angle);
+  //sheep2.rotation.y=(angle*-1);
+  App.scene.lookAt(sheep1.position);
+
+  // sheep1.rotateY(angleyz);
+  // sheep1.rotateZ(anglexz);
+
+  count = count + 1;
+  for (var j = 0; j < 10000000; j++) { }
+  window.requestAnimationFrame(moveSheepAlone);
+
+}
+
+function changeAnimals(){
+  define_data();
 }
