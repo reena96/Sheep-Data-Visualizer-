@@ -10,7 +10,7 @@ var Scene = function (options) {
   var self = this;
 
   // scale the width and height to the screen size
-  var width = d3.select('.fieldDiv').node().clientWidth;
+  var width = d3.select('.world').node().clientWidth;
   var height = width * 0.4;
 
   // width = window.innerWidth,
@@ -20,8 +20,9 @@ var Scene = function (options) {
   self.scene = new THREE.Scene();
 
   // setup the camera
-  self.camera = new THREE.PerspectiveCamera(0.5, width / height, 0.1, 100);
+  self.camera = new THREE.PerspectiveCamera(0.065, width / height, 0.1, 100);
   self.camera.position.set(10, 50, 10);
+  //self.camera.zoom=0.5;
   //self.camera.lookAt(10, 100, 30);
   var axesHelper = new THREE.AxesHelper(5);
   self.scene.add(axesHelper);
@@ -71,6 +72,7 @@ var Scene = function (options) {
   self.controls.minPolarAngle = 1.51;
   self.controls.maxPolarAngle = 1.57;
   // var angleRadians = Math.atan2(remote.y - origin.y, remote.x - origin.x);
+  self.controls.enableZoom = true;
   self.controls.enableRotate = true;
   self.controls.zoomSpeed = 0.1;
   self.controls.rotateSpeed = 0.1;
@@ -109,10 +111,10 @@ var Scene = function (options) {
       self.scene.remove(obj);
     },
     lookAt: function (obj) {
-     // console.log(self.camera.position);
+      //console.log(self.camera.position);
 
       self.controls.target=obj;
-      self.camera.position.set(10, 10, 10);
+      self.camera.position.set(0, 70, 0);
       self.controls.update();
       //self.controls.object.position.set(10, 10, 10);
       //self.camera.updateProjectionMatrix();
