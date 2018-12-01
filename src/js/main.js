@@ -6,6 +6,12 @@ var gps_data = {};
 /* IIFE to initialize the main entry of the application*/
 var sheep1;
 var sheep2;
+var lineArr1 = [];
+var lineArr2 = [];
+var count=0;
+var remove_path=[];
+var chart1;
+var chart2;
 (function () {
 
   // setup the pointer to the scope 'this' variable
@@ -20,8 +26,6 @@ var sheep2;
   var i = 0;
 
   //load a text file and output the result to the console
-
-
   /* Entry point of the application */
   App.start = function () {
     // create a new scene
@@ -37,21 +41,27 @@ var sheep2;
     sheepSystem2.initialize();
     sheep2 = sheepSystem2.getSheepSystem();
 
-    console.log(sheep1);
-    console.log(sheep2);
-    //  console.log(sheepfield);
-    //var  gps_data=sheepSystem.loadAllData("data/gps_processed_C2.csv");
-    //App.scene.addObject(sheepfield);
-    //console.log(sheepfield);
-    sheep1.scale.set(0.0025, 0.0025, 0.0025);
-    sheep2.scale.set(0.0025, 0.0025, 0.0025);
+    sheep1.scale.set(0.000625, 0.000625, 0.000625);
+    sheep2.scale.set(0.000625, 0.000625, 0.000625);
+
+    var plane_geometry = new THREE.PlaneGeometry( 100, 100, 100 );
+    var plane_material = new THREE.MeshBasicMaterial( {color: "#D7D7D7", side: THREE.DoubleSide} );
+    var plane = new THREE.Mesh( plane_geometry, plane_material );
+
     App.scene.addObject(sheep1);
     App.scene.addObject(sheep2);
-
+    App.scene.addObject(plane);
 
     App.scene.render();
-    define_data("data/gps_processed_C2.csv");
-
+    define_data();
+    //console.log();
+    var animal_select=document.getElementById("selectAnimal")
+    animal_select.addEventListener("click", function() {
+    define_data();
+    sheep1.position.set(0,0,0);
+    sheep2.position.set(0,0,0);
+    count=0;
+});
 
   };
 
@@ -61,30 +71,19 @@ var dataset1 = [];
 var dataset2 = [];
 
 var sampledData1;
-function define_data(file) {
+function define_data() {
+  lineArr1=[];
+  lineArr2=[];
+
+  console.log("define_data");
+ if (document.getElementById("both").selected == true){
+
   d3.queue()
-    .defer(d3.csv, "data/gps_processed_C2.csv")
-    .defer(d3.csv, "data/gps_processed_C3.csv")
-    .defer(d3.csv, "data/9dof_processed_C2.csv")
-    .defer(d3.csv, "data/9dof_processed_C3.csv")
-    //.defer(d3.tsv, "/data/animals.tsv")
-
-    .await(analyze);
-
-     // // To get data by uniquestamps and their corresponding avg lat, long
-    // sampledData1 = d3.nest()
-    //   .key(function (d) {
-    //     return d.TIMESTAMP;
-    //   })
-    //   .rollup(function (v) {
-    //     return {
-    //       count: v.length,
-    //       latitude: d3.mean(v, function (d) { return d.Latitude; }),
-    //       longitude: d3.mean(v, function (d) { return d.Longitude; })
-    //     };
-    //   })
-    //   .entries(data1);
-  function analyze(error, data1, data2,data3,data4) {
+    .defer(d3.csv, "data/mergedc2.csv")
+    .defer(d3.csv, "data/mergedc3.csv")
+    .await(analyzeboth);
+  function analyzeboth(error, data1, data2) {
+    console.log(data1);
     if (error) { console.log(error); }
 
 // Sampling Data
@@ -96,26 +95,61 @@ function define_data(file) {
     slider.oninput = function () {
       output.innerHTML = this.value;
       console.log("Slider Value now");
+
       var sliderVal = parseInt(this.value);
       count=0;
+      d3.select("svg").remove();
       var sampledData1 = sampleData(data1, sliderVal);
       var sampledData2 = sampleData(data2, sliderVal);
-      var sampledData1Acc = sampleDataAcc(data3, sliderVal);
-      var sampledData2Acc = sampleDataAcc(data4, sliderVal);
-      console.log(sampledData2Acc);
-      d3.selectAll("#graph").remove();
-      drawLineGraphAcc(sampledData1Acc);
-      drawLineGraphAcc(sampledData2Acc);
-      moveSheep(sampledData1, sampledData2,sampledData1Acc,sampledData2Acc,sliderVal);
-
-
+      drawLineGraphAcc(sampledData1,sampledData2,1);
+      moveSheep(sampledData1, sampledData2,sliderVal);
     }
-    drawLineGraphAcc(data3);
-    drawLineGraphAcc(data4);
-    //console.log(data4);
-    moveSheep(data1, data2,data3,data4,5);
+     drawLineGraphAcc(data1,data2,2);
+     //drawLineGraphAcc(data2,2);
+    sheep1.visible=true;
+    sheep2.visible=true;
+
+    moveSheep(data1, data2,5);
+  }
+}
+else{
+ if (document.getElementById("sheep2").selected == true) {
+   console.log("sheep2");
+  d3.queue()
+    .defer(d3.csv, "data/mergedc2.csv")
+    .await(analyze);
+  }
+  else{
+    d3.queue()
+      .defer(d3.csv, "data/mergedc3.csv")
+      .await(analyze);
   }
 
+    function analyze(error, data1) {
+      if (error) { console.log(error); }
+
+  // Sampling Data
+      var slider = document.getElementById("sampleRate");
+      var output = document.getElementById("rate");
+      output.innerHTML = slider.value;
+      console.log(output.innerHTML);
+
+      slider.oninput = function () {
+        output.innerHTML = this.value;
+
+        console.log("Slider Value now");
+        var sliderVal = parseInt(this.value);
+        count=0;
+        var sampledData1 = sampleData(data1, sliderVal);
+        drawLineGraphAcc(sampledData1,null,1);
+        moveSheepAlone(sampledData1,sliderVal);
+
+      }
+      drawLineGraphAcc(data1,null,1);
+
+      moveSheepAlone(data1,5);
+    }
+}
 }
 
 function sampleData(arr, n) {
@@ -125,9 +159,24 @@ function sampleData(arr, n) {
     console.log(arr.length);
     object =
       {
-        TIMESTAMP: arr[i].TIMESTAMP,
+        TIMESTAMP: arr[i].TIME,
         Latitude: arr[i].Latitude,
         Longitude: arr[i].Longitude,
+        bracelet_ACC_X : arr[i].bracelet_ACC_X,
+        bracelet_ACC_Y : arr[i].bracelet_ACC_Y,
+        bracelet_ACC_Z : arr[i].bracelet_ACC_Z,
+        bracelet_GYRO_X: arr[i].bracelet_GYRO_X,
+        bracelet_GYRO_Y: arr[i].bracelet_GYRO_Y,
+        bracelet_GYRO_Z: arr[i].bracelet_GYRO_Z,
+        collar_ACC_X:arr[i].collar_ACC_X,
+        collar_ACC_Y:arr[i].collar_ACC_Y,
+        collar_ACC_Z:arr[i].collar_ACC_Z,
+        collar_GYRO_X:arr[i].collar_GYRO_X,
+        collar_GYRO_Y:arr[i].collar_GYRO_Y,
+        collar_GYRO_Z:arr[i].collar_GYRO_Z,
+        collar_MAG_X:arr[i].collar_MAG_X,
+        collar_MAG_Y:arr[i].collar_MAG_Y,
+        collar_MAG_Z:arr[i].collar_MAG_Z,
       };
     result.push(object);
   }
@@ -135,6 +184,7 @@ function sampleData(arr, n) {
 }
 
 function sampleDataAcc(arr, n) {
+
   var result = [];
   var object;
   for (var i = 0; i < arr.length; i = i + n) {
@@ -154,135 +204,166 @@ function sampleDataAcc(arr, n) {
   return result
 }
 
-function drawLineGraphAcc(data){
-console.log(data);
-  // data.forEach(function(d) {
-  //       d.TIMESTAMP=
-  //       d.ACC_X = +(d.ACC_X);
-  //       d.close = +d.close;
-  //   });
-  console.log("Draw Graph");
-  var svg = d3.selectAll("#graph")
-        .append("svg")
-        //.attr("width", width + margin.left + margin.right)
-        //.attr("height", height + margin.top + margin.bottom)
-        .attr("width","100%")
-        .attr("height","100%")
-        .append("g")
-        .attr("width","100%")
-        .attr("height","100%");
+function drawLineGraphAcc(data1,data2,select){
+console.log("drawLine");
+var dataset=[];
+//var count=2;
 
+var MAX_LENGTH = 100;
+var duration = 1;
 
-var valueline = d3.line()
-          .x(function(d) { return x(d.TIME); })
-          .y(function(d) { return y(d.ACC_X); });
-    var x = d3.scaleLinear().range([d3.min(data, function(d) { return d.TIME; }), d3.max(data, function(d) { return d.TIME; })]);
-    var y = d3.scaleLinear().range([0,1]);
+if(select==2){
+ chart1 = realTimeLineChart();
+ chart2 = realTimeLineChart();
 
-    x.domain([0, d3.max(data, function(d) { return d.TIME; })]);
-    y.domain([0, d3.max(data, function(d) { return d.ACC_X; })]);
-    console.log(svg);
-
-    svg.append("path")
-        .attr("class", "line")
-        .attr("d", valueline(data));
-
-    var xAxis = d3.axisBottom(x);
-    var yAxis = d3.axisLeft(y);
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+function seedData(data1,data2) {
+  //console.log(data);
+  for (var i = 0; i < 1; ++i) {
+    lineArr1.push({
+      time: data1[i].TIME,
+    //  time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+      x: data1[i].collar_ACC_X,
+      y: data1[i].collar_ACC_Y,
+      z: data1[i].collar_ACC_Z
+    });
+    lineArr2.push({
+      time: data2[i].TIME,
+    //  time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+      x: data2[i].collar_ACC_X,
+      y: data2[i].collar_ACC_Y,
+      z: data2[i].collar_ACC_Z
+    });
+  }
 }
-var dataset1Dev;
-var dataset2Dev;
-function moveSheep(data1, data2,sampledData1Acc,sampledData2Acc,sliderVal) {
+
+  seedData(data1,data2);
+
+    d3.select("#chart1").datum(lineArr1).call(chart1);
+    chart1.width(+d3.select("#chart1").style("width").replace(/(px)/g, ""));
+    d3.select("#chart1").call(chart1);
+
+    d3.select("#chart2").datum(lineArr2).call(chart2);
+    chart2.width(+d3.select("#chart2").style("width").replace(/(px)/g, ""));
+    d3.select("#chart2").call(chart2);
+}
+else {
+  chart1 = realTimeLineChart();
+  function seedData(data1) {
+    //console.log(data);
+    for (var i = 0; i < 1; ++i) {
+      lineArr1.push({
+        time: data1[i].TIME,
+      //  time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+        x: data1[i].collar_ACC_X,
+        y: data1[i].collar_ACC_Y,
+        z: data1[i].collar_ACC_Z
+      });
+    }
+  }
+  seedData(data1);
+  d3.select("#chart1").datum(lineArr1).call(chart1);
+  chart1.width(+d3.select("#chart1").style("width").replace(/(px)/g, ""));
+  d3.select("#chart1").call(chart1);
+}
+
+}
+
+function moveSheep(data1, data2,sliderVal) {
+  //console.log(data1);
+
   if (count == 0) {
+    console.log("0");
     dataset1 = data1;
     dataset2 = data2;
-    console.log(sampledData1Acc);
-    dataset1Dev = sampledData1Acc;
-    dataset2Dev = sampledData2Acc;
-    count_remove=1;
-    remove("paths1");
-    count_remove=1;
-    remove("paths2");
+
+
+    removePathsFromScene();
+    remove_path=[];
   }
 
-  //console.log(count);
-
-  //console.log(dataset1[count]);
-  //console.log(dataset2[count]);
   if (count > 0) {
-    var geometry = new THREE.CircleGeometry(0.001, 32);
-    var material1 = new THREE.MeshBasicMaterial({ color: "blue" });
+    var geometry = new THREE.CircleGeometry(0.00025, 32);
+    var material1 = new THREE.MeshBasicMaterial({ color: "#d95f02" });
     var circle1 = new THREE.Mesh(geometry, material1);
-    var material2 = new THREE.MeshBasicMaterial({ color: "red" });
+    var material2 = new THREE.MeshBasicMaterial({ color: "#7570b3" });
     var circle2 = new THREE.Mesh(geometry, material2);
     circle1.name="paths1"+String(count);
     circle2.name="paths2"+String(count);
     // console.log("Rolled up data");
     // console.log(sampledData);
-    circle1.position.set(dataset1[count-1]['Latitude'] * 20, 0.075, (dataset1[count-1]['Longitude'] - 36) * 20);
-    circle2.position.set(dataset2[count-1]['Latitude'] * 20, 0.075, (dataset2[count-1]['Longitude'] - 36) * 20);
-    App.scene.addObject(circle1);
-    App.scene.addObject(circle2);
+    if (dataset1[count-1]['Latitude']!=""){
+    circle1.position.set(dataset1[count-1]['Latitude'] * 20, 0.01875, (dataset1[count-1]['Longitude'] - 36) * 20);
+App.scene.addObject(circle1);
+remove_path.push(circle1.name);
+  }
+  if (dataset2[count-1]['Latitude']!=""){
+    circle2.position.set(dataset2[count-1]['Latitude'] * 20, 0.01875, (dataset2[count-1]['Longitude'] - 36) * 20);
+App.scene.addObject(circle2);
+remove_path.push(circle2.name);
+  }
+
+
     //  App.scene.render();
   }
+  if (dataset1[count]['Latitude']!=""){
+    sheep1.visible=true;
   sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-  sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
-  var direction=getDirection(dataset1Dev[count]);
+  if (dataset1[count]['collar_MAG_Y']!=""){
+  var direction=getDirection(dataset1[count]);
   //Magnetometer Readings
   var angle=direction*Math.PI/180;
-  console.log(angle);
-  sheep1.rotation.y=(angle*-1);
-  var direction=getDirection(dataset2Dev[count]);
+  //console.log(angle);
+  sheep1.rotation.y=(angle*1);}
+}
+else{
+  sheep1.visible=false;
+}
+if (dataset2[count]['Latitude']!=""){
+  sheep2.visible=true;
+  sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
+  if (dataset2[count]['collar_MAG_Y']!=""){
+  var direction=getDirection(dataset2[count]);
+
   var angle=direction*Math.PI/180;
-  console.log(angle);
-  sheep2.rotation.y=(angle*-1);
+//  console.log(angle);
+  sheep2.rotation.y=(angle*1);
+  App.scene.lookAt(sheep2.position);}
+}
+else{
+  sheep2.visible=false;
+}
 
-
-  // sheep1.rotateY(angleyz);
-  // sheep1.rotateZ(anglexz);
 
   count = count + 1;
-  for (var j = 0; j < 10000000; j++) { }
+  //console.log(count);
+  updateData(dataset1,dataset2,2);
+  for (var j = 0; j < 100000000; j++) { }
+
   window.requestAnimationFrame(moveSheep);
 
 }
 var count_remove;
-function remove(id) {
+function removePathsFromScene() {
 
-  var i=count_remove;
+  var i;
+  console.log(remove_path);
 
-  //console.log(id+String(i));
-  //console.log(App.scene.getObjectByName(id+String(i)));
+  for (i = 0; i < remove_path.length; i++) {
+      App.scene.remove(App.scene.findobj(remove_path[i]));
+}
 
-  App.scene.remove(App.scene.findobj(id+String(i)));
-  count_remove=count_remove+1;
-  i=count_remove;
-  if (App.scene.findobj(id+String(i))!=null){
-
-    remove(id);
-  }
 }
 
 function getDirection(data){
   var direction;
-  if(data['MAG_Y']>0){
-    direction=90-(Math.atan(data['MAG_X']/data['MAG_Y'])*(180/Math.PI));
+  if(data['collar_MAG_Y']>0){
+    direction=90-(Math.atan(data['collar_MAG_X']/data['collar_MAG_Y'])*(180/Math.PI));
   }
-  else if (data['MAG_Y']<0) {
-      direction=270-(Math.atan(data['MAG_X']/data['MAG_Y'])*180/Math.PI);
+  else if (data['collar_MAG_Y']<0) {
+      direction=270-(Math.atan(data['collar_MAG_X']/data['collar_MAG_Y'])*180/Math.PI);
   }
   else  {
-    if(data['MAG_X']<0){
+    if(data['collar_MAG_X']<0){
       direction=180;
     }
     else{
@@ -290,4 +371,110 @@ function getDirection(data){
     }
   }
   return direction;
+}
+
+function moveSheepAlone(data1,sliderVal) {
+  if (count == 0) {
+    dataset1 = data1;
+    removePathsFromScene();
+    remove_path=[];
+
+  }
+
+  if (count > 0) {
+    var geometry = new THREE.CircleGeometry(0.00025, 32);
+    var material1 = new THREE.MeshBasicMaterial({ color: "#d95f02" });
+    var circle1 = new THREE.Mesh(geometry, material1);
+    var material2 = new THREE.MeshBasicMaterial({ color: "#7570b3" });
+    var circle2 = new THREE.Mesh(geometry, material2);
+    circle1.name="paths1"+String(count);
+
+    if (dataset1[count-1]['Latitude']!=""){
+    circle1.position.set(dataset1[count-1]['Latitude'] * 20, 0.01875, (dataset1[count-1]['Longitude'] - 36) * 20);
+    App.scene.addObject(circle1);
+    remove_path.push(circle1.name);
+  }
+
+  }
+  sheep1.visible=true;
+  sheep2.visible=false;
+  if (dataset1[count]['Latitude']!=""){
+    sheep1.visible=true;
+  sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+  if (dataset1[count]['collar_MAG_Y']!=""){
+  var direction=getDirection(dataset1[count]);
+  //Magnetometer Readings
+  var angle=direction*Math.PI/180;
+  //console.log(angle);
+  sheep1.rotation.y=(angle*1);}
+}
+else{
+  sheep1.visible=false;
+}
+
+  App.scene.lookAt(sheep1.position);
+
+
+  count = count + 1;
+  //console.log(count);
+  updateData(dataset1,null,1);
+  for (var j = 0; j < 10000000; j++) { }
+  window.requestAnimationFrame(moveSheepAlone);
+
+}
+
+function changeAnimals(){
+  count=0;
+  define_data();
+
+}
+
+function updateData(dataset1,dataset2,select) {
+
+  //console.log(dataset[count]);
+  if (select==2){
+    var lineData1 = {
+      //time: now,
+      time: dataset1[count].TIME,
+      x: dataset1[count].collar_ACC_X,
+      y: dataset1[count].collar_ACC_Y,
+      z: dataset1[count].collar_ACC_Z
+    };
+    var lineData2 = {
+      //time: now,
+      time: dataset2[count].TIME,
+      x: dataset2[count].collar_ACC_X,
+      y: dataset2[count].collar_ACC_Y,
+      z: dataset2[count].collar_ACC_Z
+    };
+
+    lineArr1.push(lineData1);
+    if (lineArr1.length > 30) {
+      lineArr1.shift();
+    }
+  d3.select("#chart1").datum(lineArr1).call(chart1);
+
+    lineArr2.push(lineData2);
+    if (lineArr2.length > 30) {
+      lineArr2.shift();
+    }
+
+  d3.select("#chart2").datum(lineArr2).call(chart2);
+  }
+  else{
+    var lineData1 = {
+      //time: now,
+      time: dataset1[count].TIME,
+      x: dataset1[count].collar_ACC_X,
+      y: dataset1[count].collar_ACC_Y,
+      z: dataset1[count].collar_ACC_Z
+    };
+    lineArr1.push(lineData1);
+    if (lineArr1.length > 30) {
+      lineArr1.shift();
+    }
+  d3.select("#chart1").datum(lineArr1).call(chart1);
+
+  }
+  //count=count+1;
 }

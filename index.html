@@ -30,12 +30,15 @@
   <script src="./lib/fbx/FBXLoader.js"></script> <!-- For loading sheep.fbx model -->
   <script src="./lib/fbx/inflate.min.js"></script>
   <script src="./lib/WebGL.js"></script>
+  <script type="text/javascript" src="src/js/stats.js"></script>
+	<script type="text/javascript" src="physi.js"></script>
 
   <!-- JS Source -->
   <script src="./src/js/scene.js"></script>
   <script src="./src/js/fieldSystem.js"></script>
   <script src="./src/js/main.js"></script>
   <script src="./src/js/sheep.js"></script>
+  <script src="./src/js/AccLineGraphScript.js"></script>
 
   <!-- JS Source -->
 
@@ -62,14 +65,13 @@
 
             <div class="form-group col-md-4 px-3">
               <label for="selectAnimal"> Select Animal </label>
-              <select id="selectAnimal" class="form-control">
-                <option selected> </option>
-                <option> Sheep ID1 </option>
-                <option> Sheep ID2 </option>
-                <option> Sheep ID3 </option>
-                <option> Baboon ID1 </option>
-                <option> Baboon ID2 </option>
-                <option> Baboon ID3 </option>
+              <select id="selectAnimal" class="form-control" >
+                <option id="both" selected>Both </option>
+
+                <option id="sheep2"> Sheep ID2 </option>
+                <option id="sheep3"> Sheep ID3 </option>
+
+
               </select>
             </div>
 
@@ -97,9 +99,11 @@
     </div>
 
 
-  <div class="row" id="graph">
+  <div class="row">
     <section id="footer" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:100px;">
     </section>
+    <div id="chart1"> </div>
+    <div id="chart2"> </div>  
   </div>
 </body>
 <script>
@@ -109,85 +113,3 @@
 </script>
 
 </html>
-
-
-<!--
-
-		<script>
-		var controls;
-
-		var gps_data={};
-		var loader = new THREE.FileLoader();
-		var lat={};
-		var long={};
-		var timestamp={};
-		//load a text file and output the result to the console
-		d3.csv("data/gps_processed_C2.csv", function(data) {
-				gps_data=data;
-				for (i = 0; i < data.length; i++) {
-					timestamp[i]=parseInt(data[i]['TIMESTAM']);
-					lat[i]=parseFloat(data[i]['Latitude']);
-					long[i]=(parseFloat(data[i]['Longitude'])-36);
-					//console.log(lat[i]);
-
-			}
-
-				});
-
-			var scene = new THREE.Scene();
-			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-
-			var renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-
-
-			var geometry = new THREE.CircleGeometry( 0.003,100 );
-			var material = new THREE.MeshBasicMaterial( { color: "blue" } );
-			var cube = new THREE.Mesh( geometry, material );
-			scene.add( cube );
-			var axesHelper = new THREE.AxesHelper( 5 );
-			scene.add( axesHelper );
-			camera.position.x = 0.3;
-			camera.position.z = 0.09999999999999999;
-			camera.position.y = 0.9;
-			//controls = new THREE.OrbitControls( camera,renderer.domElement );
-
-			// var gps_data1 = d3.nest()
-		  // .key(function(d) { return d.TIMESTAM; })
-		  // .rollup(function(v) { return d3.mean(v, function(d) {console.log(d); return d.Latitude; }); })
-			// .rollup(function(v) { return d3.mean(v, function(d) {console.log(d); return d.Longitude; }); })
-		  // .entries(gps_data);
-			// console.log(gps_data1);
-			function sleep(milliseconds) {
-			  var start = new Date().getTime();
-			  for (var i = 0; i < 1e7; i++) {
-			    if ((new Date().getTime() - start) > milliseconds){
-			      break;
-			    }
-			  }
-			}
-			var count=0;
-			var animate = function () {
-				var geometry = new THREE.CircleGeometry( 0.001,100 );
-				var material = new THREE.MeshBasicMaterial( { color: "green" } );
-				var cube1 = new THREE.Mesh( geometry, material );
-				cube1.position.set(lat[count-1],long[count-1] , 0);
-				scene.add( cube1 );
-				requestAnimationFrame( animate );
-				cube.position.set(lat[count],long[count] , 0);
-				count=count+1;
-				//console.log(count);
-				renderer.render( scene, camera );
-				console.log(timestamp[count+1]-timestamp[count]);
-				sleep((timestamp[count+1]-timestamp[count])*100);
-			};
-
-			animate();
-
-
-
-
-
-
-		</script> -->
