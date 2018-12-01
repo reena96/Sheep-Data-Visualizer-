@@ -6,8 +6,12 @@ var gps_data = {};
 /* IIFE to initialize the main entry of the application*/
 var sheep1;
 var sheep2;
+var lineArr1 = [];
+var lineArr2 = [];
 var count=0;
 var remove_path=[];
+var chart1;
+var chart2;
 (function () {
 
   // setup the pointer to the scope 'this' variable
@@ -59,8 +63,6 @@ var remove_path=[];
     count=0;
 });
 
-
-
   };
 
 })();
@@ -70,6 +72,8 @@ var dataset2 = [];
 
 var sampledData1;
 function define_data() {
+  lineArr1=[];
+  lineArr2=[];
 
   console.log("define_data");
  if (document.getElementById("both").selected == true){
@@ -94,14 +98,14 @@ function define_data() {
 
       var sliderVal = parseInt(this.value);
       count=0;
+      d3.select("svg").remove();
       var sampledData1 = sampleData(data1, sliderVal);
       var sampledData2 = sampleData(data2, sliderVal);
+      drawLineGraphAcc(sampledData1,sampledData2,1);
       moveSheep(sampledData1, sampledData2,sliderVal);
     }
-     drawLineGraphAcc(data1);
-     drawLineGraphAcc(data2);
-
-    console.log(data1);
+     drawLineGraphAcc(data1,data2,2);
+     //drawLineGraphAcc(data2,2);
     sheep1.visible=true;
     sheep2.visible=true;
 
@@ -137,9 +141,11 @@ else{
         var sliderVal = parseInt(this.value);
         count=0;
         var sampledData1 = sampleData(data1, sliderVal);
+        drawLineGraphAcc(sampledData1,null,1);
         moveSheepAlone(sampledData1,sliderVal);
 
       }
+      drawLineGraphAcc(data1,null,1);
 
       moveSheepAlone(data1,5);
     }
@@ -178,6 +184,7 @@ function sampleData(arr, n) {
 }
 
 function sampleDataAcc(arr, n) {
+
   var result = [];
   var object;
   for (var i = 0; i < arr.length; i = i + n) {
@@ -197,46 +204,68 @@ function sampleDataAcc(arr, n) {
   return result
 }
 
-function drawLineGraphAcc(data){
-console.log(data);
+function drawLineGraphAcc(data1,data2,select){
+console.log("drawLine");
+var dataset=[];
+//var count=2;
 
-  console.log("Draw Graph");
-  var svg = d3.selectAll("#graph")
-        .append("svg")
+var MAX_LENGTH = 100;
+var duration = 1;
 
-        .attr("width","100%")
-        .attr("height","100%")
-        .append("g")
-        .attr("width","100%")
-        .attr("height","100%");
+if(select==2){
+ chart1 = realTimeLineChart();
+ chart2 = realTimeLineChart();
 
+function seedData(data1,data2) {
+  //console.log(data);
+  for (var i = 0; i < 1; ++i) {
+    lineArr1.push({
+      time: data1[i].TIME,
+    //  time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+      x: data1[i].collar_ACC_X,
+      y: data1[i].collar_ACC_Y,
+      z: data1[i].collar_ACC_Z
+    });
+    lineArr2.push({
+      time: data2[i].TIME,
+    //  time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+      x: data2[i].collar_ACC_X,
+      y: data2[i].collar_ACC_Y,
+      z: data2[i].collar_ACC_Z
+    });
+  }
+}
 
-var valueline = d3.line()
-          .x(function(d) { return x(d.TIME); })
-          .y(function(d) { return y(d.collar_ACC_X); });
-    var x = d3.scaleLinear().range([d3.min(data, function(d) { return d.TIME; }), d3.max(data, function(d) { return d.TIME; })]);
-    var y = d3.scaleLinear().range([0,1]);
+  seedData(data1,data2);
 
-    x.domain([0, d3.max(data, function(d) { return d.TIME; })]);
-    y.domain([0, d3.max(data, function(d) { return d.collar_ACC_X; })]);
-    console.log(svg);
+    d3.select("#chart1").datum(lineArr1).call(chart1);
+    chart1.width(+d3.select("#chart1").style("width").replace(/(px)/g, ""));
+    d3.select("#chart1").call(chart1);
 
-    svg.append("path")
-        .attr("class", "line")
-        .attr("d", valueline(data));
+    d3.select("#chart2").datum(lineArr2).call(chart2);
+    chart2.width(+d3.select("#chart2").style("width").replace(/(px)/g, ""));
+    d3.select("#chart2").call(chart2);
+}
+else {
+  chart1 = realTimeLineChart();
+  function seedData(data1) {
+    //console.log(data);
+    for (var i = 0; i < 1; ++i) {
+      lineArr1.push({
+        time: data1[i].TIME,
+      //  time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+        x: data1[i].collar_ACC_X,
+        y: data1[i].collar_ACC_Y,
+        z: data1[i].collar_ACC_Z
+      });
+    }
+  }
+  seedData(data1);
+  d3.select("#chart1").datum(lineArr1).call(chart1);
+  chart1.width(+d3.select("#chart1").style("width").replace(/(px)/g, ""));
+  d3.select("#chart1").call(chart1);
+}
 
-    var xAxis = d3.axisBottom(x);
-    var yAxis = d3.axisLeft(y);
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
 }
 
 function moveSheep(data1, data2,sliderVal) {
@@ -307,7 +336,9 @@ else{
 
   count = count + 1;
   //console.log(count);
+  updateData(dataset1,dataset2,2);
   for (var j = 0; j < 100000000; j++) { }
+
   window.requestAnimationFrame(moveSheep);
 
 }
@@ -386,11 +417,64 @@ else{
 
   count = count + 1;
   //console.log(count);
+  updateData(dataset1,null,1);
   for (var j = 0; j < 10000000; j++) { }
   window.requestAnimationFrame(moveSheepAlone);
 
 }
 
 function changeAnimals(){
+  count=0;
   define_data();
+
+}
+
+function updateData(dataset1,dataset2,select) {
+
+  //console.log(dataset[count]);
+  if (select==2){
+    var lineData1 = {
+      //time: now,
+      time: dataset1[count].TIME,
+      x: dataset1[count].collar_ACC_X,
+      y: dataset1[count].collar_ACC_Y,
+      z: dataset1[count].collar_ACC_Z
+    };
+    var lineData2 = {
+      //time: now,
+      time: dataset2[count].TIME,
+      x: dataset2[count].collar_ACC_X,
+      y: dataset2[count].collar_ACC_Y,
+      z: dataset2[count].collar_ACC_Z
+    };
+
+    lineArr1.push(lineData1);
+    if (lineArr1.length > 30) {
+      lineArr1.shift();
+    }
+  d3.select("#chart1").datum(lineArr1).call(chart1);
+
+    lineArr2.push(lineData2);
+    if (lineArr2.length > 30) {
+      lineArr2.shift();
+    }
+
+  d3.select("#chart2").datum(lineArr2).call(chart2);
+  }
+  else{
+    var lineData1 = {
+      //time: now,
+      time: dataset1[count].TIME,
+      x: dataset1[count].collar_ACC_X,
+      y: dataset1[count].collar_ACC_Y,
+      z: dataset1[count].collar_ACC_Z
+    };
+    lineArr1.push(lineData1);
+    if (lineArr1.length > 30) {
+      lineArr1.shift();
+    }
+  d3.select("#chart1").datum(lineArr1).call(chart1);
+
+  }
+  //count=count+1;
 }
