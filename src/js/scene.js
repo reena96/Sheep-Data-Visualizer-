@@ -4,7 +4,7 @@
 var App = App || {};
 
 /* Create the scene class */
-var Scene = function (options) {
+var Scene = function(options) {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
@@ -12,6 +12,7 @@ var Scene = function (options) {
   // scale the width and height to the screen size
   var width = d3.select('.world').node().clientWidth;
   var height = width * 0.4;
+  var height = 800;
 
   // width = window.innerWidth,
   // height = window.innerHeight;
@@ -51,7 +52,9 @@ var Scene = function (options) {
 
   // create the renderer
   self.renderer = new THREE.WebGLRenderer();
-  self.renderer = new THREE.WebGLRenderer({ alpha: true });
+  self.renderer = new THREE.WebGLRenderer({
+    alpha: true
+  });
   self.renderer.setPixelRatio(window.devicePixelRatio);
   self.renderer.setSize(width, height);
   self.renderer.shadowMap.enabled = true;
@@ -69,31 +72,31 @@ var Scene = function (options) {
   self.controls.enableKeys = false;
   // self.controls.minPolarAngle = Math.PI/5; // radians
   // self.controls.maxPolarAngle = Math.PI/(1.97);
-  self.controls.minPolarAngle = 1.51;
-  self.controls.maxPolarAngle = 1.57;
+  // self.controls.minPolarAngle = 1.51;
+  // self.controls.maxPolarAngle = 1.57;
   // var angleRadians = Math.atan2(remote.y - origin.y, remote.x - origin.x);
   self.controls.enableZoom = true;
   self.controls.enableRotate = true;
   self.controls.zoomSpeed = 0.1;
   self.controls.rotateSpeed = 0.1;
   self.controls.panSpeed = 0.1;
-  self.controls.minDistance = 21;
-  self.controls.maxDistance = 36;
-  self.controls.minAzimuthAngle = 0.25; // radians (check angle by controls.getAzimuthalAngle())
-  self.controls.maxAzimuthAngle = 0.4; // radians
+  self.controls.minDistance = 5;
+  self.controls.maxDistance = 15;
+  self.controls.minAzimuthAngle = 1; // radians (check angle by controls.getAzimuthalAngle())
+  self.controls.maxAzimuthAngle = 1; // radians
 
 
   self.public = {
 
-    resize: function () {
+    resize: function() {
 
     },
 
-    addObject: function (obj) {
+    addObject: function(obj) {
       self.scene.add(obj);
     },
 
-    render: function () {
+    render: function() {
       requestAnimationFrame(self.public.render);
       self.controls.update();
       // console.log("current azimuthal angle");
@@ -103,23 +106,22 @@ var Scene = function (options) {
       self.renderer.render(self.scene, self.camera);
     },
 
-    findobj: function (obj) {
+    findobj: function(obj) {
       return self.scene.getObjectByName(obj)
     },
-    remove: function (obj) {
+    remove: function(obj) {
 
       self.scene.remove(obj);
     },
-    lookAt: function (obj) {
+    lookAt: function(obj) {
       //console.log(self.camera.position);
 
-      self.controls.target=obj;
-      self.camera.position.set(0, 70, 0);
+      self.controls.target = obj;
+      self.camera.position.set(10, 50, 10);
       self.controls.update();
       //self.controls.object.position.set(10, 10, 10);
       //self.camera.updateProjectionMatrix();
     }
-
   };
 
   return self.public;
