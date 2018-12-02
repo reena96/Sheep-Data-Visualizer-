@@ -1,4 +1,4 @@
-,Actor,Behavior,start_time,end_time
+,actor,behavior,start_time,end_time
 3,ID0,stand down,1534400517328,1534400537128
 10,ID0,walk up,1534400537228,1534400538628
 12,ID0,walk down,1534400538728,1534400548028

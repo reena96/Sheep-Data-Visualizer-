@@ -27,6 +27,7 @@
   <script src="./lib/three.js"></script>
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
   <script charset="utf-8" type="text/javascript" src="./lib/d3/d3.v4.min.js"></script>
+  <script charset="utf-8" type="text/javascript" src="./lib/d3/d3.v3.min.js"></script>
   <script src="./lib/OrbitControls.js"></script>
   <script src="./lib/fbx/FBXLoader.js"></script> <!-- For loading sheep.fbx model -->
   <script src="./lib/fbx/inflate.min.js"></script>
@@ -108,15 +109,28 @@
     </section>
   </div>
 
+  <center>
+    <div class="row" id="activity_time"></div>
+    <section id="time_series" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:100px;">
+      <input id="halt" type="checkbox" name="halt" value="halt" style="margin-bottom: 2px" /> Check the box to halt
+      <div id="viewDiv" style="margin:0 auto;"></div>
+    </section>
+  </center>
+
+
+
   <div class="row">
-    <section id="footer" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:100px;">
+    <section id="footer" style="background: rgb(138,140,191);height:100px;">
     </section>
   </div>
+
 </body>
 <script>
   var slider = document.getElementById("sampleRate");
   var output = document.getElementById("rate");
   output.innerHTML = slider.value;
 </script>
+<script src="./src/js/realTimeChartMulti.js"></script>
+<script src="./src/js/activityChart.js"></script>
 
 </html>
