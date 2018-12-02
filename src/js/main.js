@@ -41,6 +41,7 @@ var chart2;
     sheepSystem2.initialize();
     sheep2 = sheepSystem2.getSheepSystem();
 
+
     sheep1.scale.set(0.000625, 0.000625, 0.000625);
     sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
@@ -60,11 +61,25 @@ var chart2;
     //console.log();
     var animal_select = document.getElementById("selectAnimal")
     animal_select.addEventListener("click", function() {
-      define_data();
+      var startTimeInput=document.getElementById("StartTime");
+      count=startTimeInput.value-1534395958;
       sheep1.position.set(0, 0, 0);
       sheep2.position.set(0, 0, 0);
-      count = 0;
+      define_data();
+      //count = 0;
     });
+
+
+    var startTimeInput=document.getElementById("StartTime");
+    startTimeInput.addEventListener("click", function() {
+      console.log("Listened");
+    console.log(startTimeInput.value);
+    count=startTimeInput.value-1534395958;
+    sheep1.position.set(0, 0, 0);
+    sheep2.position.set(0, 0, 0);
+
+    define_data();
+  });
 
   };
 
@@ -79,6 +94,7 @@ function define_data() {
   lineArr1 = [];
   lineArr2 = [];
 
+  console.log(count);
   console.log("define_data");
   if (document.getElementById("both").selected == true) {
 
@@ -101,6 +117,11 @@ function define_data() {
 
       slider.oninput = function() {
         output.innerHTML = this.value;
+        var startTimeInput=document.getElementById("StartTime");
+
+        count=startTimeInput.value-1534395958;
+        console.log(count);
+
         console.log("Slider Value now");
 
         var sliderVal = parseInt(this.value);
@@ -146,7 +167,7 @@ function define_data() {
 
         console.log("Slider Value now");
         var sliderVal = parseInt(this.value);
-        count = 0;
+        //count = 0;
         var sampledData1 = sampleData(data1, sliderVal);
         drawLineGraphAcc(sampledData1, null, 1);
         moveSheepAlone(sampledData1, sliderVal);
@@ -274,16 +295,17 @@ function drawLineGraphAcc(data1, data2, select) {
 }
 
 function moveSheep(data1, data2, sliderVal) {
-  //console.log(data1);
-
+  console.log(count);
+  sleep(50).then(() => {
   if (count == 0) {
     console.log("0");
     dataset1 = data1;
     dataset2 = data2;
-
-
+    sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+    sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
     removePathsFromScene();
     remove_path = [];
+
   }
 
   if (count > 0) {
@@ -310,8 +332,15 @@ function moveSheep(data1, data2, sliderVal) {
       App.scene.addObject(circle2);
       remove_path.push(circle2.name);
     }
-
-
+ // if (dataset1[count-1]['activity']!=dataset1[count-1]['activity']){
+ //   sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+ // }
+ // if (dataset2[count-1]['activity']!=dataset2[count-1]['activity']){
+ //
+ //   sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+ // }
+ sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
     //  App.scene.render();
   }
   if (dataset1[count]['Latitude'] != "") {
@@ -336,7 +365,7 @@ function moveSheep(data1, data2, sliderVal) {
       var angle = direction * Math.PI / 180;
       //  console.log(angle);
       sheep2.rotation.y = (angle * 1);
-      App.scene.lookAt(sheep2.position);
+      App.scene.lookAt(sheep1.position);
     }
   } else {
     sheep2.visible = false;
@@ -346,10 +375,10 @@ function moveSheep(data1, data2, sliderVal) {
   count = count + 1;
   //console.log(count);
   updateData(dataset1, dataset2, 2);
-  for (var j = 0; j < 100000000; j++) {}
+  // for (var j = 0; j < 100000000; j++) {}
 
   window.requestAnimationFrame(moveSheep);
-
+});
 }
 var count_remove;
 
@@ -386,7 +415,7 @@ function sleep(ms) {
 
 function moveSheepAlone(data1, sliderVal) {
 
-  sleep(250).then(() => {
+  sleep(10).then(() => {
     // Do something after the sleep!
 
 
@@ -431,7 +460,7 @@ function moveSheepAlone(data1, sliderVal) {
     } else {
       sheep1.visible = false;
     }
-
+    sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
     App.scene.lookAt(sheep1.position);
 
 
@@ -445,7 +474,9 @@ function moveSheepAlone(data1, sliderVal) {
 }
 
 function changeAnimals() {
-  count = 0;
+
+  var startTimeInput=document.getElementById("StartTime");
+  count=startTimeInput.value-1534395958;
   define_data();
 
 }
@@ -497,4 +528,46 @@ function updateData(dataset1, dataset2, select) {
 
   }
   //count=count+1;
+}
+
+function getActivityColor(action){
+  // console.log(action+"  xxxxxx  ");
+  switch (action) {
+                    case "stand up":
+                      // console.log("1");
+                      return "#068b0c"; // dark green
+
+                    case "stand down":
+                        // console.log("2");
+                        return "#04f10e"; // light green
+
+                    case "walk up":
+                      // console.log("3");
+                        return "#1B07AD"; // dark blue
+
+                    case "walk down":
+                        return "#04B5FC"; // light blue
+
+                    case "ramble up":
+                        return "#FC04E9"; // dark pink
+
+                    case "ramble down":
+                        return "#FFB6C1"; // light pink
+
+                    case "trot":
+                        return "#cc6600"; // brown
+
+                    case "canter_right lead":
+                        return "FCDE04"; // dark yellow
+
+                    case "canter_left lead":
+                        return "#FFFF99"; // Light yellow
+
+                    case "canter_unk":
+                        return "#cc0000"; // red
+
+                    default:
+                        return "black";
+
+                }
 }
