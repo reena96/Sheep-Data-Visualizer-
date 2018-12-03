@@ -2,6 +2,8 @@
 
 var App = App || {};
 
+Physijs.scripts.worker = 'js/physijs_worker.js';
+Physijs.scripts.ammo = 'js/ammo.js';
 
 let camera,
     renderer,
@@ -24,7 +26,7 @@ var long={};
 var timestamp={};
 
 
-var sceneObject = new THREE.Group();
+
 
 var scene;
 
@@ -33,36 +35,20 @@ var coltorus;
 
 function init() {
   width = window.innerWidth,
+
+height = window.innerHeight;
+var scene_mat= new THREE.MeshBasicMaterial({ color: "white" });
+scene_mat.opacity = 0;
+scene_mat.transparent = true;
+scene = new Physijs.BoxMesh( new THREE.CubeGeometry( 0, 0, 0 ), scene_mat );
+
   height = window.innerHeight;
 
-  scene = new THREE.Group();
-  // camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  // camera.lookAt(scene.position);
-  // camera.position.set(0, 0.7, 8);
-  //
-  // renderer = new THREE.WebGLRenderer({ alpha: true });
-  // renderer.setPixelRatio(window.devicePixelRatio);
-  // renderer.setSize(width, height);
-  // renderer.shadowMap.enabled = true;
-  // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  //
-  // controls = new THREE.OrbitControls(camera, renderer.domElement);
-  // controls.enableZoom = false;
 
-  //addLights();
   drawSheep();
-  //drawCloud();
-  //drawSky();
 
-  //world = document.querySelector('.world');
-  //world.appendChild(renderer.domElement);
 
-  // document.addEventListener('mousedown', onMouseDown);
-  // document.addEventListener('mouseup', onMouseUp);
-  // document.addEventListener('touchstart', onTouchStart);
-	// document.addEventListener('touchend', onTouchEnd);
-  // window.addEventListener('resize', onResize);
-  //console.log(scene);
+
 }
 
 function addLights() {
@@ -82,7 +68,13 @@ function addLights() {
 
 function drawSheep() {
   sheep = new Sheep();
-    scene.add(sheep.group);
+
+
+  scene.add(sheep.group);
+  console.log(scene);
+
+
+
 }
 
 function drawCloud() {
@@ -180,7 +172,7 @@ class Sheep {
   }
   drawBody() {
     const bodyGeometry = new THREE.IcosahedronGeometry(1.7, 0);
-    const body = new THREE.Mesh(bodyGeometry, this.woolMaterial);
+    const body = new Physijs.BoxMesh(bodyGeometry, this.woolMaterial);
     body.castShadow = true;
     body.receiveShadow = true;
     this.group.add(body);
@@ -192,14 +184,14 @@ class Sheep {
     this.group.add(head);
 
     const foreheadGeometry = new THREE.BoxGeometry(0.7, 0.6, 0.7);
-    const forehead = new THREE.Mesh(foreheadGeometry, this.skinMaterial);
+    const forehead =new Physijs.BoxMesh(foreheadGeometry, this.skinMaterial);
     forehead.castShadow = true;
     forehead.receiveShadow = true;
     forehead.position.y = -0.15;
     head.add(forehead);
 
     const faceGeometry = new THREE.CylinderGeometry(0.5, 0.15, 0.4, 4, 1);
-    const face = new THREE.Mesh(faceGeometry, this.skinMaterial);
+    const face = new Physijs.BoxMesh(faceGeometry, this.skinMaterial);
     face.castShadow = true;
     face.receiveShadow = true;
     face.position.y = -0.65;
@@ -215,13 +207,13 @@ class Sheep {
     //console.log(coltorus);
 
     const woolGeometry = new THREE.BoxGeometry(0.84, 0.46, 0.9);
-    const wool = new THREE.Mesh(woolGeometry, this.woolMaterial);
+    const wool = new Physijs.BoxMesh(woolGeometry, this.woolMaterial);
     wool.position.set(0, 0.12, 0.07);
     wool.rotation.x = rad(20);
     head.add(wool);
 
     const rightEyeGeometry = new THREE.CylinderGeometry(0.08, 0.1, 0.06, 6);
-    const rightEye = new THREE.Mesh(rightEyeGeometry, this.darkMaterial);
+    const rightEye = new Physijs.BoxMesh(rightEyeGeometry, this.darkMaterial);
     rightEye.castShadow = true;
     rightEye.receiveShadow = true;
     rightEye.position.set(0.35, -0.48, 0.33);
@@ -235,7 +227,7 @@ class Sheep {
 
     const rightEarGeometry = new THREE.BoxGeometry(0.12, 0.5, 0.3);
     rightEarGeometry.translate(0, -0.25, 0);
-    this.rightEar = new THREE.Mesh(rightEarGeometry, this.skinMaterial);
+    this.rightEar = new Physijs.BoxMesh(rightEarGeometry, this.skinMaterial);
     this.rightEar.castShadow = true;
     this.rightEar.receiveShadow = true;
     this.rightEar.position.set(0.35, -0.12, -0.07);
@@ -246,11 +238,16 @@ class Sheep {
     this.leftEar.position.x = -this.rightEar.position.x;
     this.leftEar.rotation.z = -this.rightEar.rotation.z;
     head.add(this.leftEar);
+
+
+
+
+
   }
   drawLegs() {
     const legGeometry = new THREE.CylinderGeometry(0.3, 0.15, 1, 4);
     legGeometry.translate(0, -0.5, 0);
-    this.frontRightLeg = new THREE.Mesh(legGeometry, this.darkMaterial);
+    this.frontRightLeg = new Physijs.BoxMesh(legGeometry, this.darkMaterial);
     this.frontRightLeg.castShadow = true;
     this.frontRightLeg.receiveShadow = true;
     this.frontRightLeg.position.set(0.7, -0.8, 0.5);
@@ -423,38 +420,6 @@ class Sky {
     this.group.rotation.y -= 0.004;
   }
 }
-
-// const toggleBtn = document.querySelector('.toggle');
-//
-// toggleBtn.addEventListener('click', toggleNight);
-//
-// const worldMusic = document.querySelector('.world-music');
-//
-// const btnMusic = document.querySelector('.toggle-music');
-//
-// let playMusic = false;
-// btnMusic.addEventListener('click', toggleMusic);
-// worldMusic.volume = 0.3;
-// worldMusic.loop = true;
-//
-// function toggleNight() {
-//   night = !night;
-//
-//   toggleBtn.classList.toggle('toggle-night');
-//   world.classList.toggle('world-night');
-//
-//   sky.showNightSky(night);
-// }
-//
-// function toggleMusic() {
-//   playMusic = !playMusic;
-//   btnMusic.classList.toggle('music-off');
-//   playMusic ? worldMusic.play() : worldMusic.pause();
-// }
-
-
-
-
 
 var SheepSystem = function() {
 

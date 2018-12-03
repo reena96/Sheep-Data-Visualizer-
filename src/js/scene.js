@@ -8,7 +8,7 @@ var Scene = function(options) {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
-
+var render_stats = new Stats();
   // scale the width and height to the screen size
   var width = d3.select('.world').node().clientWidth;
   var height = width * 0.4;
@@ -18,7 +18,7 @@ var Scene = function(options) {
   // height = window.innerHeight;
 
   // create the scene
-  self.scene = new THREE.Scene();
+  self.scene = new Physijs.Scene;
 
   // setup the camera
   self.camera = new THREE.PerspectiveCamera(0.065, width / height, 0.1, 100);
@@ -72,8 +72,8 @@ var Scene = function(options) {
   self.controls.enableKeys = false;
   // self.controls.minPolarAngle = Math.PI/5; // radians
   // self.controls.maxPolarAngle = Math.PI/(1.97);
-  self.controls.minPolarAngle = 0.2;
-  self.controls.maxPolarAngle = 0.2;
+  self.controls.minPolarAngle = -3.14;
+  self.controls.maxPolarAngle = 3.14;
   // var angleRadians = Math.atan2(remote.y - origin.y, remote.x - origin.x);
   self.controls.enableZoom = true;
   self.controls.enableRotate = true;
@@ -81,9 +81,9 @@ var Scene = function(options) {
   self.controls.rotateSpeed = 0.1;
   self.controls.panSpeed = 0.1;
   self.controls.minDistance = 5;
-  self.controls.maxDistance = 15;
-  // self.controls.minAzimuthAngle = 1; // radians (check angle by controls.getAzimuthalAngle())
-  // self.controls.maxAzimuthAngle = 1; // radians
+  self.controls.maxDistance = 12;
+  //  self.controls.minAzimuthAngle = 2; // radians (check angle by controls.getAzimuthalAngle())
+  // self.controls.maxAzimuthAngle = 2; // radians
 
 
   self.public = {
@@ -99,11 +99,9 @@ var Scene = function(options) {
     render: function() {
       requestAnimationFrame(self.public.render);
       self.controls.update();
-      // console.log("current azimuthal angle");
-      // console.log(self.controls.getAzimuthalAngle());
-      // console.log("current Polar angle");
-      // console.log(self.controls.getPolarAngle());
       self.renderer.render(self.scene, self.camera);
+      render_stats.update();
+      self.scene.simulate();
     },
 
     findobj: function(obj) {
@@ -115,12 +113,19 @@ var Scene = function(options) {
     },
     lookAt: function(obj) {
       //console.log(self.camera.position);
-      //console.log(obj);
-      self.controls.target = obj;
-      self.camera.position.set(15, 50, 15);
+      //console.log(obj.y);
+      self.controls.target.set(obj.x,obj.y+0.02,obj.z);
+      //self.controls.target = obj;
+      self.camera.position.set(5, 6, 5);
       self.controls.update();
       //self.controls.object.position.set(10, 10, 10);
       //self.camera.updateProjectionMatrix();
+    },
+    addConstraint: function(obj) {
+      //console.log(self.camera.position);
+self.scene.addConstraint(obj);
+
+
     }
   };
 
