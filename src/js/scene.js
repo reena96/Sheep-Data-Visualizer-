@@ -18,7 +18,7 @@ var Scene = function(options) {
   // height = window.innerHeight;
 
   // create the scene
-  self.scene = new THREE.Scene();
+  self.scene = new Physijs.Scene;
 
   // setup the camera
   self.camera = new THREE.PerspectiveCamera(0.065, width / height, 0.1, 100);
@@ -121,6 +121,12 @@ var Scene = function(options) {
       self.controls.update();
       //self.controls.object.position.set(10, 10, 10);
       //self.camera.updateProjectionMatrix();
+    },
+    simulate: function() {
+      //console.log(self.camera.position);
+
+      self.scene.simulate()
+    
     }
   };
 

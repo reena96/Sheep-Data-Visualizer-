@@ -40,7 +40,10 @@ var chart2;
     var sheepSystem2 = new SheepSystem();
     sheepSystem2.initialize();
     sheep2 = sheepSystem2.getSheepSystem();
-
+    console.log(sheep1);
+    sheep1.setAngularVelocity(new THREE.Vector3(0, 0, 1));
+  sheep2.setAngularVelocity(new THREE.Vector3(0, 0, 1));
+  App.scene.simulate();
     sheep1.scale.set(0.000625, 0.000625, 0.000625);
     sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
@@ -56,7 +59,7 @@ var chart2;
     App.scene.addObject(plane);
 
     App.scene.render();
-    define_data();
+    //define_data();
     //console.log();
     var animal_select = document.getElementById("selectAnimal")
     animal_select.addEventListener("click", function() {
