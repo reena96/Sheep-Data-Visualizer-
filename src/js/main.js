@@ -12,6 +12,8 @@ var count = 0;
 var remove_path = [];
 var chart1;
 var chart2;
+var path_svgContainer;
+var path_rectangle;
 (function() {
 
   // setup the pointer to the scope 'this' variable
@@ -32,6 +34,16 @@ var chart2;
     App.scene = new Scene({
       container: "scene"
     });
+     path_svgContainer=d3.select("#path").append("svg")
+                                   .attr("width", "100%")
+                                     .attr("height", "100%");
+     path_rectangle=path_svgContainer
+                                 .append("rect")
+                                 .attr("x", 0)
+                                 .attr("y", 0)
+                                 .attr("width", 350)
+                                 .attr("height", 350)
+                                 .style("fill", "#D3D3D3");
 
     // initialize the FIELD system
     var sheepSystem1 = new SheepSystem();
@@ -48,28 +60,46 @@ var chart2;
     sheep1.scale.set(0.000625, 0.000625, 0.000625);
     sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
-    var plane_geometry = new THREE.PlaneGeometry(100, 100, 100);
-    var plane_material = new THREE.MeshBasicMaterial({
-      color: "#D7D7D7",
-      side: THREE.DoubleSide
-    });
-    var plane = new THREE.Mesh(plane_geometry, plane_material);
 
     App.scene.addObject(sheep1);
     App.scene.addObject(sheep2);
-    App.scene.addObject(plane);
-    sheep1.setLinearFactor(new THREE.Vector3( 1, 0, 1 ));
+    var constraint = new Physijs.DOFConstraint(
+    sheep1, // First object to be constrained
+    sheep1, // OPTIONAL second object - if omitted then physijs_mesh_1 will be constrained to the scene
+    new THREE.Vector3( 0, 10, 0 ), // point in the scene to apply the constraint
+    );
+    App.scene.addConstraint( constraint );
 
+    //Ground
+    var ground_material = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial( { color: "#708090" } ),0, .9 // low restitution
+    );
+    ground_material.side = THREE.DoubleSide;
+    ground_material.transparent=true;
+    // Ground
+    var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(40, 0, 40),ground_material,0 // mass
+    );
+    ground.position.set(-0.5,-0.5,-0.5);
 
-   //constraint.enableLinearMotor( 2,2 );
+    ground.receiveShadow = true;
+    App.scene.addObject( ground );
+
+    constraint.setLinearLowerLimit( new THREE.Vector3( -10, -5, 0 ) ); // sets the lower end of the linear movement along the x, y, and z axes.
+    constraint.setLinearUpperLimit( new THREE.Vector3( 10, 5, 0 ) ); // sets the upper end of the linear movement along the x, y, and z axes.
+    constraint.setAngularLowerLimit( new THREE.Vector3( 0, -Math.PI, 0 ) ); // sets the lower end of the angular movement, in radians, along the x, y, and z axes.
+    constraint.setAngularUpperLimit( new THREE.Vector3( 0, Math.PI, 0 ) );
+    constraint.enableAngularMotor( 2 );
+    sheep1.setLinearVelocity(new THREE.Vector3(1, 0, 1));
+     sheep1.setAngularVelocity(new THREE.Vector3(0, 0, 0));
     App.scene.render();
-    //define_data();
+    define_data();
     //console.log();
     var animal_select = document.getElementById("selectAnimal")
     animal_select.addEventListener("click", function() {
         console.log("Animals Select Input");
       var startTimeInput=document.getElementById("StartTime");
       count=startTimeInput.value-1534395958;
+      path_svgContainer.selectAll("circle").remove();
       sheep1.position.set(0, 0, 0);
       sheep2.position.set(0, 0, 0);
       define_data();
@@ -79,6 +109,7 @@ var chart2;
 
     var startTimeInput=document.getElementById("StartTime");
     startTimeInput.oninput = function() {
+    path_svgContainer.selectAll("circle").remove();
     console.log("Start Time Slider");
     console.log(startTimeInput.value);
     count=startTimeInput.value-1534395958;
@@ -98,6 +129,7 @@ var dataset2 = [];
 var sampledData1;
 
 function define_data() {
+  path_svgContainer.selectAll("circle").remove();
   lineArr1 = [];
   lineArr2 = [];
 
@@ -133,6 +165,7 @@ function define_data() {
 
         var sliderVal = parseInt(this.value);
         count = 0;
+        path_svgContainer.selectAll("circle").remove();
         d3.select("svg").remove();
         var sampledData1 = sampleData(data1, sliderVal);
         var sampledData2 = sampleData(data2, sliderVal);
@@ -364,6 +397,11 @@ sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(d
   if (dataset1[count]['Latitude'] != "") {
     sheep1.visible = true;
     sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+    path_svgContainer.append("circle")
+                               .attr("cx", dataset1[count]['Latitude'] * 200)
+                                .attr("cy", (dataset1[count]['Longitude'] - 36) * 200)
+                               .attr("r", 5)
+                               .style("fill", "#d95f02");
     if (dataset1[count]['collar_MAG_Y'] != "") {
       var direction = getDirection(dataset1[count]);
       //Magnetometer Readings
@@ -377,6 +415,11 @@ sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(d
   if (dataset2[count]['Latitude'] != "") {
     sheep2.visible = true;
     sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
+    path_svgContainer.append("circle")
+                               .attr("cx", dataset2[count]['Latitude'] * 200)
+                                .attr("cy", (dataset2[count]['Longitude'] - 36) * 200)
+                               .attr("r", 5)
+                               .style("fill", "#7570b3");
     if (dataset2[count]['collar_MAG_Y'] != "") {
       var direction = getDirection(dataset2[count]);
 
@@ -465,6 +508,12 @@ function moveSheepAlone(data1, sliderVal,initialize) {
     if (dataset1[count]['Latitude'] != "") {
       sheep1.visible = true;
       sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+      path_svgContainer.append("circle")
+                                 .attr("cx", dataset1[count]['Latitude'] * 200)
+                                  .attr("cy", (dataset1[count]['Longitude'] - 36) * 200)
+                                 .attr("r", 5)
+                                 .style("fill", "#d95f02");
+
       if (dataset1[count]['collar_MAG_Y'] != "") {
         var direction = getDirection(dataset1[count]);
         //Magnetometer Readings
@@ -544,8 +593,7 @@ function updateData(dataset1, dataset2, select) {
   }
   //count=count+1;
 }
-<<<<<<< HEAD
-=======
+
 
 function getActivityColor(action){
   // console.log(action+"  xxxxxx  ");
@@ -588,4 +636,17 @@ function getActivityColor(action){
 
                 }
 }
->>>>>>> origin/master
+
+function createPath(){
+   path_svgContainer = d3.select("#path").append("svg")
+                                  .attr("width", "100%")
+                                    .attr("height", "100%");
+   path_rectangle = path_svgContainer
+                                .append("rect")
+                                .attr("x", 0)
+                                .attr("y", 0)
+                                .attr("width", 350)
+                                .attr("height", 350)
+                                .style("fill", "#708090");
+
+}

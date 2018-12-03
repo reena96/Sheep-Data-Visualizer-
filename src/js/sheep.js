@@ -35,33 +35,20 @@ var coltorus;
 
 function init() {
   width = window.innerWidth,
-<<<<<<< HEAD
-    height = window.innerHeight;
+
+height = window.innerHeight;
 var scene_mat= new THREE.MeshBasicMaterial({ color: "white" });
 scene_mat.opacity = 0;
 scene_mat.transparent = true;
 scene = new Physijs.BoxMesh( new THREE.CubeGeometry( 0, 0, 0 ), scene_mat );
-=======
+
   height = window.innerHeight;
->>>>>>> origin/master
+
 
   drawSheep();
-<<<<<<< HEAD
 
-=======
-  //drawCloud();
-  //drawSky();
 
-  //world = document.querySelector('.world');
-  //world.appendChild(renderer.domElement);
 
-  // document.addEventListener('mousedown', onMouseDown);
-  // document.addEventListener('mouseup', onMouseUp);
-  // document.addEventListener('touchstart', onTouchStart);
-	// document.addEventListener('touchend', onTouchEnd);
-  // window.addEventListener('resize', onResize);
-  //console.log(scene);
->>>>>>> origin/master
 }
 
 function addLights() {
@@ -81,13 +68,13 @@ function addLights() {
 
 function drawSheep() {
   sheep = new Sheep();
-<<<<<<< HEAD
+
 
   scene.add(sheep.group);
   console.log(scene);
-=======
-    scene.add(sheep.group);
->>>>>>> origin/master
+
+
+
 }
 
 function drawCloud() {
@@ -251,17 +238,11 @@ class Sheep {
     this.leftEar.position.x = -this.rightEar.position.x;
     this.leftEar.rotation.z = -this.rightEar.rotation.z;
     head.add(this.leftEar);
-<<<<<<< HEAD
 
 
-    var collarGeometry = new THREE.TorusGeometry(0.75, 0.15, 16, 100);
-    var material = new THREE.MeshBasicMaterial({
-      color: 0xffff00
-    });
-    var collar = new Physijs.BoxMesh(collarGeometry, material);
-    head.add(collar);
-=======
->>>>>>> origin/master
+
+
+
   }
   drawLegs() {
     const legGeometry = new THREE.CylinderGeometry(0.3, 0.15, 1, 4);
@@ -439,38 +420,6 @@ class Sky {
     this.group.rotation.y -= 0.004;
   }
 }
-
-// const toggleBtn = document.querySelector('.toggle');
-//
-// toggleBtn.addEventListener('click', toggleNight);
-//
-// const worldMusic = document.querySelector('.world-music');
-//
-// const btnMusic = document.querySelector('.toggle-music');
-//
-// let playMusic = false;
-// btnMusic.addEventListener('click', toggleMusic);
-// worldMusic.volume = 0.3;
-// worldMusic.loop = true;
-//
-// function toggleNight() {
-//   night = !night;
-//
-//   toggleBtn.classList.toggle('toggle-night');
-//   world.classList.toggle('world-night');
-//
-//   sky.showNightSky(night);
-// }
-//
-// function toggleMusic() {
-//   playMusic = !playMusic;
-//   btnMusic.classList.toggle('music-off');
-//   playMusic ? worldMusic.play() : worldMusic.pause();
-// }
-
-
-
-
 
 var SheepSystem = function() {
 
