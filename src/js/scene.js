@@ -8,7 +8,7 @@ var Scene = function(options) {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
-
+var render_stats = new Stats();
   // scale the width and height to the screen size
   var width = d3.select('.world').node().clientWidth;
   var height = width * 0.4;
@@ -96,14 +96,12 @@ var Scene = function(options) {
       self.scene.add(obj);
     },
 
-    render: function() {
+    render: function() {  
       requestAnimationFrame(self.public.render);
       self.controls.update();
-      // console.log("current azimuthal angle");
-      // console.log(self.controls.getAzimuthalAngle());
-      // console.log("current Polar angle");
-      // console.log(self.controls.getPolarAngle());
       self.renderer.render(self.scene, self.camera);
+      render_stats.update();
+      self.scene.simulate();
     },
 
     findobj: function(obj) {
@@ -122,11 +120,11 @@ var Scene = function(options) {
       //self.controls.object.position.set(10, 10, 10);
       //self.camera.updateProjectionMatrix();
     },
-    simulate: function() {
+    addConstraint: function(obj) {
       //console.log(self.camera.position);
+self.scene.addConstraint(obj);
 
-      self.scene.simulate()
-    
+
     }
   };
 

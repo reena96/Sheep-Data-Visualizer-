@@ -41,9 +41,9 @@ var chart2;
     sheepSystem2.initialize();
     sheep2 = sheepSystem2.getSheepSystem();
     console.log(sheep1);
-    sheep1.setAngularVelocity(new THREE.Vector3(0, 0, 1));
-  sheep2.setAngularVelocity(new THREE.Vector3(0, 0, 1));
-  App.scene.simulate();
+    sheep1.__dirtyPosition=true;
+    sheep1.__dirtyRotation=true;
+
     sheep1.scale.set(0.000625, 0.000625, 0.000625);
     sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
@@ -57,7 +57,10 @@ var chart2;
     App.scene.addObject(sheep1);
     App.scene.addObject(sheep2);
     App.scene.addObject(plane);
+    sheep1.setLinearFactor(new THREE.Vector3( 1, 0, 1 ));
 
+
+   //constraint.enableLinearMotor( 2,2 );
     App.scene.render();
     //define_data();
     //console.log();
