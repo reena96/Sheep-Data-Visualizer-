@@ -61,6 +61,7 @@ var chart2;
     //console.log();
     var animal_select = document.getElementById("selectAnimal")
     animal_select.addEventListener("click", function() {
+        console.log("Animals Select Input");
       var startTimeInput=document.getElementById("StartTime");
       count=startTimeInput.value-1534395958;
       sheep1.position.set(0, 0, 0);
@@ -71,15 +72,15 @@ var chart2;
 
 
     var startTimeInput=document.getElementById("StartTime");
-    startTimeInput.addEventListener("click", function() {
-      console.log("Listened");
+    startTimeInput.oninput = function() {
+    console.log("Start Time Slider");
     console.log(startTimeInput.value);
     count=startTimeInput.value-1534395958;
     sheep1.position.set(0, 0, 0);
     sheep2.position.set(0, 0, 0);
 
     define_data();
-  });
+  }
 
   };
 
@@ -94,17 +95,16 @@ function define_data() {
   lineArr1 = [];
   lineArr2 = [];
 
-  console.log(count);
-  console.log("define_data");
-  if (document.getElementById("both").selected == true) {
 
+  //console.log("define_data");
+  if (document.getElementById("both").selected == true) {
     d3.queue()
       .defer(d3.csv, "data/mergedc2.csv")
       .defer(d3.csv, "data/mergedc3.csv")
       .await(analyzeboth);
 
     function analyzeboth(error, data1, data2) {
-      console.log(data1);
+      //console.log(data1);
       if (error) {
         console.log(error);
       }
@@ -113,9 +113,10 @@ function define_data() {
       var slider = document.getElementById("sampleRate");
       var output = document.getElementById("rate");
       output.innerHTML = slider.value;
-      console.log(output.innerHTML);
+      //console.log(output.innerHTML);
 
       slider.oninput = function() {
+        console.log("Sample Rate Slider");
         output.innerHTML = this.value;
         var startTimeInput=document.getElementById("StartTime");
 
@@ -130,16 +131,22 @@ function define_data() {
         var sampledData1 = sampleData(data1, sliderVal);
         var sampledData2 = sampleData(data2, sliderVal);
         drawLineGraphAcc(sampledData1, sampledData2, 1);
-        moveSheep(sampledData1, sampledData2, sliderVal);
+        console.log("Here1");
+        removePathsFromScene();
+        remove_path = [];
+        moveSheep(sampledData1, sampledData2, sliderVal,1);
       }
       drawLineGraphAcc(data1, data2, 2);
       //drawLineGraphAcc(data2,2);
       sheep1.visible = true;
       sheep2.visible = true;
-
-      moveSheep(data1, data2, 5);
+      console.log("Here2");
+      removePathsFromScene();
+      remove_path = [];
+      moveSheep(data1, data2, 5,1);
     }
-  } else {
+  }
+  else {
     if (document.getElementById("sheep2").selected == true) {
       console.log("sheep2");
       d3.queue()
@@ -160,7 +167,7 @@ function define_data() {
       var slider = document.getElementById("sampleRate");
       var output = document.getElementById("rate");
       output.innerHTML = slider.value;
-      console.log(output.innerHTML);
+      //console.log(output.innerHTML);
 
       slider.oninput = function() {
         output.innerHTML = this.value;
@@ -170,12 +177,15 @@ function define_data() {
         //count = 0;
         var sampledData1 = sampleData(data1, sliderVal);
         drawLineGraphAcc(sampledData1, null, 1);
-        moveSheepAlone(sampledData1, sliderVal);
+        removePathsFromScene();
+        remove_path = [];
+        moveSheepAlone(sampledData1, sliderVal,1);
 
       }
       drawLineGraphAcc(data1, null, 1);
-
-      moveSheepAlone(data1, 5);
+      removePathsFromScene();
+      remove_path = [];
+      moveSheepAlone(data1, 5,1);
     }
   }
 }
@@ -231,7 +241,7 @@ function sampleDataAcc(arr, n) {
 }
 
 function drawLineGraphAcc(data1, data2, select) {
-  console.log("drawLine");
+  //console.log("drawLine");
   var dataset = [];
   //var count=2;
 
@@ -294,17 +304,19 @@ function drawLineGraphAcc(data1, data2, select) {
 
 }
 
-function moveSheep(data1, data2, sliderVal) {
-  console.log(count);
-  sleep(50).then(() => {
-  if (count == 0) {
-    console.log("0");
+function moveSheep(data1, data2, sliderVal,initialize) {
+  if (document.getElementById("both").selected == true ) {
+  console.log("Move Sheep");
+  //console.log(count);
+  sleep(10).then(() => {
+  if (initialize == 1) {
+    //console.log("0");
     dataset1 = data1;
     dataset2 = data2;
     sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
     sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
-    removePathsFromScene();
-    remove_path = [];
+
+    initialize=0;
 
   }
 
@@ -379,13 +391,13 @@ sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(d
 
   window.requestAnimationFrame(moveSheep);
 });
-}
+}}
 var count_remove;
 
 function removePathsFromScene() {
 
   var i;
-  console.log(remove_path);
+  //console.log(remove_path);
 
   for (i = 0; i < remove_path.length; i++) {
     App.scene.remove(App.scene.findobj(remove_path[i]));
@@ -413,17 +425,14 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function moveSheepAlone(data1, sliderVal) {
-
+function moveSheepAlone(data1, sliderVal,initialize) {
+  if (document.getElementById("sheep2").selected == true || document.getElementById("sheep3").selected == true){ // (document.getElementById("sheep3").selected == true)  {
+  console.log("Move Sheep Alone");
   sleep(10).then(() => {
     // Do something after the sleep!
-
-
-    if (count == 0) {
+    if (initialize == 1) {
       dataset1 = data1;
-      removePathsFromScene();
-      remove_path = [];
-
+      initialize=0;
     }
 
     if (count > 0) {
@@ -471,7 +480,7 @@ function moveSheepAlone(data1, sliderVal) {
     window.requestAnimationFrame(moveSheepAlone);
   });
 
-}
+}}
 
 function changeAnimals() {
 
@@ -558,7 +567,7 @@ function getActivityColor(action){
                         return "#cc6600"; // brown
 
                     case "canter_right lead":
-                        return "FCDE04"; // dark yellow
+                        return "#FCDE04"; // dark yellow
 
                     case "canter_left lead":
                         return "#FFFF99"; // Light yellow
