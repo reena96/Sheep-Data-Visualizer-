@@ -12,7 +12,7 @@ var render_stats = new Stats();
   // scale the width and height to the screen size
   var width = d3.select('.world').node().clientWidth;
   var height = width * 0.4;
-  var height = 800;
+  var height = 500;
 
   // width = window.innerWidth,
   // height = window.innerHeight;

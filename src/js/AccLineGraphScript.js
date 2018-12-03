@@ -1,12 +1,12 @@
 function realTimeLineChart() {
   var margin = {
       top: 20,
-      right: 20,
+      right: 40,
       bottom: 20,
       left: 20
     },
-    width = 600,
-    height = 400,
+    width = 200,
+    height = 200,
     duration = 500,
     color = d3.schemeCategory10;
 
@@ -80,21 +80,21 @@ function realTimeLineChart() {
       var legendEnter = gEnter.append("g")
         .attr("class", "legend")
         .attr("transform", "translate(" + (width - margin.right - margin.left - 75) + ",25)");
-      legendEnter.append("rect")
-        .attr("width", 50)
-        .attr("height", 75)
-        .attr("fill", "#ffffff")
-        .attr("fill-opacity", 0.7);
-      legendEnter.selectAll("text")
-        .data(data).enter()
-        .append("text")
-        .attr("y", function(d, i) {
-          return (i * 20) + 25;
-        })
-        .attr("x", 5)
-        .attr("fill", function(d) {
-          return z(d.label);
-        });
+      // legendEnter.append("rect")
+      //   .attr("width", 50)
+      //   .attr("height", 75)
+      //   .attr("fill", "#ffffff")
+      //   .attr("fill-opacity", 0.7);
+      // legendEnter.selectAll("text")
+      //   .data(data).enter()
+      //   .append("text")
+      //   .attr("y", function(d, i) {
+      //     return (i * 20) + 25;
+      //   })
+      //   .attr("x", 5)
+      //   .attr("fill", function(d) {
+      //     return z(d.label);
+      //   });
 
       var svg = selection.select("svg");
       svg.attr('width', width).attr('height', height);
