@@ -72,8 +72,8 @@ var render_stats = new Stats();
   self.controls.enableKeys = false;
   // self.controls.minPolarAngle = Math.PI/5; // radians
   // self.controls.maxPolarAngle = Math.PI/(1.97);
-  // self.controls.minPolarAngle = 1.51;
-  // self.controls.maxPolarAngle = 1.57;
+  self.controls.minPolarAngle = 0.2;
+  self.controls.maxPolarAngle = 0.2;
   // var angleRadians = Math.atan2(remote.y - origin.y, remote.x - origin.x);
   self.controls.enableZoom = true;
   self.controls.enableRotate = true;
@@ -82,8 +82,8 @@ var render_stats = new Stats();
   self.controls.panSpeed = 0.1;
   self.controls.minDistance = 5;
   self.controls.maxDistance = 15;
-  self.controls.minAzimuthAngle = 1; // radians (check angle by controls.getAzimuthalAngle())
-  self.controls.maxAzimuthAngle = 1; // radians
+  // self.controls.minAzimuthAngle = 1; // radians (check angle by controls.getAzimuthalAngle())
+  // self.controls.maxAzimuthAngle = 1; // radians
 
 
   self.public = {
@@ -113,9 +113,9 @@ var render_stats = new Stats();
     },
     lookAt: function(obj) {
       //console.log(self.camera.position);
-
+      //console.log(obj);
       self.controls.target = obj;
-      self.camera.position.set(10, 50, 10);
+      self.camera.position.set(15, 50, 15);
       self.controls.update();
       //self.controls.object.position.set(10, 10, 10);
       //self.camera.updateProjectionMatrix();
