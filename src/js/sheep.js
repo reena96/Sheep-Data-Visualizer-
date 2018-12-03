@@ -4,35 +4,36 @@ var App = App || {};
 
 
 let camera,
-  renderer,
-  controls,
-  mouseDown,
-  world,
-  night = false;
+    renderer,
+    controls,
+    mouseDown,
+    world,
+    night = false;
 
 let sheep,
-  cloud,
-  sky;
+    cloud,
+    sky;
 
 let width,
-  height;
+    height;
 
-var gps_data = {};
+var gps_data={};
 var loader = new THREE.FileLoader();
-var lat = {};
-var long = {};
-var timestamp = {};
+var lat={};
+var long={};
+var timestamp={};
 
 
 var sceneObject = new THREE.Group();
 
 var scene;
 
-
+var colmaterial;
+var coltorus;
 
 function init() {
   width = window.innerWidth,
-    height = window.innerHeight;
+  height = window.innerHeight;
 
   scene = new THREE.Group();
   // camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -59,7 +60,7 @@ function init() {
   // document.addEventListener('mousedown', onMouseDown);
   // document.addEventListener('mouseup', onMouseUp);
   // document.addEventListener('touchstart', onTouchStart);
-  // document.addEventListener('touchend', onTouchEnd);
+	// document.addEventListener('touchend', onTouchEnd);
   // window.addEventListener('resize', onResize);
   //console.log(scene);
 }
@@ -81,7 +82,7 @@ function addLights() {
 
 function drawSheep() {
   sheep = new Sheep();
-  scene.add(sheep.group);
+    scene.add(sheep.group);
 }
 
 function drawCloud() {
@@ -108,7 +109,6 @@ function onResize() {
 function onMouseDown(event) {
   mouseDown = true;
 }
-
 function onTouchStart(event) {
   const targetClass = event.target.classList[0];
   if (targetClass === 'toggle' || targetClass === 'toggle-music') return;
@@ -119,7 +119,6 @@ function onTouchStart(event) {
 function onMouseUp() {
   mouseDown = false;
 }
-
 function onTouchEnd(event) {
   const targetClass = event.target.classList[0];
   if (targetClass === 'toggle' || targetClass === 'toggle-music') return;
@@ -167,6 +166,11 @@ class Sheep {
       roughness: 1,
       shading: THREE.FlatShading
     });
+    this.collarMaterial = new THREE.MeshStandardMaterial({
+      color: "red",
+      roughness: 1,
+      shading: THREE.FlatShading
+    });
 
     this.vAngle = 0;
 
@@ -202,6 +206,14 @@ class Sheep {
     face.rotation.y = rad(45);
     head.add(face);
 
+    const colgeometry = new THREE.TorusGeometry( 0.3, 0.2, 16, 100 );
+    //const colmaterial = new THREE.MeshBasicMaterial( { color: "red" } );
+    const coltorus = new THREE.Mesh( colgeometry, this.collarMaterial );
+    coltorus.position.y = 0.15;
+  //  coltorus.rotation.y = rad(45);
+    head.add(coltorus);
+    //console.log(coltorus);
+
     const woolGeometry = new THREE.BoxGeometry(0.84, 0.46, 0.9);
     const wool = new THREE.Mesh(woolGeometry, this.woolMaterial);
     wool.position.set(0, 0.12, 0.07);
@@ -234,14 +246,6 @@ class Sheep {
     this.leftEar.position.x = -this.rightEar.position.x;
     this.leftEar.rotation.z = -this.rightEar.rotation.z;
     head.add(this.leftEar);
-
-
-    var collarGeometry = new THREE.TorusGeometry(0.75, 0.15, 16, 100);
-    var material = new THREE.MeshBasicMaterial({
-      color: 0xffff00
-    });
-    var collar = new THREE.Mesh(collarGeometry, material);
-    head.add(collar);
   }
   drawLegs() {
     const legGeometry = new THREE.CylinderGeometry(0.3, 0.15, 1, 4);
@@ -285,12 +289,7 @@ class Sheep {
     this.leftEar.rotation.z = -earRotation;
   }
   jumpOnMouseDown() {
-    // if (mouseDown) {
-    //   this.jump(0.05);
-    // } else {
-    //   if (this.group.position.y <= 0.4) return;
-    //   this.jump(0.08);
-    // }
+
   }
 }
 
@@ -369,7 +368,7 @@ class Sky {
     this.drawNightLights();
   }
   drawSky(phase) {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 30; i ++) {
       const geometry = new THREE.IcosahedronGeometry(0.4, 0);
       const material = new THREE.MeshStandardMaterial({
         color: this.colors[phase][Math.floor(Math.random() * this.colors[phase].length)],
@@ -379,8 +378,8 @@ class Sky {
       const mesh = new THREE.Mesh(geometry, material);
 
       mesh.position.set((Math.random() - 0.5) * 30,
-        (Math.random() - 0.5) * 30,
-        (Math.random() - 0.5) * 30);
+                         (Math.random() - 0.5) * 30,
+                         (Math.random() - 0.5) * 30);
       if (phase === 'day') {
         this.daySky.add(mesh);
       } else {
@@ -396,14 +395,14 @@ class Sky {
       shading: THREE.FlatShading
     });
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i ++) {
       const light = new THREE.PointLight(0xF55889, 2, 30);
       const mesh = new THREE.Mesh(geometry, material);
       light.add(mesh);
 
       light.position.set((Math.random() - 2) * 6,
-        (Math.random() - 2) * 6,
-        (Math.random() - 2) * 6);
+                         (Math.random() - 2) * 6,
+                         (Math.random() - 2) * 6);
       light.updateMatrix();
       light.matrixAutoUpdate = false;
 
@@ -470,17 +469,10 @@ var SheepSystem = function() {
 
     // load the data and setup the system
     initialize: function() {
-      // var data=[];
-      // data=loadData(file);
-      //console.log(gps_data);
-      //  console.log(file);
+
       console.log("init");
       self.init();
       self.animate();
-
-
-      //return data;
-
     },
 
     // accessor for the particle system
@@ -489,6 +481,7 @@ var SheepSystem = function() {
       //console.log(scene);
       return scene;
     }
+
   };
 
   return publiclyAvailable;
