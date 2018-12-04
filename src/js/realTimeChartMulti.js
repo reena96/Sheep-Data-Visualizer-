@@ -212,7 +212,7 @@ function realTimeChartMulti() {
     // set the scale domains for main and nav charts
     x.domain([startTimeViewport, endTimeViewport]);
     var et = 1534402833728;
-    var st = 1534400571000;
+    var st = 1534400517328;
     xNav.domain([st, et]);
 
     // update axis with modified scale
