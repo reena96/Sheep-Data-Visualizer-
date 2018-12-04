@@ -15,7 +15,7 @@ var chart2;
 var path_svgContainer;
 var path_rectangle;
 var g;
-var x,y,xAxis,yAxis,gX,gY,line;
+var x, y, xAxis, yAxis, gX, gY, line;
 (function() {
 
   // setup the pointer to the scope 'this' variable
@@ -37,39 +37,39 @@ var x,y,xAxis,yAxis,gX,gY,line;
     App.scene = new Scene({
       container: "scene"
     });
-     path_svgContainer=d3.select("#path").append("svg")
-                                   .attr("width", "100%")
-                                     .attr("height", "100%");
-     g = path_svgContainer.append("g");
-     path_rectangle=g
-                                 .append("rect")
-                                 .attr("x", 0)
-                                 .attr("y", 0)
-                                 .attr("width", 300)
-                                 .attr("height", 300)
-                                 .style("fill", "#D3D3D3")
-                                 .attr("pointer-events", "all")
-                                 .call(d3.zoom()
-                                    .scaleExtent([1, 12])
-                                    .on("zoom", zoom));
+    path_svgContainer = d3.select("#path").append("svg")
+      .attr("width", "100%")
+      .attr("height", "100%");
+    g = path_svgContainer.append("g");
+    path_rectangle = g
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 300)
+      .attr("height", 300)
+      .style("fill", "#D3D3D3")
+      .attr("pointer-events", "all")
+      .call(d3.zoom()
+        .scaleExtent([1, 12])
+        .on("zoom", zoom));
 
-     x = d3.scaleLinear()
-    .domain([0, 0.5])
-    .range([0, 300]);
-     y = d3.scaleLinear()
-    .domain([36.8, 37])
-    .range([300, 0]);
+    x = d3.scaleLinear()
+      .domain([0, 0.5])
+      .range([0, 300]);
+    y = d3.scaleLinear()
+      .domain([36.8, 37])
+      .range([300, 0]);
 
-     xAxis = d3.axisBottom(x);
-     yAxis = d3.axisLeft(y);
+    xAxis = d3.axisBottom(x);
+    yAxis = d3.axisLeft(y);
 
-     gX = g.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + 300 + ")")
-    .call(xAxis);
-     gY = g.append("g")
-    .attr("class", "axis axis--y")
-    .call(yAxis)
+    gX = g.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + 300 + ")")
+      .call(xAxis);
+    gY = g.append("g")
+      .attr("class", "axis axis--y")
+      .call(yAxis)
 
 
 
@@ -78,60 +78,63 @@ var x,y,xAxis,yAxis,gX,gY,line;
     var sheepSystem1 = new SheepSystem();
     sheepSystem1.initialize("2");
     sheep1 = sheepSystem1.getSheepSystem();
-sleep(10).then(() => {
-    var sheepSystem2 = new SheepSystem();
-    sheepSystem2.initialize("3");
-    sheep2 = sheepSystem2.getSheepSystem();
+    sleep(10).then(() => {
+      var sheepSystem2 = new SheepSystem();
+      sheepSystem2.initialize("3");
+      sheep2 = sheepSystem2.getSheepSystem();
 
 
-    sheep1.scale.set(0.000625, 0.000625, 0.000625);
-    sheep2.scale.set(0.000625, 0.000625, 0.000625);
+      sheep1.scale.set(0.000625, 0.000625, 0.000625);
+      sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
 
-    App.scene.addObject(sheep1);
-    App.scene.addObject(sheep2);
-    //Ground
-    var ground_material = Physijs.createMaterial(
-        new THREE.MeshStandardMaterial( { color: "#708090" } ),0, .9 // low restitution
-    );
-    ground_material.side = THREE.DoubleSide;
-    ground_material.transparent=true;
-    // Ground
-    var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(40, 0, 40),ground_material,0 // mass
-    );
-    ground.position.set(-0.5,-0.5,-0.5);
+      App.scene.addObject(sheep1);
+      App.scene.addObject(sheep2);
+      //Ground
+      var ground_material = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial({
+          color: "#708090"
+        }), 0, .9 // low restitution
+      );
+      ground_material.side = THREE.DoubleSide;
+      ground_material.transparent = true;
+      // Ground
+      var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(40, 0, 40), ground_material, 0 // mass
+      );
+      ground.position.set(-0.5, -0.5, -0.5);
 
-    ground.receiveShadow = true;
-    App.scene.addObject( ground );
-    App.scene.render();
-    define_data();
-    //console.log();
-    var animal_select = document.getElementById("selectAnimal")
-    animal_select.addEventListener("click", function() {
-        console.log("Animals Select Input");
-      var startTimeInput=document.getElementById("StartTime");
-      count=startTimeInput.value-1534395958;
-      path_svgContainer.selectAll("circle").remove();
-      sheep1.position.set(0, 0, 0);
-      sheep2.position.set(0, 0, 0);
+      ground.receiveShadow = true;
+      App.scene.addObject(ground);
+      App.scene.render();
       define_data();
-      //count = 0;
-    });
+      //console.log();
+      var animal_select = document.getElementById("selectAnimal")
+      animal_select.addEventListener("click", function() {
+        console.log("Animals Select Input");
+        var startTimeInput = document.getElementById("StartTime");
+        count = startTimeInput.value - 1534395958;
+        path_svgContainer.selectAll("circle").remove();
+        sheep1.position.set(0, 0, 0);
+        sheep2.position.set(0, 0, 0);
+        define_data();
+        //count = 0;
+      });
 
 
-    var startTimeInput=document.getElementById("StartTime");
-    startTimeInput.oninput = function() {
-    path_svgContainer.selectAll("circle").remove();
-    console.log("Start Time Slider");
-    console.log(startTimeInput.value);
-    count=startTimeInput.value-1534395958;
-    sheep1.position.set(0, 0, 0);
-    sheep2.position.set(0, 0, 0);
+      var startTimeInput = document.getElementById("StartTime");
+      startTimeInput.oninput = function() {
+        path_svgContainer.selectAll("circle").remove();
+        console.log("Start Time Slider");
+        console.log(startTimeInput.value);
+        count = startTimeInput.value - 1534395958;
+        sheep1.position.set(0, 0, 0);
+        sheep2.position.set(0, 0, 0);
 
-    define_data();
-  }
+        define_data();
+      }
 
-})};
+    })
+  };
 
 })();
 var count = 0;
@@ -168,9 +171,9 @@ function define_data() {
       slider.oninput = function() {
         console.log("Sample Rate Slider");
         output.innerHTML = this.value;
-        var startTimeInput=document.getElementById("StartTime");
+        var startTimeInput = document.getElementById("StartTime");
 
-        count=startTimeInput.value-1534395958;
+        count = startTimeInput.value - 1534395958;
         console.log(count);
 
         console.log("Slider Value now");
@@ -185,7 +188,7 @@ function define_data() {
         console.log("Here1");
         removePathsFromScene();
         remove_path = [];
-        moveSheep(sampledData1, sampledData2, sliderVal,1);
+        moveSheep(sampledData1, sampledData2, sliderVal, 1);
       }
       drawLineGraphAcc(data1, data2, 2);
       //drawLineGraphAcc(data2,2);
@@ -194,10 +197,9 @@ function define_data() {
       console.log("Here2");
       removePathsFromScene();
       remove_path = [];
-      moveSheep(data1, data2, 5,1);
+      moveSheep(data1, data2, 5, 1);
     }
-  }
-  else {
+  } else {
     if (document.getElementById("sheep2").selected == true) {
       console.log("sheep2");
       d3.queue()
@@ -230,13 +232,13 @@ function define_data() {
         drawLineGraphAcc(sampledData1, null, 1);
         removePathsFromScene();
         remove_path = [];
-        moveSheepAlone(sampledData1, sliderVal,1);
+        moveSheepAlone(sampledData1, sliderVal, 1);
 
       }
       drawLineGraphAcc(data1, null, 1);
       removePathsFromScene();
       remove_path = [];
-      moveSheepAlone(data1, 5,1);
+      moveSheepAlone(data1, 5, 1);
     }
   }
 }
@@ -292,7 +294,10 @@ function sampleDataAcc(arr, n) {
 }
 
 function drawLineGraphAcc(data1, data2, select) {
-  //console.log("drawLine");
+
+  d3.select("#chart1").selectAll("svg").remove();
+  d3.select("#chart2").selectAll("svg").remove();
+  console.log("drawLine");
   var dataset = [];
   //var count=2;
 
@@ -355,104 +360,105 @@ function drawLineGraphAcc(data1, data2, select) {
 
 }
 
-function moveSheep(data1, data2, sliderVal,initialize) {
-  if (document.getElementById("both").selected == true ) {
-  console.log("Move Sheep");
-  //console.log(count);
-  sleep(10).then(() => {
-  if (initialize == 1) {
-    //console.log("0");
-    dataset1 = data1;
-    dataset2 = data2;
-    sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
-    sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+function moveSheep(data1, data2, sliderVal, initialize) {
+  if (document.getElementById("both").selected == true) {
+    console.log("Move Sheep");
+    //console.log(count);
+    sleep(10).then(() => {
+      if (initialize == 1) {
+        //console.log("0");
+        dataset1 = data1;
+        dataset2 = data2;
+        sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+        sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
 
-    initialize=0;
+        initialize = 0;
 
-  }
+      }
 
-  if (count > 0) {
-    var geometry = new THREE.CircleGeometry(0.00025, 32);
-    var material1 = new THREE.MeshBasicMaterial({
-      color: "#d95f02"
+      if (count > 0) {
+        var geometry = new THREE.CircleGeometry(0.00025, 32);
+        var material1 = new THREE.MeshBasicMaterial({
+          color: "#d95f02"
+        });
+        var circle1 = new THREE.Mesh(geometry, material1);
+        var material2 = new THREE.MeshBasicMaterial({
+          color: "#7570b3"
+        });
+        var circle2 = new THREE.Mesh(geometry, material2);
+        circle1.name = "paths1" + String(count);
+        circle2.name = "paths2" + String(count);
+        // console.log("Rolled up data");
+        // console.log(sampledData);
+        if (dataset1[count - 1]['Latitude'] != "") {
+          circle1.position.set(dataset1[count - 1]['Latitude'] * 20, 0.01875, (dataset1[count - 1]['Longitude'] - 36) * 20);
+          App.scene.addObject(circle1);
+          remove_path.push(circle1.name);
+        }
+        if (dataset2[count - 1]['Latitude'] != "") {
+          circle2.position.set(dataset2[count - 1]['Latitude'] * 20, 0.01875, (dataset2[count - 1]['Longitude'] - 36) * 20);
+          App.scene.addObject(circle2);
+          remove_path.push(circle2.name);
+        }
+        // if (dataset1[count-1]['activity']!=dataset1[count-1]['activity']){
+        //   sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+        // }
+        // if (dataset2[count-1]['activity']!=dataset2[count-1]['activity']){
+        //
+        //   sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+        // }
+        sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+        sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+        //  App.scene.render();
+      }
+      if (dataset1[count]['Latitude'] != "") {
+        sheep1.visible = true;
+        sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+        g.append("circle")
+          .attr("cx", x(dataset1[count]['Latitude']))
+          .attr("cy", y((dataset1[count]['Longitude'])))
+          .attr("r", 1)
+          .style("fill", "#d95f02");
+        if (dataset1[count]['collar_MAG_Y'] != "") {
+          var direction = getDirection(dataset1[count]);
+          //Magnetometer Readings
+          var angle = direction * Math.PI / 180;
+          //console.log(angle);
+          sheep1.rotation.y = (angle * 1);
+        }
+      } else {
+        sheep1.visible = false;
+      }
+      if (dataset2[count]['Latitude'] != "") {
+        sheep2.visible = true;
+        sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
+        g.append("circle")
+          .attr("cx", x(dataset2[count]['Latitude']))
+          .attr("cy", y((dataset2[count]['Longitude'])))
+          .attr("r", 1)
+          .style("fill", "#7570b3");
+        if (dataset2[count]['collar_MAG_Y'] != "") {
+          var direction = getDirection(dataset2[count]);
+
+          var angle = direction * Math.PI / 180;
+          //  console.log(angle);
+          sheep2.rotation.y = (angle * 1);
+          App.scene.lookAt(sheep1.position);
+        }
+      } else {
+        sheep2.visible = false;
+      }
+
+
+      count = count + 1;
+      //console.log(count);
+      updateData(dataset1, dataset2, 2);
+      // for (var j = 0; j < 100000000; j++) {}
+
+      window.requestAnimationFrame(moveSheep);
     });
-    var circle1 = new THREE.Mesh(geometry, material1);
-    var material2 = new THREE.MeshBasicMaterial({
-      color: "#7570b3"
-    });
-    var circle2 = new THREE.Mesh(geometry, material2);
-    circle1.name = "paths1" + String(count);
-    circle2.name = "paths2" + String(count);
-    // console.log("Rolled up data");
-    // console.log(sampledData);
-    if (dataset1[count - 1]['Latitude'] != "") {
-      circle1.position.set(dataset1[count - 1]['Latitude'] * 20, 0.01875, (dataset1[count - 1]['Longitude'] - 36) * 20);
-      App.scene.addObject(circle1);
-      remove_path.push(circle1.name);
-    }
-    if (dataset2[count - 1]['Latitude'] != "") {
-      circle2.position.set(dataset2[count - 1]['Latitude'] * 20, 0.01875, (dataset2[count - 1]['Longitude'] - 36) * 20);
-      App.scene.addObject(circle2);
-      remove_path.push(circle2.name);
-    }
- // if (dataset1[count-1]['activity']!=dataset1[count-1]['activity']){
- //   sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
- // }
- // if (dataset2[count-1]['activity']!=dataset2[count-1]['activity']){
- //
- //   sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
- // }
- sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
-sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
-    //  App.scene.render();
   }
-  if (dataset1[count]['Latitude'] != "") {
-    sheep1.visible = true;
-    sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-    g.append("circle")
-    .attr("cx", x(dataset1[count]['Latitude']) )
-     .attr("cy", y((dataset1[count]['Longitude'])))
-                               .attr("r", 1)
-                               .style("fill", "#d95f02");
-    if (dataset1[count]['collar_MAG_Y'] != "") {
-      var direction = getDirection(dataset1[count]);
-      //Magnetometer Readings
-      var angle = direction * Math.PI / 180;
-      //console.log(angle);
-      sheep1.rotation.y = (angle * 1);
-    }
-  } else {
-    sheep1.visible = false;
-  }
-  if (dataset2[count]['Latitude'] != "") {
-    sheep2.visible = true;
-    sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
-    g.append("circle")
-    .attr("cx", x(dataset2[count]['Latitude']) )
-     .attr("cy", y((dataset2[count]['Longitude'])))
-                               .attr("r", 1)
-                               .style("fill", "#7570b3");
-    if (dataset2[count]['collar_MAG_Y'] != "") {
-      var direction = getDirection(dataset2[count]);
-
-      var angle = direction * Math.PI / 180;
-      //  console.log(angle);
-      sheep2.rotation.y = (angle * 1);
-      App.scene.lookAt(sheep1.position);
-    }
-  } else {
-    sheep2.visible = false;
-  }
-
-
-  count = count + 1;
-  //console.log(count);
-  updateData(dataset1, dataset2, 2);
-  // for (var j = 0; j < 100000000; j++) {}
-
-  window.requestAnimationFrame(moveSheep);
-});
-}}
+}
 var count_remove;
 
 function removePathsFromScene() {
@@ -486,45 +492,42 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function moveSheepAlone(data1, sliderVal,initialize) {
-  if (document.getElementById("sheep2").selected == true || document.getElementById("sheep3").selected == true){ // (document.getElementById("sheep3").selected == true)  {
-  console.log("Move Sheep Alone");
-  sleep(10).then(() => {
-    // Do something after the sleep!
-    if (initialize == 1) {
-      dataset1 = data1;
-      initialize=0;
-    }
-
-    if (count > 0) {
-      var geometry = new THREE.CircleGeometry(0.00025, 32);
-      var material1 = new THREE.MeshBasicMaterial({
-        color: "#d95f02"
-      });
-      var circle1 = new THREE.Mesh(geometry, material1);
-      var material2 = new THREE.MeshBasicMaterial({
-        color: "#7570b3"
-      });
-      var circle2 = new THREE.Mesh(geometry, material2);
-      circle1.name = "paths1" + String(count);
-
-      if (dataset1[count - 1]['Latitude'] != "") {
-        circle1.position.set(dataset1[count - 1]['Latitude'] * 20, 0.01875, (dataset1[count - 1]['Longitude'] - 36) * 20);
-        App.scene.addObject(circle1);
-        remove_path.push(circle1.name);
+function moveSheepAlone(data1, sliderVal, initialize) {
+  if (document.getElementById("sheep2").selected == true || document.getElementById("sheep3").selected == true) { // (document.getElementById("sheep3").selected == true)  {
+    console.log("Move Sheep Alone");
+    sleep(10).then(() => {
+      // Do something after the sleep!
+      if (initialize == 1) {
+        dataset1 = data1;
+        initialize = 0;
       }
 
-    }
-    sheep1.visible = true;
-    sheep2.visible = false;
-    if (dataset1[count]['Latitude'] != "") {
+      if (count > 0) {
+        var geometry = new THREE.CircleGeometry(0.00025, 32);
+        var material1 = new THREE.MeshBasicMaterial({
+          color: "#d95f02"
+        });
+        var circle1 = new THREE.Mesh(geometry, material1);
+        var material2 = new THREE.MeshBasicMaterial({
+          color: "#7570b3"
+        });
+        var circle2 = new THREE.Mesh(geometry, material2);
+        circle1.name = "paths1" + String(count);
+
+        if (dataset1[count - 1]['Latitude'] != "") {
+          circle1.position.set(dataset1[count - 1]['Latitude'] * 20, 0.01875, (dataset1[count - 1]['Longitude'] - 36) * 20);
+          App.scene.addObject(circle1);
+          remove_path.push(circle1.name);
+        }
+
+      }
       sheep1.visible = true;
       sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
       g.append("circle")
-                                 .attr("cx", x(dataset1[count]['Latitude']) )
-                                  .attr("cy", y((dataset1[count]['Longitude'])))
-                                 .attr("r", 2)
-                                 .style("fill", "#d95f02");
+        .attr("cx", x(dataset1[count]['Latitude']))
+        .attr("cy", y((dataset1[count]['Longitude'])))
+        .attr("r", 2)
+        .style("fill", "#d95f02");
 
       if (dataset1[count]['collar_MAG_Y'] != "") {
         var direction = getDirection(dataset1[count]);
@@ -533,26 +536,24 @@ function moveSheepAlone(data1, sliderVal,initialize) {
         //console.log(angle);
         sheep1.rotation.y = (angle * 1);
       }
-    } else {
-      sheep1.visible = false;
-    }
-    sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
-    App.scene.lookAt(sheep1.position);
+      sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+      App.scene.lookAt(sheep1.position);
 
 
-    count = count + 1;
-    //console.log(count);
-    updateData(dataset1, null, 1);
-    // for (var j = 0; j < 100000000; j++) {}
-    window.requestAnimationFrame(moveSheepAlone);
-  });
+      count = count + 1;
+      //console.log(count);
+      updateData(dataset1, null, 1);
+      // for (var j = 0; j < 100000000; j++) {}
+      window.requestAnimationFrame(moveSheepAlone);
+    });
 
-}}
+  }
+}
 
 function changeAnimals() {
 
-  var startTimeInput=document.getElementById("StartTime");
-  count=startTimeInput.value-1534395958;
+  var startTimeInput = document.getElementById("StartTime");
+  count = startTimeInput.value - 1534395958;
   define_data();
 
 }
@@ -607,52 +608,52 @@ function updateData(dataset1, dataset2, select) {
 }
 
 
-function getActivityColor(action){
+function getActivityColor(action) {
   // console.log(action+"  xxxxxx  ");
   switch (action) {
-                    case "stand up":
-                      // console.log("1");
-                      return "#068b0c"; // dark green
+    case "stand up":
+      // console.log("1");
+      return "#068b0c"; // dark green
 
-                    case "stand down":
-                        // console.log("2");
-                        return "#04f10e"; // light green
+    case "stand down":
+      // console.log("2");
+      return "#04f10e"; // light green
 
-                    case "walk up":
-                      // console.log("3");
-                        return "#1B07AD"; // dark blue
+    case "walk up":
+      // console.log("3");
+      return "#1B07AD"; // dark blue
 
-                    case "walk down":
-                        return "#04B5FC"; // light blue
+    case "walk down":
+      return "#04B5FC"; // light blue
 
-                    case "ramble up":
-                        return "#FC04E9"; // dark pink
+    case "ramble up":
+      return "#FC04E9"; // dark pink
 
-                    case "ramble down":
-                        return "#FFB6C1"; // light pink
+    case "ramble down":
+      return "#FFB6C1"; // light pink
 
-                    case "trot":
-                        return "#cc6600"; // brown
+    case "trot":
+      return "#cc6600"; // brown
 
-                    case "canter_right lead":
-                        return "#FCDE04"; // dark yellow
+    case "canter_right lead":
+      return "#FCDE04"; // dark yellow
 
-                    case "canter_left lead":
-                        return "#FFFF99"; // Light yellow
+    case "canter_left lead":
+      return "#FFFF99"; // Light yellow
 
-                    case "canter_unk":
-                        return "#cc0000"; // red
+    case "canter_unk":
+      return "#cc0000"; // red
 
-                    default:
-                        return "black";
+    default:
+      return "black";
 
-                }
+  }
 }
 
 
 function zoom() {
   g.attr("transform", d3.event.transform);
-  d3.selectAll('.line').style("stroke-width", 2/d3.event.transform.k);
+  d3.selectAll('.line').style("stroke-width", 2 / d3.event.transform.k);
   gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
   gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
 }

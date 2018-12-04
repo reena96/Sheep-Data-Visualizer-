@@ -6,25 +6,25 @@ Physijs.scripts.worker = 'js/physijs_worker.js';
 Physijs.scripts.ammo = 'js/ammo.js';
 
 let camera,
-    renderer,
-    controls,
-    mouseDown,
-    world,
-    night = false;
+  renderer,
+  controls,
+  mouseDown,
+  world,
+  night = false;
 var id;
 
 let sheep,
-    cloud,
-    sky;
+  cloud,
+  sky;
 
 let width,
-    height;
+  height;
 
-var gps_data={};
+var gps_data = {};
 var loader = new THREE.FileLoader();
-var lat={};
-var long={};
-var timestamp={};
+var lat = {};
+var long = {};
+var timestamp = {};
 
 
 
@@ -38,11 +38,13 @@ function init() {
 
   width = window.innerWidth,
 
-height = window.innerHeight;
-var scene_mat= new THREE.MeshBasicMaterial({ color: "white" });
-scene_mat.opacity = 0;
-scene_mat.transparent = true;
-scene = new Physijs.BoxMesh( new THREE.CubeGeometry( 0, 0, 0 ), scene_mat );
+    height = window.innerHeight;
+  var scene_mat = new THREE.MeshBasicMaterial({
+    color: "white"
+  });
+  scene_mat.opacity = 0;
+  scene_mat.transparent = true;
+  scene = new Physijs.BoxMesh(new THREE.CubeGeometry(0, 0, 0), scene_mat);
 
   height = window.innerHeight;
 
@@ -104,6 +106,7 @@ function onResize() {
 function onMouseDown(event) {
   mouseDown = true;
 }
+
 function onTouchStart(event) {
   const targetClass = event.target.classList[0];
   if (targetClass === 'toggle' || targetClass === 'toggle-music') return;
@@ -114,6 +117,7 @@ function onTouchStart(event) {
 function onMouseUp() {
   mouseDown = false;
 }
+
 function onTouchEnd(event) {
   const targetClass = event.target.classList[0];
   if (targetClass === 'toggle' || targetClass === 'toggle-music') return;
@@ -183,40 +187,40 @@ class Sheep {
     var loader = new THREE.FontLoader(manager);
 
     console.log(id);
-    var font =  loader.load(
+    var font = loader.load(
       // resource URL
       'src/js/helvetiker.json',
       // onLoad callback
-      function ( font ) {
-      console.log(id);
-      var geometry = new THREE.TextGeometry( id, {
-      font: font,
-      size: 1,
-      height: 0.02,
-      curveSegments: 50,
-      bevelEnabled: false,
-      bevelThickness: 0.5,
-      bevelSize: 0.3,
-      bevelSegments: 5
-    } );
-       var textMaterial = new THREE.MeshPhongMaterial(
-          { color: "white" }
-      );
+      function(font) {
+        console.log(id);
+        var geometry = new THREE.TextGeometry(id, {
+          font: font,
+          size: 1,
+          height: 0.02,
+          curveSegments: 50,
+          bevelEnabled: false,
+          bevelThickness: 0.5,
+          bevelSize: 0.3,
+          bevelSegments: 5
+        });
+        var textMaterial = new THREE.MeshPhongMaterial({
+          color: "white"
+        });
 
-      var mesh = new THREE.Mesh(geometry, textMaterial);
-      mesh.position.set(0,2,0);
-      console.log(mesh);
-        body.add( mesh );
+        var mesh = new THREE.Mesh(geometry, textMaterial);
+        mesh.position.set(0, 2, 0);
+        console.log(mesh);
+        body.add(mesh);
 
       },
 
       // onProgress callback
-      function ( xhr ) {
-      //  console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      function(xhr) {
+        //  console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
       },
 
       // onError callback
-      function ( err ) {
+      function(err) {
 
       }
     );
@@ -228,7 +232,7 @@ class Sheep {
     this.group.add(head);
 
     const foreheadGeometry = new THREE.BoxGeometry(0.7, 0.6, 0.7);
-    const forehead =new Physijs.BoxMesh(foreheadGeometry, this.skinMaterial);
+    const forehead = new Physijs.BoxMesh(foreheadGeometry, this.skinMaterial);
     forehead.castShadow = true;
     forehead.receiveShadow = true;
     forehead.position.y = -0.15;
@@ -242,11 +246,11 @@ class Sheep {
     face.rotation.y = rad(45);
     head.add(face);
 
-    const colgeometry = new THREE.TorusGeometry( 0.3, 0.2, 16, 100 );
+    const colgeometry = new THREE.TorusGeometry(0.3, 0.2, 16, 100);
     //const colmaterial = new THREE.MeshBasicMaterial( { color: "red" } );
-    const coltorus = new THREE.Mesh( colgeometry, this.collarMaterial );
+    const coltorus = new THREE.Mesh(colgeometry, this.collarMaterial);
     coltorus.position.y = 0.15;
-  //  coltorus.rotation.y = rad(45);
+    //  coltorus.rotation.y = rad(45);
     head.add(coltorus);
     //console.log(coltorus);
 
@@ -282,10 +286,6 @@ class Sheep {
     this.leftEar.position.x = -this.rightEar.position.x;
     this.leftEar.rotation.z = -this.rightEar.rotation.z;
     head.add(this.leftEar);
-
-
-
-
 
   }
   drawLegs() {
@@ -409,7 +409,7 @@ class Sky {
     this.drawNightLights();
   }
   drawSky(phase) {
-    for (let i = 0; i < 30; i ++) {
+    for (let i = 0; i < 30; i++) {
       const geometry = new THREE.IcosahedronGeometry(0.4, 0);
       const material = new THREE.MeshStandardMaterial({
         color: this.colors[phase][Math.floor(Math.random() * this.colors[phase].length)],
@@ -419,8 +419,8 @@ class Sky {
       const mesh = new THREE.Mesh(geometry, material);
 
       mesh.position.set((Math.random() - 0.5) * 30,
-                         (Math.random() - 0.5) * 30,
-                         (Math.random() - 0.5) * 30);
+        (Math.random() - 0.5) * 30,
+        (Math.random() - 0.5) * 30);
       if (phase === 'day') {
         this.daySky.add(mesh);
       } else {
@@ -436,14 +436,14 @@ class Sky {
       shading: THREE.FlatShading
     });
 
-    for (let i = 0; i < 3; i ++) {
+    for (let i = 0; i < 3; i++) {
       const light = new THREE.PointLight(0xF55889, 2, 30);
       const mesh = new THREE.Mesh(geometry, material);
       light.add(mesh);
 
       light.position.set((Math.random() - 2) * 6,
-                         (Math.random() - 2) * 6,
-                         (Math.random() - 2) * 6);
+        (Math.random() - 2) * 6,
+        (Math.random() - 2) * 6);
       light.updateMatrix();
       light.matrixAutoUpdate = false;
 
@@ -478,7 +478,7 @@ var SheepSystem = function() {
 
     // load the data and setup the system
     initialize: function(sheep_id) {
-      id=sheep_id;
+      id = sheep_id;
       console.log("init");
       self.init();
       self.animate();

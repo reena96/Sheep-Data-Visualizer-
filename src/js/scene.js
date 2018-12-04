@@ -8,11 +8,11 @@ var Scene = function(options) {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
-var render_stats = new Stats();
+  var render_stats = new Stats();
   // scale the width and height to the screen size
   var width = d3.select('.world').node().clientWidth;
   var height = width * 0.4;
-  var height = 800;
+  var height = 500;
 
   // width = window.innerWidth,
   // height = window.innerHeight;
@@ -114,7 +114,7 @@ var render_stats = new Stats();
     lookAt: function(obj) {
       //console.log(self.camera.position);
       //console.log(obj.y);
-      self.controls.target.set(obj.x,obj.y+0.02,obj.z);
+      self.controls.target.set(obj.x, obj.y + 0.02, obj.z);
       //self.controls.target = obj;
       self.camera.position.set(5, 6, 5);
       self.controls.update();
@@ -123,7 +123,7 @@ var render_stats = new Stats();
     },
     addConstraint: function(obj) {
       //console.log(self.camera.position);
-self.scene.addConstraint(obj);
+      self.scene.addConstraint(obj);
 
 
     }
