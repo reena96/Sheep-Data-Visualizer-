@@ -1,4 +1,5 @@
 function realTimeLineChart() {
+  d3.selectAll("converge_lines").remove();
   var margin = {
       top: 20,
       right: 40,
@@ -61,20 +62,23 @@ function realTimeLineChart() {
         .y(function(d) {
           if (d.value[0]>=d.value[1]>=d.value[2]){}
           else{
-            var lineData = {
+            var lineData1 = {
               //time: now,
-              time: d.time,
-              x: d.value[0],
-              y: d.value[1],
-              z: d.value[2]
+              time: d.time
+
             };
-            lineArr.push(lineData);
+            lineArr.push(lineData1);
           }
           return y(d.value);
         });
 
+
+        // console.log(data.length);
+        // console.log(lineArr.length);
+        lineArr=[]
       var svg = d3.select(this).selectAll("svg").data([data]);
       var gEnter = svg.enter().append("svg").append("g");
+
       gEnter.append("g").attr("class", "axis x");
       gEnter.append("g").attr("class", "axis y");
       gEnter.append("defs").append("clipPath")
@@ -89,9 +93,28 @@ function realTimeLineChart() {
         .append("path")
         .attr("class", "data");
 
+        svg.append("g")
+        .attr("class", "converge_lines");
+
+
+if (lineArr.length>0){
+  d3.selectAll("converge_lines").append("line")
+        .style("stroke", "red")
+        // .data([lineArr])
+        // .enter()
+        // .attr("x1", function(d) {  console.log(d);return x(d.time);})    // x position of the first end of the line
+        // .attr("y1", y(15))      // y position of the first end of the line
+        // .attr("x2",  function(d) {  return x(d.time);})     // x position of the second end of the line
+        // .attr("y2", y(-15));
+        .attr("x1", 0)    // x position of the first end of the line
+        .attr("y1", y(15))      // y position of the first end of the line
+        .attr("x2",  0)     // x position of the second end of the line
+        .attr("y2", y(-15));
+
+}
       var legendEnter = gEnter.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(" + (width - margin.right - margin.left - 75) + ",25)");
+        .attr("transform", "translate(" + (width - margin.right - margin.left - 75) + ",10)");
       // legendEnter.append("rect")
       //   .attr("width", 50)
       //   .attr("height", 75)
