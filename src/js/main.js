@@ -74,15 +74,14 @@ var x,y,xAxis,yAxis,gX,gY,line;
 
 
     // initialize the FIELD system
+
     var sheepSystem1 = new SheepSystem();
-    sheepSystem1.initialize();
+    sheepSystem1.initialize("2");
     sheep1 = sheepSystem1.getSheepSystem();
+sleep(10).then(() => {
     var sheepSystem2 = new SheepSystem();
-    sheepSystem2.initialize();
+    sheepSystem2.initialize("3");
     sheep2 = sheepSystem2.getSheepSystem();
-    console.log(sheep1);
-    sheep1.__dirtyPosition=true;
-    sheep1.__dirtyRotation=true;
 
 
     sheep1.scale.set(0.000625, 0.000625, 0.000625);
@@ -91,13 +90,6 @@ var x,y,xAxis,yAxis,gX,gY,line;
 
     App.scene.addObject(sheep1);
     App.scene.addObject(sheep2);
-    var constraint = new Physijs.DOFConstraint(
-    sheep1, // First object to be constrained
-    sheep1, // OPTIONAL second object - if omitted then physijs_mesh_1 will be constrained to the scene
-    new THREE.Vector3( 0, 10, 0 ), // point in the scene to apply the constraint
-    );
-    App.scene.addConstraint( constraint );
-
     //Ground
     var ground_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial( { color: "#708090" } ),0, .9 // low restitution
@@ -111,14 +103,6 @@ var x,y,xAxis,yAxis,gX,gY,line;
 
     ground.receiveShadow = true;
     App.scene.addObject( ground );
-
-    constraint.setLinearLowerLimit( new THREE.Vector3( -10, -5, 0 ) ); // sets the lower end of the linear movement along the x, y, and z axes.
-    constraint.setLinearUpperLimit( new THREE.Vector3( 10, 5, 0 ) ); // sets the upper end of the linear movement along the x, y, and z axes.
-    constraint.setAngularLowerLimit( new THREE.Vector3( 0, -Math.PI, 0 ) ); // sets the lower end of the angular movement, in radians, along the x, y, and z axes.
-    constraint.setAngularUpperLimit( new THREE.Vector3( 0, Math.PI, 0 ) );
-    constraint.enableAngularMotor( 2 );
-    sheep1.setLinearVelocity(new THREE.Vector3(1, 0, 1));
-     sheep1.setAngularVelocity(new THREE.Vector3(0, 0, 0));
     App.scene.render();
     define_data();
     //console.log();
@@ -147,7 +131,7 @@ var x,y,xAxis,yAxis,gX,gY,line;
     define_data();
   }
 
-  };
+})};
 
 })();
 var count = 0;
