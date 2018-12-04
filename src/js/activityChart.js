@@ -75,7 +75,7 @@ function analyze(error, data1, data2) {
     // console.log("data***************");
     // console.log(data1);
     // console.log(data2);
-    for (let idx = 0; idx < data1.length; idx++) {
+    for (let idx = 4610; idx < data1.length; idx++) {
       // output a sample for each category, each interval (five seconds)
       // chart.yDomain().forEach(function (cat, i) {
 
