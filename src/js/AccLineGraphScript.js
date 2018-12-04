@@ -9,6 +9,7 @@ function realTimeLineChart() {
     height = 200,
     duration = 500,
     color = d3.schemeCategory10;
+    var lineArr=[];
 
   function chart(selection) {
     // Based on https://bl.ocks.org/mbostock/3884955
@@ -27,7 +28,7 @@ function realTimeLineChart() {
       // console.log(data);
 
       var t = d3.transition().duration(duration).ease(d3.easeLinear),
-        x = d3.scaleTime().rangeRound([0, width - margin.left - margin.right]),
+        x = d3.scaleLinear().rangeRound([0, width - margin.left - margin.right]),
         y = d3.scaleLinear().rangeRound([height - margin.top - margin.bottom, 0]),
         z = d3.scaleOrdinal(color);
 
@@ -58,6 +59,17 @@ function realTimeLineChart() {
           return x(d.time);
         })
         .y(function(d) {
+          if (d.value[0]>=d.value[1]>=d.value[2]){}
+          else{
+            var lineData = {
+              //time: now,
+              time: d.time,
+              x: d.value[0],
+              y: d.value[1],
+              z: d.value[2]
+            };
+            lineArr.push(lineData);
+          }
           return y(d.value);
         });
 

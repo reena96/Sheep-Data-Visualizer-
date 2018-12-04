@@ -113,7 +113,7 @@ var Scene = function(options) {
     },
     lookAt: function(obj) {
       //console.log(self.camera.position);
-      //console.log(obj.y);
+      //console.log(obj);
       self.controls.target.set(obj.x, obj.y + 0.02, obj.z);
       //self.controls.target = obj;
       self.camera.position.set(5, 6, 5);
