@@ -66,7 +66,7 @@
             </div>
             <div class="form-group col-md-4 px-3">
               <label for="sampleRate"> Sample Rate: <span id="rate"></span></label>
-              <input id="sampleRate" type="range" min="1" max="10" value="5" class="slider mt-2" />
+              <input id="sampleRate" type="range" min="1" max="10" value="1" class="slider mt-2" />
             </div>
 
             <div class="form-group col-md-4 px-3">
@@ -117,9 +117,11 @@
     </section>
   </center>
 
+<br>
+
 
   <div class="row">
-    <section id="path" style="background: rgb(138,140,191);height:350px;">
+    <section id="path" style="background: rgb(138,140,191);height:350px;width:350px;">
 
     </section>
   </div>
@@ -134,7 +136,7 @@
   var output = document.getElementById("rate");
   output.innerHTML = slider.value;
 </script>
-<script src="./src/js/realTimeChartMulti.js"></script>
-<script src="./src/js/activityChart.js"></script>
+<!-- <script src="./src/js/realTimeChartMulti.js"></script>
+<script src="./src/js/activityChart.js"></script> -->
 
 </html>
