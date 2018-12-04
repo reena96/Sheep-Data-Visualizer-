@@ -7,6 +7,7 @@ body {
   transition: 0.3s;
   /* width: inherit;
   padding: 40px 60px; */
+  border-radius: 0px;
 }
 
 .card:hover {
@@ -142,6 +143,17 @@ body {
 
 a:hover: {
   background-color: #efefef;
+}
+
+.world {
+  background-color: #fff;
+  margin: 0px;
+}
+
+.fieldDiv {
+  max-height: 500px;
+  height: 500px;
+  overflow: hidden;
 }
 
 #sidenav a {

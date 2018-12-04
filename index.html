@@ -39,7 +39,7 @@
 
 </head>
 
-<body onload="App.start();" style="background: rgb(138,140,191); background: rgb(207,219,219); background: #e1e1e1; height:0px">
+<body onload="App.start();" style="background: rgb(138,140,191); background: rgb(207,219,219); background: #e1e1e1; ">
   <div class="container-fluid px-0">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark ">
       <a class="navbar-brand" href="#">
@@ -132,32 +132,52 @@
         </div>
         <div class="graphDiv col-md-4 px-2 pr-4">
           <div id="graphWorld" class="card gWorld">
-            <div class="col-md-12" id="chart1"> </div>
-            <div class="col-md-12" id="chart2"> </div>
+            <!-- <div class="col-md-12" id="" style="min-height:100px;"> sai </div> -->
+            <div class="title bg-warning text-dark text-center py-2" id="chart1Title">
+              Time Series for Accelerometer
+            </div>
+            <hr class="my-0" />
+            <div class="col-md-12 mb-2 px-3" id="chart1"> </div>
+            <hr class="my-0" />
+            <div class="col-md-12 my-2 px-3 mb-3" id="chart2"> </div>
           </div>
         </div>
       </div>
-      </section>
+      <div class="row mt-3">
+        <div id="time_series" class="col-md-8 px-2 pl-4 text-dark ">
+          <div class="card">
+            <div class=" title bg-light text-dark text-center py-2" id="actTitle">
+              Time Series for Activity
+            </div>
+            <div class="col-md-12 mb-3">
+              <input id="halt" type="checkbox" class="form-check-input ml-3" name="halt" value="halt" />
+              <label class="form-check-label ml-5" for="halt"> Check the box to halt </label>
+              <div id="viewDiv"></div>
+            </div>
+          </div>
+        </div>
+        <div id="path" class="col-md-4 pb-2 pt-4" style="height:400px;"></div>
+      </div>
     </div>
+  </div>
+  </div>
 
-    <center>
+  <!-- <center>
       <div class="row" id="activity_time"></div>
       <section id="time_series" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:100px;">
         <input id="halt" type="checkbox" name="halt" value="halt" style="margin-bottom: 2px" /> Check the box to halt
         <div id="viewDiv" style="margin:0 auto;"></div>
       </section>
-    </center>
+    </center> -->
 
-
-    <div class="row">
+  <!-- <div class="row">
       <section id="path" style="background: rgb(138,140,191);height:350px;">
-
       </section>
     </div>
     <div class="row">
       <section id="footer" style="background: rgb(138,140,191);height:100px;">
       </section>
-    </div>
+    </div> -->
 </body>
 <script>
   var slider = document.getElementById("sampleRate");

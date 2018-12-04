@@ -7,12 +7,30 @@ function realTimeChartMulti() {
 
   var version = "0.1.0",
     datum, data,
-    maxSeconds = 1000, pixelsPerSecond = 10,
-    svgWidth = 700, svgHeight = 300,
-    margin = { top: 20, bottom: 30, left: 100, right: 30, topNav: 20, bottomNav: 20 },
-    dimension = { chartTitle: 20, xAxis: 20, yAxis: 10, xTitle: 20, yTitle: 20, navChart: 70 },
+    maxSeconds = 1000,
+    pixelsPerSecond = 10,
+    svgWidth = 700,
+    svgHeight = 300,
+    margin = {
+      top: 20,
+      bottom: 30,
+      left: 100,
+      right: 30,
+      topNav: 20,
+      bottomNav: 20
+    },
+    dimension = {
+      chartTitle: 20,
+      xAxis: 20,
+      yAxis: 10,
+      xTitle: 20,
+      yTitle: 20,
+      navChart: 70
+    },
     chartTitle, yTitle, xTitle,
-    drawXAxis = true, drawYAxis = true, drawNavChart = true,
+    drawXAxis = true,
+    drawYAxis = true,
+    drawNavChart = true,
     border,
     selection,
     barId = 0,
@@ -28,7 +46,7 @@ function realTimeChartMulti() {
     svg;
 
   // create the chart
-  var chart = function (s) {
+  var chart = function(s) {
     selection = s;
     if (selection == undefined) {
       console.error("selection is undefined");
@@ -60,7 +78,7 @@ function realTimeChartMulti() {
     svg = selection.append("svg")
       .attr("width", svgWidth)
       .attr("height", svgHeight)
-      .style("border", function (d) {
+      .style("border", function(d) {
         if (border) return "2px solid #CEDBDB";
         else return null;
       });
@@ -87,7 +105,7 @@ function realTimeChartMulti() {
       .style("fill", "#CEDBDB");
 
     // note that two groups are created here, the latter assigned to barG;
-    // the former will contain a clip path to constrain objects to the chart area; 
+    // the former will contain a clip path to constrain objects to the chart area;
     // no equivalent clip path is created for the nav chart as the data itself
     // is clipped to the full time domain
     var barG = main.append("g")
@@ -111,7 +129,7 @@ function realTimeChartMulti() {
       .attr("x", width / 2)
       .attr("y", 25)
       .attr("dy", ".71em")
-      .text(function (d) {
+      .text(function(d) {
         var text = xTitle == undefined ? "" : xTitle;
         return text;
       });
@@ -120,10 +138,10 @@ function realTimeChartMulti() {
     yAxisG.append("text")
       .attr("class", "title")
       .attr("transform", "rotate(-90)")
-      .attr("x", - height / 2)
+      .attr("x", -height / 2)
       .attr("y", -margin.left + 15) //-35
       .attr("dy", ".71em")
-      .text(function (d) {
+      .text(function(d) {
         var text = yTitle == undefined ? "" : yTitle;
         return text;
       });
@@ -134,7 +152,7 @@ function realTimeChartMulti() {
       .attr("x", width / 2)
       .attr("y", -20)
       .attr("dy", ".71em")
-      .text(function (d) {
+      .text(function(d) {
         var text = chartTitle == undefined ? "" : chartTitle;
         return text;
       });
@@ -190,7 +208,7 @@ function realTimeChartMulti() {
     var startTimeViewport = new Date(endTime.getTime() - width / pixelsPerSecond * 1000);
     var intervalViewport = endTimeViewport.getTime() - startTimeViewport.getTime();
     var offsetViewport = startTimeViewport.getTime() - startTime.getTime();
-  
+
     // set the scale domains for main and nav charts
     x.domain([startTimeViewport, endTimeViewport]);
     var et = 1534402833728;
@@ -206,7 +224,7 @@ function realTimeChartMulti() {
     var viewport = d3v3.svg.brush()
       .x(xNav)
       .extent([startTimeViewport, endTimeViewport])
-      .on("brush", function () {
+      .on("brush", function() {
         // get the current time extent of viewport
         var extent = viewport.extent();
 
@@ -244,11 +262,11 @@ function realTimeChartMulti() {
     data = [];
     refresh();
 
-    // function to refresh the viz upon changes of the time domain 
+    // function to refresh the viz upon changes of the time domain
     // (which happens constantly), or after arrival of new data, or at init
     function refresh() {
-      // process data to remove too late data items 
-      data = data.filter(function (d) {
+      // process data to remove too late data items
+      data = data.filter(function(d) {
         if (d.time.getTime() > startTime.getTime()) {
           return true;
         } else {
@@ -266,15 +284,15 @@ function realTimeChartMulti() {
       // here we bind the new data to the main chart
       // note: no key function is used here; therefore the data binding is
       // by index, which effectivly means that available DOM elements
-      // are associated with each item in the available data array, from 
+      // are associated with each item in the available data array, from
       // first to last index; if the new data array contains fewer elements
       // than the existing DOM elements, the LAST DOM elements are removed;
-      // basically, for each step, the data items "walks" leftward (each data 
+      // basically, for each step, the data items "walks" leftward (each data
       // item occupying the next DOM element to the left);
-      // This data binding is very different from one that is done with a key 
+      // This data binding is very different from one that is done with a key
       // function; in such a case, a data item stays "resident" in the DOM
       // element, and such DOM element (with data) would be moved left, until
-      // the x position is to the left of the chart, where the item would be 
+      // the x position is to the left of the chart, where the item would be
       // exited
       var updateSel = barG.selectAll(".bar")
         .data(data);
@@ -284,21 +302,23 @@ function realTimeChartMulti() {
 
       // add items
       updateSel.enter()
-        .append(function (d) {
-          if (debug) { console.log("d", JSON.stringify(d)); }
+        .append(function(d) {
+          if (debug) {
+            console.log("d", JSON.stringify(d));
+          }
           if (d.type == undefined) console.error(JSON.stringify(d))
           var type = d.type || "circle";
           var node = document.createElementNS("http://www.w3.org/2000/svg", type);
           return node;
         })
         .attr("class", "bar")
-        .attr("id", function () {
+        .attr("id", function() {
           return "bar-" + barId++;
         });
 
       // update items; added items are now part of the update selection
       updateSel
-        .attr("x", function (d) {
+        .attr("x", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "rect":
@@ -309,7 +329,7 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .attr("y", function (d) {
+        .attr("y", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "rect":
@@ -320,7 +340,7 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .attr("cx", function (d) {
+        .attr("cx", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "circle":
@@ -330,7 +350,7 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .attr("cy", function (d) {
+        .attr("cy", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "circle":
@@ -341,7 +361,7 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .attr("r", function (d) {
+        .attr("r", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "circle":
@@ -351,7 +371,7 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .attr("width", function (d) {
+        .attr("width", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "rect":
@@ -361,7 +381,7 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .attr("height", function (d) {
+        .attr("height", function(d) {
           var retVal = null;
           switch (getTagName(this)) {
             case "rect":
@@ -371,11 +391,15 @@ function realTimeChartMulti() {
           }
           return retVal;
         })
-        .style("fill", function (d) { return d.color || "black"; })
+        .style("fill", function(d) {
+          return d.color || "black";
+        })
         //.style("stroke", "orange")
         //.style("stroke-width", "1px")
         //.style("stroke-opacity", 0.8)
-        .style("fill-opacity", function (d) { return d.opacity || 1; });
+        .style("fill-opacity", function(d) {
+          return d.opacity || 1;
+        });
 
       // create update selection for the nav chart, by applying data
       var updateSelNav = navG.selectAll("circle")
@@ -391,10 +415,10 @@ function realTimeChartMulti() {
 
       // added items now part of update selection; set coordinates of points
       updateSelNav
-        .attr("cx", function (d) {
+        .attr("cx", function(d) {
           return Math.round(xNav(d.time));
         })
-        .attr("cy", function (d) {
+        .attr("cy", function(d) {
           return yNav(d.category);
         })
 
@@ -407,46 +431,46 @@ function realTimeChartMulti() {
     }
 
 
-    // function to keep the chart "moving" through time (right to left) 
+    // function to keep the chart "moving" through time (right to left)
     var i = 0;
-    var ts = 
-    setInterval(function () {
+    var ts =
+      setInterval(function() {
 
-      if (halted) return;
+        if (halted) return;
 
-      // get current viewport extent
-      var extent = viewport.empty() ? xNav.domain() : viewport.extent();
-      var interval = extent[1].getTime() - extent[0].getTime();
-      // var offset = extent[0].getTime() - xNav.domain()[0].getTime();
+        // get current viewport extent
+        var extent = viewport.empty() ? xNav.domain() : viewport.extent();
+        var interval = extent[1].getTime() - extent[0].getTime();
+        // var offset = extent[0].getTime() - xNav.domain()[0].getTime();
 
-      if(data[i]!=null){
-        ts = data[i].time;
-      }
-          i = i + 1;
+        if (data[i] != null) {
+          ts = data[i].time;
+        }
+        i = i + 1;
 
-      var endTime = new Date(ts);
-      var startTime = new Date(endTime.getTime() - maxSeconds * 1000);
-      var interval = endTime.getTime() - startTime.getTime();
+        var endTime = new Date(ts);
+        var startTime = new Date(endTime.getTime() - maxSeconds * 1000);
+        var interval = endTime.getTime() - startTime.getTime();
 
-      // then the viewport time domain (what's visible in the main chart and the viewport in the nav chart)
-      var endTimeViewport = new Date(ts);
-      var startTimeViewport = new Date(endTime.getTime() - width / pixelsPerSecond * 1000);
-      var intervalViewport = endTimeViewport.getTime() - startTimeViewport.getTime();
-      var offsetViewport = startTimeViewport.getTime() - startTime.getTime();
-      // console.log(endTimeViewport);
-      // console.log(startTimeViewport);
-      // set the scale domains for main and nav charts
-      x.domain([startTimeViewport, endTimeViewport]);
-      xNav.domain([startTime, endTime]);
+        // then the viewport time domain (what's visible in the main chart and the viewport in the nav chart)
+        var endTimeViewport = new Date(ts);
+        var startTimeViewport = new Date(endTime.getTime() - width / pixelsPerSecond * 1000);
+        var intervalViewport = endTimeViewport.getTime() - startTimeViewport.getTime();
+        var offsetViewport = startTimeViewport.getTime() - startTime.getTime();
+        // console.log(endTimeViewport);
+        // console.log(startTimeViewport);
+        // set the scale domains for main and nav charts
+        x.domain([startTimeViewport, endTimeViewport]);
+        xNav.domain([startTime, endTime]);
 
-      // update axis
-      xAxis.scale(x)(xAxisG);
-      xAxisNav.scale(xNav)(xAxisGNav);
+        // update axis
+        xAxis.scale(x)(xAxisG);
+        xAxisNav.scale(xNav)(xAxisGNav);
 
-      // refresh svg
-      refresh();
+        // refresh svg
+        refresh();
 
-    }, 200)
+      }, 200)
 
     // end setInterval function
 
@@ -457,9 +481,9 @@ function realTimeChartMulti() {
 
   // chart getters/setters
 
-  // new data item (this most recent item will appear 
+  // new data item (this most recent item will appear
   // on the right side of the chart, and begin moving left)
-  chart.datum = function (_) {
+  chart.datum = function(_) {
     if (arguments.length == 0) return datum;
     datum = _;
     data.push(datum);
@@ -467,49 +491,49 @@ function realTimeChartMulti() {
   }
 
   // svg width
-  chart.width = function (_) {
+  chart.width = function(_) {
     if (arguments.length == 0) return svgWidth;
     svgWidth = _;
     return chart;
   }
 
   // svg height
-  chart.height = function (_) {
+  chart.height = function(_) {
     if (arguments.length == 0) return svgHeight;
     svgHeight = _;
     return chart;
   }
 
   // svg border
-  chart.border = function (_) {
+  chart.border = function(_) {
     if (arguments.length == 0) return border;
     border = _;
     return chart;
   }
 
   // chart title
-  chart.title = function (_) {
+  chart.title = function(_) {
     if (arguments.length == 0) return chartTitle;
     chartTitle = _;
     return chart;
   }
 
   // x axis title
-  chart.xTitle = function (_) {
+  chart.xTitle = function(_) {
     if (arguments.length == 0) return xTitle;
     xTitle = _;
     return chart;
   }
 
   // y axis title
-  chart.yTitle = function (_) {
+  chart.yTitle = function(_) {
     if (arguments.length == 0) return yTitle;
     yTitle = _;
     return chart;
   }
 
   // yItems (can be dynamically added after chart construction)
-  chart.yDomain = function (_) {
+  chart.yDomain = function(_) {
     if (arguments.length == 0) return yDomain;
     yDomain = _;
     if (svg) {
@@ -524,14 +548,14 @@ function realTimeChartMulti() {
   }
 
   // debug
-  chart.debug = function (_) {
+  chart.debug = function(_) {
     if (arguments.length == 0) return debug;
     debug = _;
     return chart;
   }
 
   // halt
-  chart.halt = function (_) {
+  chart.halt = function(_) {
     if (arguments.length == 0) return halted;
     halted = _;
     return chart;
