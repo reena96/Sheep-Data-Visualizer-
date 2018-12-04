@@ -14,6 +14,8 @@ var chart1;
 var chart2;
 var path_svgContainer;
 var path_rectangle;
+var g;
+var x,y,xAxis,yAxis,gX,gY,line;
 (function() {
 
   // setup the pointer to the scope 'this' variable
@@ -27,6 +29,7 @@ var path_rectangle;
   var gps_data = [];
   var i = 0;
 
+
   //load a text file and output the result to the console
   /* Entry point of the application */
   App.start = function() {
@@ -37,13 +40,38 @@ var path_rectangle;
      path_svgContainer=d3.select("#path").append("svg")
                                    .attr("width", "100%")
                                      .attr("height", "100%");
-     path_rectangle=path_svgContainer
+     g = path_svgContainer.append("g");
+     path_rectangle=g
                                  .append("rect")
                                  .attr("x", 0)
                                  .attr("y", 0)
-                                 .attr("width", 350)
-                                 .attr("height", 350)
-                                 .style("fill", "#D3D3D3");
+                                 .attr("width", 300)
+                                 .attr("height", 300)
+                                 .style("fill", "#D3D3D3")
+                                 .attr("pointer-events", "all")
+                                 .call(d3.zoom()
+                                    .scaleExtent([1, 12])
+                                    .on("zoom", zoom));
+
+     x = d3.scaleLinear()
+    .domain([0, 0.5])
+    .range([0, 300]);
+     y = d3.scaleLinear()
+    .domain([36.8, 37])
+    .range([300, 0]);
+
+     xAxis = d3.axisBottom(x);
+     yAxis = d3.axisLeft(y);
+
+     gX = g.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + 300 + ")")
+    .call(xAxis);
+     gY = g.append("g")
+    .attr("class", "axis axis--y")
+    .call(yAxis)
+
+
 
     // initialize the FIELD system
     var sheepSystem1 = new SheepSystem();
@@ -397,10 +425,10 @@ sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(d
   if (dataset1[count]['Latitude'] != "") {
     sheep1.visible = true;
     sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-    path_svgContainer.append("circle")
-                               .attr("cx", dataset1[count]['Latitude'] * 200)
-                                .attr("cy", (dataset1[count]['Longitude'] - 36) * 200)
-                               .attr("r", 5)
+    g.append("circle")
+    .attr("cx", x(dataset1[count]['Latitude']) )
+     .attr("cy", y((dataset1[count]['Longitude'])))
+                               .attr("r", 1)
                                .style("fill", "#d95f02");
     if (dataset1[count]['collar_MAG_Y'] != "") {
       var direction = getDirection(dataset1[count]);
@@ -415,10 +443,10 @@ sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(d
   if (dataset2[count]['Latitude'] != "") {
     sheep2.visible = true;
     sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
-    path_svgContainer.append("circle")
-                               .attr("cx", dataset2[count]['Latitude'] * 200)
-                                .attr("cy", (dataset2[count]['Longitude'] - 36) * 200)
-                               .attr("r", 5)
+    g.append("circle")
+    .attr("cx", x(dataset2[count]['Latitude']) )
+     .attr("cy", y((dataset2[count]['Longitude'])))
+                               .attr("r", 1)
                                .style("fill", "#7570b3");
     if (dataset2[count]['collar_MAG_Y'] != "") {
       var direction = getDirection(dataset2[count]);
@@ -508,10 +536,10 @@ function moveSheepAlone(data1, sliderVal,initialize) {
     if (dataset1[count]['Latitude'] != "") {
       sheep1.visible = true;
       sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-      path_svgContainer.append("circle")
-                                 .attr("cx", dataset1[count]['Latitude'] * 200)
-                                  .attr("cy", (dataset1[count]['Longitude'] - 36) * 200)
-                                 .attr("r", 5)
+      g.append("circle")
+                                 .attr("cx", x(dataset1[count]['Latitude']) )
+                                  .attr("cy", y((dataset1[count]['Longitude'])))
+                                 .attr("r", 2)
                                  .style("fill", "#d95f02");
 
       if (dataset1[count]['collar_MAG_Y'] != "") {
@@ -637,16 +665,10 @@ function getActivityColor(action){
                 }
 }
 
-function createPath(){
-   path_svgContainer = d3.select("#path").append("svg")
-                                  .attr("width", "100%")
-                                    .attr("height", "100%");
-   path_rectangle = path_svgContainer
-                                .append("rect")
-                                .attr("x", 0)
-                                .attr("y", 0)
-                                .attr("width", 350)
-                                .attr("height", 350)
-                                .style("fill", "#708090");
 
+function zoom() {
+  g.attr("transform", d3.event.transform);
+  d3.selectAll('.line').style("stroke-width", 2/d3.event.transform.k);
+  gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
+  gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
 }
