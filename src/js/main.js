@@ -37,6 +37,7 @@ var x, y, xAxis, yAxis, gX, gY, line;
     App.scene = new Scene({
       container: "scene"
     });
+    var p_width = d3.select('#path').node().clientWidth;
     path_svgContainer = d3.select("#path").append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
@@ -45,8 +46,8 @@ var x, y, xAxis, yAxis, gX, gY, line;
       .append("rect")
       .attr("x", 0)
       .attr("y", 0)
-      .attr("width", 300)
-      .attr("height", 300)
+      .attr("width", p_width)
+      .attr("height", 310)
       .style("fill", "#D3D3D3")
       .attr("pointer-events", "all")
       .call(d3.zoom()
@@ -55,17 +56,17 @@ var x, y, xAxis, yAxis, gX, gY, line;
 
     x = d3.scaleLinear()
       .domain([0, 0.5])
-      .range([0, 300]);
+      .range([0, p_width]);
     y = d3.scaleLinear()
       .domain([36.8, 37])
-      .range([300, 0]);
+      .range([310, 0]);
 
     xAxis = d3.axisBottom(x);
     yAxis = d3.axisLeft(y);
 
     gX = g.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + 300 + ")")
+      .attr("transform", "translate(0," + 310 + ")")
       .call(xAxis);
     gY = g.append("g")
       .attr("class", "axis axis--y")
@@ -524,18 +525,17 @@ function moveSheepAlone(data1, sliderVal, initialize) {
 
       if (dataset1[count]['Latitude'] != "") {
         sheep1.visible = true;
-      sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-      if (dataset1[count]['collar_MAG_Y'] != "") {
-        var direction = getDirection(dataset1[count]);
-        //Magnetometer Readings
-        var angle = direction * Math.PI / 180;
-        //console.log(angle);
-        sheep1.rotation.y = (angle * 1);
+        sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+        if (dataset1[count]['collar_MAG_Y'] != "") {
+          var direction = getDirection(dataset1[count]);
+          //Magnetometer Readings
+          var angle = direction * Math.PI / 180;
+          //console.log(angle);
+          sheep1.rotation.y = (angle * 1);
+        }
+      } else {
+        sheep1.visible = false;
       }
-    }
-    else{
-      sheep1.visible = false;
-    }
       g.append("circle")
         .attr("cx", x(dataset1[count]['Latitude']))
         .attr("cy", y((dataset1[count]['Longitude'])))
@@ -545,7 +545,7 @@ function moveSheepAlone(data1, sliderVal, initialize) {
 
       sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
 
-        //console.log(sheep1.position);
+      //console.log(sheep1.position);
       App.scene.lookAt(sheep1.position);
 
 
