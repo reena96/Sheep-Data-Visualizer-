@@ -18,7 +18,7 @@ var Scene = function(options) {
   // height = window.innerHeight;
 
   // create the scene
-  self.scene = new Physijs.Scene;
+  self.scene = new Physijs.Scene({fixedTimeStep: 1 / 60});
 
   // setup the camera
   self.camera = new THREE.PerspectiveCamera(0.065, width / height, 0.1, 100);

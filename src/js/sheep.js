@@ -11,6 +11,7 @@ let camera,
   mouseDown,
   world,
   night = false;
+var id;
 
 let sheep,
   cloud,
@@ -34,6 +35,7 @@ var colmaterial;
 var coltorus;
 
 function init() {
+
   width = window.innerWidth,
 
     height = window.innerHeight;
@@ -48,6 +50,7 @@ function init() {
 
 
   drawSheep();
+  console.log(scene);
 
 
 
@@ -73,7 +76,7 @@ function drawSheep() {
 
 
   scene.add(sheep.group);
-  console.log(scene);
+  //console.log(scene);
 
 
 
@@ -180,6 +183,47 @@ class Sheep {
     body.castShadow = true;
     body.receiveShadow = true;
     this.group.add(body);
+    var manager = new THREE.LoadingManager();
+    var loader = new THREE.FontLoader(manager);
+
+    console.log(id);
+    var font = loader.load(
+      // resource URL
+      'src/js/helvetiker.json',
+      // onLoad callback
+      function(font) {
+        console.log(id);
+        var geometry = new THREE.TextGeometry(id, {
+          font: font,
+          size: 1,
+          height: 0.02,
+          curveSegments: 50,
+          bevelEnabled: false,
+          bevelThickness: 0.5,
+          bevelSize: 0.3,
+          bevelSegments: 5
+        });
+        var textMaterial = new THREE.MeshPhongMaterial({
+          color: "white"
+        });
+
+        var mesh = new THREE.Mesh(geometry, textMaterial);
+        mesh.position.set(0, 2, 0);
+        console.log(mesh);
+        body.add(mesh);
+
+      },
+
+      // onProgress callback
+      function(xhr) {
+        //  console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      },
+
+      // onError callback
+      function(err) {
+
+      }
+    );
   }
   drawHead() {
     const head = new THREE.Group();
@@ -433,8 +477,8 @@ var SheepSystem = function() {
   var publiclyAvailable = {
 
     // load the data and setup the system
-    initialize: function() {
-
+    initialize: function(sheep_id) {
+      id = sheep_id;
       console.log("init");
       self.init();
       self.animate();

@@ -14,6 +14,8 @@ var chart1;
 var chart2;
 var path_svgContainer;
 var path_rectangle;
+var g;
+var x, y, xAxis, yAxis, gX, gY, line;
 (function() {
 
   // setup the pointer to the scope 'this' variable
@@ -27,6 +29,7 @@ var path_rectangle;
   var gps_data = [];
   var i = 0;
 
+
   //load a text file and output the result to the console
   /* Entry point of the application */
   App.start = function() {
@@ -37,90 +40,100 @@ var path_rectangle;
     path_svgContainer = d3.select("#path").append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
-    path_rectangle = path_svgContainer
+    g = path_svgContainer.append("g");
+    path_rectangle = g
       .append("rect")
       .attr("x", 0)
       .attr("y", 0)
-      .attr("width", 350)
-      .attr("height", 350)
-      .style("fill", "#D3D3D3");
+      .attr("width", 300)
+      .attr("height", 300)
+      .style("fill", "#D3D3D3")
+      .attr("pointer-events", "all")
+      .call(d3.zoom()
+        .scaleExtent([1, 12])
+        .on("zoom", zoom));
+
+    x = d3.scaleLinear()
+      .domain([0, 0.5])
+      .range([0, 300]);
+    y = d3.scaleLinear()
+      .domain([36.8, 37])
+      .range([300, 0]);
+
+    xAxis = d3.axisBottom(x);
+    yAxis = d3.axisLeft(y);
+
+    gX = g.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + 300 + ")")
+      .call(xAxis);
+    gY = g.append("g")
+      .attr("class", "axis axis--y")
+      .call(yAxis)
+
+
 
     // initialize the FIELD system
+
     var sheepSystem1 = new SheepSystem();
-    sheepSystem1.initialize();
+    sheepSystem1.initialize("2");
     sheep1 = sheepSystem1.getSheepSystem();
-    var sheepSystem2 = new SheepSystem();
-    sheepSystem2.initialize();
-    sheep2 = sheepSystem2.getSheepSystem();
-    console.log(sheep1);
-    sheep1.__dirtyPosition = true;
-    sheep1.__dirtyRotation = true;
+    sleep(10).then(() => {
+      var sheepSystem2 = new SheepSystem();
+      sheepSystem2.initialize("3");
+      sheep2 = sheepSystem2.getSheepSystem();
 
 
-    sheep1.scale.set(0.000625, 0.000625, 0.000625);
-    sheep2.scale.set(0.000625, 0.000625, 0.000625);
+      sheep1.scale.set(0.000625, 0.000625, 0.000625);
+      sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
 
-    App.scene.addObject(sheep1);
-    App.scene.addObject(sheep2);
-    var constraint = new Physijs.DOFConstraint(
-      sheep1, // First object to be constrained
-      sheep1, // OPTIONAL second object - if omitted then physijs_mesh_1 will be constrained to the scene
-      new THREE.Vector3(0, 10, 0), // point in the scene to apply the constraint
-    );
-    App.scene.addConstraint(constraint);
+      App.scene.addObject(sheep1);
+      App.scene.addObject(sheep2);
+      //Ground
+      var ground_material = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial({
+          color: "#708090"
+        }), 0, .9 // low restitution
+      );
+      ground_material.side = THREE.DoubleSide;
+      ground_material.transparent = true;
+      // Ground
+      var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(40, 0, 40), ground_material, 0 // mass
+      );
+      ground.position.set(-0.5, -0.5, -0.5);
 
-    //Ground
-    var ground_material = Physijs.createMaterial(
-      new THREE.MeshStandardMaterial({
-        color: "#708090"
-      }), 0, .9 // low restitution
-    );
-    ground_material.side = THREE.DoubleSide;
-    ground_material.transparent = true;
-    // Ground
-    var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(40, 0, 40), ground_material, 0 // mass
-    );
-    ground.position.set(-0.5, -0.5, -0.5);
+      ground.receiveShadow = true;
+      App.scene.addObject(ground);
+      App.scene.render();
+      define_data();
+      //console.log();
+      var animal_select = document.getElementById("selectAnimal")
+      animal_select.addEventListener("click", function() {
+        console.log("Animals Select Input");
+        var startTimeInput = document.getElementById("StartTime");
+        count = startTimeInput.value - 1534395958;
+        path_svgContainer.selectAll("circle").remove();
+        sheep1.position.set(0, 0, 0);
+        sheep2.position.set(0, 0, 0);
+        define_data();
+        //count = 0;
+      });
 
-    ground.receiveShadow = true;
-    App.scene.addObject(ground);
 
-    constraint.setLinearLowerLimit(new THREE.Vector3(-10, -5, 0)); // sets the lower end of the linear movement along the x, y, and z axes.
-    constraint.setLinearUpperLimit(new THREE.Vector3(10, 5, 0)); // sets the upper end of the linear movement along the x, y, and z axes.
-    constraint.setAngularLowerLimit(new THREE.Vector3(0, -Math.PI, 0)); // sets the lower end of the angular movement, in radians, along the x, y, and z axes.
-    constraint.setAngularUpperLimit(new THREE.Vector3(0, Math.PI, 0));
-    constraint.enableAngularMotor(2);
-    sheep1.setLinearVelocity(new THREE.Vector3(1, 0, 1));
-    sheep1.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-    App.scene.render();
-    define_data();
-    //console.log();
-    var animal_select = document.getElementById("selectAnimal")
-    animal_select.addEventListener("click", function() {
-      console.log("Animals Select Input");
       var startTimeInput = document.getElementById("StartTime");
-      count = startTimeInput.value - 1534395958;
-      path_svgContainer.selectAll("circle").remove();
-      sheep1.position.set(0, 0, 0);
-      sheep2.position.set(0, 0, 0);
-      define_data();
-      //count = 0;
-    });
+      startTimeInput.oninput = function() {
+        path_svgContainer.selectAll("circle").remove();
+        console.log("Start Time Slider");
+        console.log(startTimeInput.value);
+        count = startTimeInput.value - 1534395958;
+        sheep1.position.set(0, 0, 0);
+        sheep2.position.set(0, 0, 0);
 
+        define_data();
+      }
 
-    var startTimeInput = document.getElementById("StartTime");
-    startTimeInput.oninput = function() {
-      path_svgContainer.selectAll("circle").remove();
-      console.log("Start Time Slider");
-      console.log(startTimeInput.value);
-      count = startTimeInput.value - 1534395958;
-      sheep1.position.set(0, 0, 0);
-      sheep2.position.set(0, 0, 0);
-
-      define_data();
-    }
-
+    })
   };
 
 })();
@@ -401,10 +414,10 @@ function moveSheep(data1, data2, sliderVal, initialize) {
       if (dataset1[count]['Latitude'] != "") {
         sheep1.visible = true;
         sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-        path_svgContainer.append("circle")
-          .attr("cx", dataset1[count]['Latitude'] * 200)
-          .attr("cy", (dataset1[count]['Longitude'] - 36) * 200)
-          .attr("r", 5)
+        g.append("circle")
+          .attr("cx", x(dataset1[count]['Latitude']))
+          .attr("cy", y((dataset1[count]['Longitude'])))
+          .attr("r", 1)
           .style("fill", "#d95f02");
         if (dataset1[count]['collar_MAG_Y'] != "") {
           var direction = getDirection(dataset1[count]);
@@ -419,10 +432,10 @@ function moveSheep(data1, data2, sliderVal, initialize) {
       if (dataset2[count]['Latitude'] != "") {
         sheep2.visible = true;
         sheep2.position.set(dataset2[count]['Latitude'] * 20, 0, (dataset2[count]['Longitude'] - 36) * 20);
-        path_svgContainer.append("circle")
-          .attr("cx", dataset2[count]['Latitude'] * 200)
-          .attr("cy", (dataset2[count]['Longitude'] - 36) * 200)
-          .attr("r", 5)
+        g.append("circle")
+          .attr("cx", x(dataset2[count]['Latitude']))
+          .attr("cy", y((dataset2[count]['Longitude'])))
+          .attr("r", 1)
           .style("fill", "#7570b3");
         if (dataset2[count]['collar_MAG_Y'] != "") {
           var direction = getDirection(dataset2[count]);
@@ -509,25 +522,19 @@ function moveSheepAlone(data1, sliderVal, initialize) {
 
       }
       sheep1.visible = true;
-      sheep2.visible = false;
-      if (dataset1[count]['Latitude'] != "") {
-        sheep1.visible = true;
-        sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
-        path_svgContainer.append("circle")
-          .attr("cx", dataset1[count]['Latitude'] * 200)
-          .attr("cy", (dataset1[count]['Longitude'] - 36) * 200)
-          .attr("r", 5)
-          .style("fill", "#d95f02");
+      sheep1.position.set(dataset1[count]['Latitude'] * 20, 0, (dataset1[count]['Longitude'] - 36) * 20);
+      g.append("circle")
+        .attr("cx", x(dataset1[count]['Latitude']))
+        .attr("cy", y((dataset1[count]['Longitude'])))
+        .attr("r", 2)
+        .style("fill", "#d95f02");
 
-        if (dataset1[count]['collar_MAG_Y'] != "") {
-          var direction = getDirection(dataset1[count]);
-          //Magnetometer Readings
-          var angle = direction * Math.PI / 180;
-          //console.log(angle);
-          sheep1.rotation.y = (angle * 1);
-        }
-      } else {
-        sheep1.visible = false;
+      if (dataset1[count]['collar_MAG_Y'] != "") {
+        var direction = getDirection(dataset1[count]);
+        //Magnetometer Readings
+        var angle = direction * Math.PI / 180;
+        //console.log(angle);
+        sheep1.rotation.y = (angle * 1);
       }
       sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
       App.scene.lookAt(sheep1.position);
@@ -643,16 +650,10 @@ function getActivityColor(action) {
   }
 }
 
-function createPath() {
-  path_svgContainer = d3.select("#path").append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%");
-  path_rectangle = path_svgContainer
-    .append("rect")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", 350)
-    .attr("height", 350)
-    .style("fill", "#708090");
 
+function zoom() {
+  g.attr("transform", d3.event.transform);
+  d3.selectAll('.line').style("stroke-width", 2 / d3.event.transform.k);
+  gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
+  gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
 }
