@@ -58,7 +58,7 @@
         </li>
       </ul>
     </nav>
-    <div class="main-content" style="background: rgb(207,219,219);">
+    <div class="main-content pb-5" style="background: rgb(207,219,219);">
       <div id="sidenav" class="bg-dark">
         <ul class="nav flex-column">
           <li class="nav-item">
@@ -151,12 +151,36 @@
             </div>
             <div class="col-md-12 mb-3">
               <input id="halt" type="checkbox" class="form-check-input ml-3" name="halt" value="halt" />
-              <label class="form-check-label ml-5" for="halt"> Check the box to halt </label>
+              <label class="form-check-label ml-5" for="halt"> Check the box to halt the graph movement</label>
+              <div class="col-md-12">
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#068b0c"> </i> &nbsp Stand up </span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#04f10e"> </i> &nbsp Stand down</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#1B07AD"> </i> &nbsp walk up</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#04B5FC"> </i> &nbsp Walk down</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FC04E9"> </i> &nbsp Ramble up</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FFB6C1"> </i> &nbsp Ramble down</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#cc6600"> </i> &nbsp Trot </span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FCDE04"> </i> &nbsp Canter right lead</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FFFF99"> </i> &nbsp Canter left lead</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#cc0000"> </i> &nbsp Canter unk</span>
+                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:black"> </i> &nbsp No Activity</span>
+              </div>
               <div id="viewDiv"></div>
             </div>
           </div>
         </div>
-        <div id="path" class="col-md-4 pb-2 pt-4" style="height:400px;"></div>
+        <!-- <div id="path" class="col-md-4 pb-2 pt-4" style="height:400px;"></div> -->
+        <div id="path_graph" class="col-md-4 px-2 pr-4 text-dark ">
+          <div class="card">
+            <div class="title bg-light text-dark text-center py-2" id="actTitle">
+              Path of the Sheeps
+            </div>
+            <div class="col-md-12 py-2">
+              </br>
+              <div id="path" class="col-md-12" style="height:330px;"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
