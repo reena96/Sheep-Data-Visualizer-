@@ -31,6 +31,8 @@ var colorDict = {
   "canter_unk": "#cc0000", // red
   "Unknown": "black"
 };
+var paused = false;
+var sheepSelected = 0;
 
 (function () {
 
@@ -226,7 +228,6 @@ function define_data() {
       drawActivityGraph(data1, data2, 0, length);
     }
   } else {
-    var sheepSelected = 0;
     if (document.getElementById("sheep2").selected == true) {
       console.log("sheep2");
       d3.queue()
@@ -298,9 +299,35 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
     .attr("id", "chartDiv");
 
   // event handler for halt checkbox
-  d3v3.select("#halt").on("change", function () {
-    var state = d3v3.select(this).property("checked");
-    chart.halt(state);
+
+  var pause_btn = d3v3.select("#pause");
+  var play_btn = d3v3.select("#play");
+  pause_btn.on("click", function () {
+    // var state = d3v3.select(this).property("checked");
+    if (paused == false) {
+      paused = true;
+      pause_btn.style("opacity", 0.2);
+      play_btn.style("opacity", 1);
+      chart.halt(paused);
+      chart1.halt(paused);
+      chart2.halt(paused);
+    }
+
+
+  });
+
+  d3v3.select("#play").on("click", function () {
+    // var state = d3v3.select(this).property("checked");
+    if (paused == true) {
+      paused = false;
+      pause_btn.style("opacity", 1);
+      play_btn.style("opacity", 0.2);
+      chart.halt(paused);
+      chart1.halt(paused);
+      chart2.halt(paused);
+      // define_data();
+    }
+
   });
 
   chartDiv.call(chart);
@@ -314,7 +341,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
   }
   else {
     for (let idx = count; idx < length; idx++) {
-      chart.yDomain([sheepID+sheepSelected]); // initial y domain (note array)
+      chart.yDomain([sheepID + sheepSelected]); // initial y domain (note array)
       // chartDiv.call(chart);
       createSample(data1, idx, chart, sheepSelected);
     }
@@ -528,6 +555,7 @@ function drawLineGraphAcc(data1, data2, select) {
 }
 
 function moveSheep(data1, data2, sliderVal, initialize) {
+  // if (paused) return;
   if (document.getElementById("both").selected == true) {
     console.log("Move Sheep");
     //console.log(count);
@@ -660,6 +688,7 @@ function sleep(ms) {
 }
 
 function moveSheepAlone(data1, sliderVal, initialize) {
+  // if (paused) return;
   if (document.getElementById("sheep2").selected == true || document.getElementById("sheep3").selected == true) { // (document.getElementById("sheep3").selected == true)  {
     console.log("Move Sheep Alone");
     sleep(100).then(() => {
