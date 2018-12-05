@@ -79,7 +79,7 @@ var x, y, xAxis, yAxis, gX, gY, line;
     var sheepSystem1 = new SheepSystem();
     sheepSystem1.initialize("2");
     sheep1 = sheepSystem1.getSheepSystem();
-    sleep(10).then(() => {
+    sleep(100).then(() => {
       var sheepSystem2 = new SheepSystem();
       sheepSystem2.initialize("3");
       sheep2 = sheepSystem2.getSheepSystem();
@@ -94,7 +94,7 @@ var x, y, xAxis, yAxis, gX, gY, line;
       //Ground
       var ground_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial({
-          color: "#708090"
+          color: "#ffffff"
         }), 0, .9 // low restitution
       );
       ground_material.side = THREE.DoubleSide;
@@ -329,8 +329,12 @@ function drawLineGraphAcc(data1, data2, select) {
       }
     }
 
+
     seedData(data1, data2);
 
+    // var timer_time = new Date(+data2[1].TIME * 1000);
+    // console.log("timer_time");
+    // console.log(timer_time);
     d3.select("#chart1").datum(lineArr1).call(chart1);
     chart1.width(+d3.select("#chart1").style("width").replace(/(px)/g, ""));
     d3.select("#chart1").call(chart1);
@@ -365,7 +369,7 @@ function moveSheep(data1, data2, sliderVal, initialize) {
   if (document.getElementById("both").selected == true) {
     console.log("Move Sheep");
     //console.log(count);
-    sleep(10).then(() => {
+    sleep(100).then(() => {
       if (initialize == 1) {
         //console.log("0");
         dataset1 = data1;
@@ -496,7 +500,7 @@ function sleep(ms) {
 function moveSheepAlone(data1, sliderVal, initialize) {
   if (document.getElementById("sheep2").selected == true || document.getElementById("sheep3").selected == true) { // (document.getElementById("sheep3").selected == true)  {
     console.log("Move Sheep Alone");
-    sleep(10).then(() => {
+    sleep(100).then(() => {
       // Do something after the sleep!
       if (initialize == 1) {
         dataset1 = data1;
@@ -613,9 +617,28 @@ function updateData(dataset1, dataset2, select) {
     d3.select("#chart1").datum(lineArr1).call(chart1);
 
   }
+
+  var timer_time = new Date(+dataset1[count].TIME * 1000);
+  // new Date(+dataset1[count].TIME * 1000);
+  //  Fri Dec 02 2016 14:03:52 GMT+0530 (IST)
+  // console.log("timer_time");
+  // console.log(timer_time);
+
+  d3.select("#timer").text(timer_time);
   //count=count+1;
 }
 
+function pad(num) {
+  return ("0" + num).slice(-2);
+}
+
+function getTimeFromDate(timestamp) {
+  var date = new Date(timestamp * 1000);
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var seconds = date.getSeconds();
+  return pad(hours) + ":" + pad(minutes) + ":" + pad(seconds)
+}
 
 function getActivityColor(action) {
   // console.log(action+"  xxxxxx  ");
