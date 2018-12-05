@@ -298,6 +298,20 @@ class Sheep {
     this.frontRightLeg.rotation.x = rad(-12);
     this.group.add(this.frontRightLeg);
 
+    // const Rleg = new THREE.Group();
+    // Rleg.add(this.frontRightLeg);
+
+    const braceletGeometry = new THREE.TorusGeometry(0.2, 0.25, 16, 100);
+    const braceletmaterial = new THREE.MeshBasicMaterial({
+      color: "red"
+    });
+    const bracelet = new THREE.Mesh(braceletGeometry, braceletmaterial);
+    // bracelet.position.y = 0.15;
+    // Rleg.add(bracelet);
+    // this.group.add(Rleg);
+
+
+
     this.frontLeftLeg = this.frontRightLeg.clone();
     this.frontLeftLeg.position.x = -this.frontRightLeg.position.x;
     this.frontLeftLeg.rotation.z = -this.frontRightLeg.rotation.z;
@@ -312,6 +326,10 @@ class Sheep {
     this.backLeftLeg.position.z = -this.frontLeftLeg.position.z;
     this.backLeftLeg.rotation.x = -this.frontLeftLeg.rotation.x;
     this.group.add(this.backLeftLeg);
+
+    bracelet.rotation.x = rad(90);
+    bracelet.position.x = -0.5;
+    this.frontRightLeg.add(bracelet);
   }
   jump(speed) {
     this.vAngle += speed;
