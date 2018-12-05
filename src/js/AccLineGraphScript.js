@@ -8,10 +8,13 @@ function realTimeLineChart() {
     width = 200,
     height = 200,
     duration = 500,
-    color = d3.schemeCategory10;
-    var lineArr=[];
+    color = d3.schemeCategory10,
+    lineArr=[],
+    halted = false;
+    
 
   function chart(selection) {
+    if (halted) return;
     // Based on https://bl.ocks.org/mbostock/3884955
     selection.each(function(data) {
       data = ["x", "y", "z"].map(function(c) {
@@ -147,6 +150,7 @@ function realTimeLineChart() {
 
       // For transitions https://bl.ocks.org/mbostock/1642874
       function tick() {
+        if (halted) return;
         d3.select(this)
           .attr("d", function(d) {
             return line(d.values);
@@ -191,6 +195,13 @@ function realTimeLineChart() {
     duration = _;
     return chart;
   };
+
+  // halt
+  chart.halt = function(_) {
+    if (arguments.length == 0) return halted;
+    halted = _;
+    return chart;
+  }
 
   return chart;
 }
