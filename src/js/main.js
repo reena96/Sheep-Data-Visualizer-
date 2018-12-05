@@ -8,6 +8,8 @@ var sheep1;
 var sheep2;
 var lineArr1 = [];
 var lineArr2 = [];
+var actArr1 = [];
+var actArr2 = [];
 var count = 0;
 var remove_path = [];
 var chart1;
@@ -16,7 +18,21 @@ var path_svgContainer;
 var path_rectangle;
 var g;
 var x, y, xAxis, yAxis, gX, gY, line;
-(function() {
+var colorDict = {
+  "stand up": "#068b0c", // dark green
+  "stand down": "#04f10e", // light green
+  "walk up": "#1B07AD", // dark blue
+  "walk down": "#04B5FC", // light blue
+  "ramble up": "#FC04E9", // dark pink
+  "ramble down": "#FFB6C1", // light pink
+  "trot": "#cc6600", // brown
+  "canter_right lead": "FCDE04", // dark yellow
+  "canter_left lead": "#FFFF99", // Light yellow
+  "canter_unk": "#cc0000", // red
+  "Unknown": "black"
+};
+
+(function () {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
@@ -32,7 +48,7 @@ var x, y, xAxis, yAxis, gX, gY, line;
 
   //load a text file and output the result to the console
   /* Entry point of the application */
-  App.start = function() {
+  App.start = function () {
     // create a new scene
     App.scene = new Scene({
       container: "scene"
@@ -110,7 +126,7 @@ var x, y, xAxis, yAxis, gX, gY, line;
       define_data();
       //console.log();
       var animal_select = document.getElementById("selectAnimal")
-      animal_select.addEventListener("click", function() {
+      animal_select.addEventListener("click", function () {
         console.log("Animals Select Input");
         var startTimeInput = document.getElementById("StartTime");
         count = startTimeInput.value - 1534395958;
@@ -123,7 +139,7 @@ var x, y, xAxis, yAxis, gX, gY, line;
 
 
       var startTimeInput = document.getElementById("StartTime");
-      startTimeInput.oninput = function() {
+      startTimeInput.oninput = function () {
         path_svgContainer.selectAll("circle").remove();
         console.log("Start Time Slider");
         console.log(startTimeInput.value);
@@ -151,6 +167,7 @@ function define_data() {
 
 
   //console.log("define_data");
+  var length = 0;
   if (document.getElementById("both").selected == true) {
     d3.queue()
       .defer(d3.csv, "data/mergedc2.csv")
@@ -169,7 +186,7 @@ function define_data() {
       output.innerHTML = slider.value;
       //console.log(output.innerHTML);
 
-      slider.oninput = function() {
+      slider.oninput = function () {
         console.log("Sample Rate Slider");
         output.innerHTML = this.value;
         var startTimeInput = document.getElementById("StartTime");
@@ -190,6 +207,9 @@ function define_data() {
         removePathsFromScene();
         remove_path = [];
         moveSheep(sampledData1, sampledData2, sliderVal, 1);
+        length = sampleData1.length;
+        drawActivityGraph(sampledData1, sampledData2, 0, length);
+
       }
       drawLineGraphAcc(data1, data2, 2);
       //drawLineGraphAcc(data2,2);
@@ -199,17 +219,25 @@ function define_data() {
       removePathsFromScene();
       remove_path = [];
       moveSheep(data1, data2, 5, 1);
+      console.log("___________");
+      console.log(data1);
+      console.log(data2);
+      length = data1.length;
+      drawActivityGraph(data1, data2, 0, length);
     }
   } else {
+    var sheepSelected = 0;
     if (document.getElementById("sheep2").selected == true) {
       console.log("sheep2");
       d3.queue()
         .defer(d3.csv, "data/mergedc2.csv")
         .await(analyze);
+      sheepSelected = 2;
     } else {
       d3.queue()
         .defer(d3.csv, "data/mergedc3.csv")
         .await(analyze);
+      sheepSelected = 3;
     }
 
     function analyze(error, data1) {
@@ -223,7 +251,7 @@ function define_data() {
       output.innerHTML = slider.value;
       //console.log(output.innerHTML);
 
-      slider.oninput = function() {
+      slider.oninput = function () {
         output.innerHTML = this.value;
 
         console.log("Slider Value now");
@@ -240,15 +268,149 @@ function define_data() {
       removePathsFromScene();
       remove_path = [];
       moveSheepAlone(data1, 5, 1);
+      length = data1.length;
+      drawActivityGraph(data1, null, sheepSelected, length);
     }
   }
 }
+
+function drawActivityGraph(data1, data2, sheepSelected, length) {
+  var chart = realTimeChartMulti()
+    .title("Time Series Activity Chart")
+    .yTitle("Sheep Activity")
+    .xTitle("Time")
+    .yDomain(["Sheep ID2", "Sheep ID3"]) // initial y domain (note array)
+    .border(true)
+    .width(900)
+    .height(340);
+
+  console.log("-----------------------------");
+  console.log(data1);
+  console.log(data2);
+  console.log(length);
+  var selection = d3v3.select("#chartDiv");
+  if (!selection.empty()) {
+    selection.remove();
+  }
+
+  // invoke the chart
+  var chartDiv = d3v3.select("#viewDiv").append("div")
+    .attr("id", "chartDiv");
+
+  // event handler for halt checkbox
+  d3v3.select("#halt").on("change", function () {
+    var state = d3v3.select(this).property("checked");
+    chart.halt(state);
+  });
+
+  chartDiv.call(chart);
+
+  var sheepID = "Sheep ID";
+  if (sheepSelected == 0) {
+    for (let idx = count; idx < length; idx++) {
+      createSample(data1, idx, chart, 2);
+      createSample(data2, idx, chart, 3);
+    }
+  }
+  else {
+    for (let idx = count; idx < length; idx++) {
+      chart.yDomain([sheepID+sheepSelected]); // initial y domain (note array)
+      // chartDiv.call(chart);
+      createSample(data1, idx, chart, sheepSelected);
+    }
+  }
+
+
+
+}
+
+
+function createSample(data, index, chart, actor) {
+
+  // console.log(data[index]);
+  // create randomized timestamp for this category data item
+  if (data[index] != null) {
+    var start_time = Number(data[index].TIME);
+    // console.log(start_time*1000);
+    // var end_time = Number(data[index].end_time);
+    var now = new Date(start_time * 1000);
+    var action = data[index].activity + "";
+    // console.log(action);
+    var color = colorDict[action];
+
+    var j = 0;
+    // create new data item
+    var obj;
+
+    obj = {
+
+      // complex data item; four attributes (type, color, opacity and size) are changing dynamically with each iteration (as an example)
+      time: now,
+      color: color,
+      opacity: 1,
+      category: "Sheep ID" + actor,
+      //type: shapes[Math.round(Math.random() * (shapes.length - 1))], // the module currently doesn't support dynamically changed svg types (need to add key function to data, or method to dynamically replace svg object – tbd)
+      type: "rect",
+      size: 70,
+    };
+    // console.log(obj);
+    // send the datum to the chart
+    chart.datum(obj);
+
+  }
+}
+
+// function updateActivityData(dataset1, dataset2, select) {
+
+//   //console.log(dataset[count]);
+//   if (select == 2) {
+//     var actData1 = {
+//       //time: now,
+//       time: Number(dataset1[count].TIME),
+//       color: color,
+//       opacity: 1,
+//       category: "Sheep ID" + actor,
+//       //type: shapes[Math.round(Math.random() * (shapes.length - 1))], // the module currently doesn't support dynamically changed svg types (need to add key function to data, or method to dynamically replace svg object – tbd)
+//       type: "rect",
+//       size: 70,
+//     };
+//     var actData2 = {
+//       //time: now,
+//       time: dataset2[count].TIME,
+//     };
+
+//     actArr1.push(actData1);
+//     if (actArr1.length > 30) {
+//       actArr1.shift();
+//     }
+//     d3.select("#chart1").datum(actArr1).call(chart1);
+
+//     actArr2.push(actData2);
+//     if (actArr2.length > 30) {
+//       actArr2.shift();
+//     }
+
+//     d3.select("#chart2").datum(actArr2).call(chart2);
+//   } else {
+//     var actData1 = {
+//       //time: now,
+//       time: dataset1[count].TIME,
+//     };
+//     actArr1.push(actData1);
+//     if (lineArr1.length > 30) {
+//       actArr1.shift();
+//     }
+//     d3.select("#chart1").datum(actArr1).call(chart1);
+
+//   }
+//   //count=count+1;
+// }
 
 function sampleData(arr, n) {
   var result = [];
   var object;
   for (var i = 0; i < arr.length; i = i + n) {
-    console.log(arr.length);
+    // console.log(arr.length);
     object = {
       TIMESTAMP: arr[i].TIME,
       Latitude: arr[i].Latitude,
@@ -279,7 +441,7 @@ function sampleDataAcc(arr, n) {
   var result = [];
   var object;
   for (var i = 0; i < arr.length; i = i + n) {
-    console.log(arr.length);
+    // console.log(arr.length);
     object = {
       TIMESTAMP: arr[i].TIMESTAMP,
       ACC_X: arr[i].ACC_X,
@@ -615,6 +777,8 @@ function updateData(dataset1, dataset2, select) {
   }
   //count=count+1;
 }
+
+
 
 
 function getActivityColor(action) {
