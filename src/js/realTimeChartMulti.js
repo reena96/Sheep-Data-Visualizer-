@@ -166,35 +166,35 @@ function realTimeChartMulti() {
     yAxis = d3v3.svg.axis().orient("left");
 
     // add nav chart
-    var nav = svg.append("g")
-      .attr("transform", "translate (" + margin.left + "," + marginTopNav + ")");
+    // var nav = svg.append("g")
+    //   .attr("transform", "translate (" + margin.left + "," + marginTopNav + ")");
 
     // add nav background
-    nav.append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", width)
-      .attr("height", heightNav)
-      .style("fill", "#CEDBDB")
-      .style("shape-rendering", "crispEdges")
-      .attr("transform", "translate(0, 0)");
+    // nav.append("rect")
+    //   .attr("x", 0)
+    //   .attr("y", 0)
+    //   .attr("width", width)
+    //   .attr("height", heightNav)
+    //   .style("fill", "#CEDBDB")
+    //   .style("shape-rendering", "crispEdges")
+    //   .attr("transform", "translate(0, 0)");
 
     // add group to data items
-    var navG = nav.append("g")
-      .attr("class", "nav");
+    // var navG = nav.append("g")
+    //   .attr("class", "nav");
 
     // add group to hold nav x axis
     // please note that a clip path has yet to be added here (tbd)
-    var xAxisGNav = nav.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + heightNav + ")");
+    // var xAxisGNav = nav.append("g")
+    //   .attr("class", "x axis")
+    //   .attr("transform", "translate(0," + heightNav + ")");
 
-    // define nav chart scales
-    xNav = d3v3.time.scale().range([0, widthNav]);
-    yNav = d3v3.scale.ordinal().domain(yDomain).rangeRoundPoints([heightNav, 0], 1)
+    // // define nav chart scales
+    // // xNav = d3v3.time.scale().range([0, widthNav]);
+    // // yNav = d3v3.scale.ordinal().domain(yDomain).rangeRoundPoints([heightNav, 0], 1)
 
-    // define nav axis
-    var xAxisNav = d3v3.svg.axis().orient("bottom");
+    // // define nav axis
+    // var xAxisNav = d3v3.svg.axis().orient("bottom");
 
     // compute initial time domains...
     var ts = 1534395958000; //start time
@@ -211,56 +211,58 @@ function realTimeChartMulti() {
 
     // set the scale domains for main and nav charts
     x.domain([startTimeViewport, endTimeViewport]);
-    var et = 1534402833728;
-    var st = 1534400571000;
-    xNav.domain([st, et]);
+    // var et = 1534402833728;
+    // var st = 1534400571000;
+    // var et = 1534402833728;
+    // var st = 1534400517328;
+    // xNav.domain([st, et]);
 
     // update axis with modified scale
     xAxis.scale(x)(xAxisG);
     yAxis.scale(y)(yAxisG);
-    xAxisNav.scale(xNav)(xAxisGNav);
+    // xAxisNav.scale(xNav)(xAxisGNav);
 
     // create brush (moveable, changable rectangle that determines the time domain of main chart)
-    var viewport = d3v3.svg.brush()
-      .x(xNav)
-      .extent([startTimeViewport, endTimeViewport])
-      .on("brush", function() {
-        // get the current time extent of viewport
-        var extent = viewport.extent();
+    // var viewport = d3v3.svg.brush()
+    //   .x(xNav)
+    //   .extent([startTimeViewport, endTimeViewport])
+    //   .on("brush", function() {
+    //     // get the current time extent of viewport
+    //     var extent = viewport.extent();
 
-        startTimeViewport = extent[0];
-        endTimeViewport = extent[1];
+    //     startTimeViewport = extent[0];
+    //     endTimeViewport = extent[1];
 
-        // compute viewport extent in milliseconds
-        intervalViewport = endTimeViewport.getTime() - startTimeViewport.getTime();
-        offsetViewport = startTimeViewport.getTime() - startTime.getTime();
+    //     // compute viewport extent in milliseconds
+    //     intervalViewport = endTimeViewport.getTime() - startTimeViewport.getTime();
+    //     offsetViewport = startTimeViewport.getTime() - startTime.getTime();
 
-        // handle invisible viewport
-        if (intervalViewport == 0) {
-          intervalViewport = maxSeconds * 1000;
-          offsetViewport = 0;
-        }
+    //     // handle invisible viewport
+    //     if (intervalViewport == 0) {
+    //       intervalViewport = maxSeconds * 1000;
+    //       offsetViewport = 0;
+    //     }
 
-        // update the x domain of the main chart
-        x.domain(viewport.empty() ? xNav.domain() : extent);
+    //     // update the x domain of the main chart
+    //     x.domain(viewport.empty() ? xNav.domain() : extent);
 
-        // update the x axis of the main chart
-        xAxis.scale(x)(xAxisG);
+    //     // update the x axis of the main chart
+    //     xAxis.scale(x)(xAxisG);
 
-        // update display
-        refresh();
-      });
+    //     // update display
+    //     refresh();
+    //   });
 
     // create group and assign to brush
-    var viewportG = nav.append("g")
-      .attr("class", "viewport")
-      .call(viewport)
-      .selectAll("rect")
-      .attr("height", heightNav);
+    // var viewportG = nav.append("g")
+    //   .attr("class", "viewport")
+    //   .call(viewport)
+    //   .selectAll("rect")
+    //   .attr("height", heightNav);
 
-    // initial invocation; update display
+    // // initial invocation; update display
     data = [];
-    refresh();
+    // refresh();
 
     // function to refresh the viz upon changes of the time domain
     // (which happens constantly), or after arrival of new data, or at init
@@ -402,25 +404,25 @@ function realTimeChartMulti() {
         });
 
       // create update selection for the nav chart, by applying data
-      var updateSelNav = navG.selectAll("circle")
-        .data(data);
+      // var updateSelNav = navG.selectAll("circle")
+      //   .data(data);
 
       // remove items
-      updateSelNav.exit().remove();
+      // updateSelNav.exit().remove();
 
       // add items
-      updateSelNav.enter().append("circle")
-        .attr("r", 1)
-        .attr("fill", "black")
+      // updateSelNav.enter().append("circle")
+      //   .attr("r", 1)
+      //   .attr("fill", "black")
 
       // added items now part of update selection; set coordinates of points
-      updateSelNav
-        .attr("cx", function(d) {
-          return Math.round(xNav(d.time));
-        })
-        .attr("cy", function(d) {
-          return yNav(d.category);
-        })
+      // updateSelNav
+      //   .attr("cx", function(d) {
+      //     return Math.round(xNav(d.time));
+      //   })
+      //   .attr("cy", function(d) {
+      //     return yNav(d.category);
+      //   })
 
     } // end refreshChart function
 
@@ -439,8 +441,8 @@ function realTimeChartMulti() {
         if (halted) return;
 
         // get current viewport extent
-        var extent = viewport.empty() ? xNav.domain() : viewport.extent();
-        var interval = extent[1].getTime() - extent[0].getTime();
+        // var extent = viewport.empty() ? xNav.domain() : viewport.extent();
+        // var interval = extent[1].getTime() - extent[0].getTime();
         // var offset = extent[0].getTime() - xNav.domain()[0].getTime();
 
         if (data[i] != null) {
@@ -461,16 +463,16 @@ function realTimeChartMulti() {
         // console.log(startTimeViewport);
         // set the scale domains for main and nav charts
         x.domain([startTimeViewport, endTimeViewport]);
-        xNav.domain([startTime, endTime]);
+        // xNav.domain([startTime, endTime]);
 
         // update axis
         xAxis.scale(x)(xAxisG);
-        xAxisNav.scale(xNav)(xAxisGNav);
+        // xAxisNav.scale(xNav)(xAxisGNav);
 
         // refresh svg
         refresh();
 
-      }, 200)
+      }, 2)
 
     // end setInterval function
 
