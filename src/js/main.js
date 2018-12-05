@@ -223,7 +223,7 @@ function define_data() {
         removePathsFromScene();
         remove_path = [];
         moveSheep(sampledData1, sampledData2, sliderVal, 1);
-        length = sampleData1.length;
+        length = sampledData1.length;
         drawActivityGraph(sampledData1, sampledData2, 0, length);
 
       }
@@ -384,6 +384,7 @@ function createSample(data, index, chart, actor) {
     var action = data[index].activity + "";
     // console.log(action);
     var color = colorDict[action];
+  
 
     var j = 0;
     // create new data item
