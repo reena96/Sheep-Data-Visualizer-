@@ -60,6 +60,7 @@ var sheepSelected = 0;
       .attr("width", "100%")
       .attr("height", "100%");
     g = path_svgContainer.append("g");
+    g.attr("transform", "translate(40 ,0)");
     path_rectangle = g
       .append("rect")
       .attr("x", 0)
@@ -69,11 +70,11 @@ var sheepSelected = 0;
       .style("fill", "#D3D3D3")
       .attr("pointer-events", "all")
       .call(d3.zoom()
-        .scaleExtent([1, 12])
+        .scaleExtent([0, 12])
         .on("zoom", zoom));
 
     x = d3.scaleLinear()
-      .domain([0, 0.5])
+      .domain([0.27, 0.4])
       .range([0, p_width]);
     y = d3.scaleLinear()
       .domain([36.8, 37])
@@ -112,7 +113,7 @@ var sheepSelected = 0;
       //Ground
       var ground_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial({
-          color: "#ffffff"
+          color: "#708090"
         }), 0, .9 // low restitution
       );
       ground_material.side = THREE.DoubleSide;
@@ -222,8 +223,8 @@ function define_data() {
       remove_path = [];
       moveSheep(data1, data2, 5, 1);
       console.log("___________");
-      console.log(data1);
-      console.log(data2);
+      // console.log(data1);
+      // console.log(data2);
       length = data1.length;
       drawActivityGraph(data1, data2, 0, length);
     }
@@ -286,9 +287,9 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
     .height(340);
 
   console.log("-----------------------------");
-  console.log(data1);
-  console.log(data2);
-  console.log(length);
+  // console.log(data1);
+  // console.log(data2);
+  // console.log(length);
   var selection = d3v3.select("#chartDiv");
   if (!selection.empty()) {
     selection.remove();
