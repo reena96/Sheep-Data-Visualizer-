@@ -1,4 +1,7 @@
+
 function realTimeLineChart() {
+  var lineArr;
+  d3.selectAll("converge_lines").remove();
   var margin = {
       top: 20,
       right: 40,
@@ -9,13 +12,14 @@ function realTimeLineChart() {
     height = 200,
     duration = 500,
     color = d3.schemeCategory10,
-    lineArr=[],
+
     halted = false;
-    
+
 
   function chart(selection) {
+    lineArr=[];
     if (halted) return;
-    // Based on https://bl.ocks.org/mbostock/3884955
+
     selection.each(function(data) {
       data = ["x", "y", "z"].map(function(c) {
         return {
@@ -56,28 +60,27 @@ function realTimeLineChart() {
         return c.label;
       }));
 
+      //lineArr=[];
       var line = d3.line()
         .curve(d3.curveBasis)
         .x(function(d) {
           return x(d.time);
         })
         .y(function(d) {
-          if (d.value[0]>=d.value[1]>=d.value[2]){}
+          if (d.value[0]>=d.value[1] && d.value[1]>=d.value[2]){}
           else{
-            var lineData = {
-              //time: now,
-              time: d.time,
-              x: d.value[0],
-              y: d.value[1],
-              z: d.value[2]
-            };
-            lineArr.push(lineData);
+            appendToLineArr(d.time);
           }
           return y(d.value);
         });
 
+
+        // console.log(data.length);
+        // console.log(lineArr.length);
+
       var svg = d3.select(this).selectAll("svg").data([data]);
       var gEnter = svg.enter().append("svg").append("g");
+
       gEnter.append("g").attr("class", "axis x");
       gEnter.append("g").attr("class", "axis y");
       gEnter.append("defs").append("clipPath")
@@ -92,24 +95,39 @@ function realTimeLineChart() {
         .append("path")
         .attr("class", "data");
 
+        console.log(lineArr);
+        var con_line_g=gEnter.append("g");
+        var con_line=  con_line_g.selectAll("line")
+        .data([lineArr])
+        .enter()
+        .append("line");
+
+        con_line
+        .style("stroke", "red")
+        .attr("x1", function(d){return d;})    // x position of the first end of the line
+        .attr("y1", y(15))      // y position of the first end of the line
+        .attr("x2",  function(d){return d})     // x position of the second end of the line
+        .attr("y2", y(-15));
+
+
       var legendEnter = gEnter.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(" + (width - margin.right - margin.left - 75) + ",25)");
-      // legendEnter.append("rect")
-      //   .attr("width", 50)
-      //   .attr("height", 75)
-      //   .attr("fill", "#ffffff")
-      //   .attr("fill-opacity", 0.7);
-      // legendEnter.selectAll("text")
-      //   .data(data).enter()
-      //   .append("text")
-      //   .attr("y", function(d, i) {
-      //     return (i * 20) + 25;
-      //   })
-      //   .attr("x", 5)
-      //   .attr("fill", function(d) {
-      //     return z(d.label);
-      //   });
+        .attr("transform", "translate(450,-30)");
+      legendEnter.append("rect")
+        .attr("width", 50)
+        .attr("height", 75)
+        .attr("fill", "#ffffff")
+        .attr("fill-opacity", 0.7);
+      legendEnter.selectAll("text")
+        .data(data).enter()
+        .append("text")
+        .attr("y", function(d, i) {
+          return (i * 20) + 25;
+        })
+        .attr("x", 5)
+        .attr("fill", function(d) {
+          return z(d.label);
+        });
 
       var svg = selection.select("svg");
       svg.attr('width', width).attr('height', height);
@@ -202,6 +220,23 @@ function realTimeLineChart() {
     halted = _;
     return chart;
   }
+  function appendToLineArr(value){
+    //console.log(lineArr);
+    lineArr.push(value);
+    // sleep(100).then(() => {});
+
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   return chart;
+}
+function getTimeFromDate(timestamp) {
+  var date = new Date(timestamp * 1000);
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var seconds = date.getSeconds();
+  return pad(hours) + ":" + pad(minutes) + ":" + pad(seconds)
 }
