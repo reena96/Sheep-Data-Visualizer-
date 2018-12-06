@@ -18,7 +18,7 @@ var path_svgContainer;
 var path_rectangle;
 var g;
 var x, y, xAxis, yAxis, gX, gY, line;
-var colorDict = {
+var colorDictMain = {
   "stand up": "#009292", // dark green
   "stand down": "#8dd3c7", // light green
   "walk up": "#ff6db6", // dark blue
@@ -382,15 +382,6 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
   var color_selected = false;
   $(".act-color").click(function() {
     color_id = '#' + $(this).attr("id");
-    // if ($(color_id).hasClass("active")) {
-    //   alert($(color_id).attr('class'));
-    //   $(color_id).removeClass("active");
-    //   alert($(color_id).attr('class'));
-    // } else {
-    //   alert($(color_id).attr('class'));
-    //   $(color_id).addClass("active");
-    //   alert($(color_id).attr('class'));
-    // }
     $(this).toggleClass("active");
     color_id = $(this).attr("id");
     color_id = color_id.replace("-", " ");
