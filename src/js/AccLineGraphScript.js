@@ -2,26 +2,27 @@ function realTimeLineChart() {
   var lineArr;
   d3.selectAll("converge_lines").remove();
   var margin = {
-      top: 20,
-      right: 40,
-      bottom: 20,
-      left: 20
-    },
+    top: 20,
+    right: 40,
+    bottom: 20,
+    left: 20
+  },
     width = 200,
     height = 200,
     duration = 500,
     color = d3.schemeCategory10,
+    xTitle, yTitle, chartTitle,
     halted = false;
 
   function chart(selection) {
     lineArr = [];
     if (halted) return;
 
-    selection.each(function(data) {
-      data = ["x", "y", "z"].map(function(c) {
+    selection.each(function (data) {
+      data = ["x", "y", "z"].map(function (c) {
         return {
           label: c,
-          values: data.map(function(d) {
+          values: data.map(function (d) {
             return {
               time: +d.time,
               value: d[c]
@@ -37,13 +38,13 @@ function realTimeLineChart() {
         y = d3.scaleLinear().rangeRound([height - margin.top - margin.bottom, 0]),
         z = d3.scaleOrdinal(color);
 
-      var xMin = d3.min(data, function(c) {
-        return d3.min(c.values, function(d) {
+      var xMin = d3.min(data, function (c) {
+        return d3.min(c.values, function (d) {
           return d.time;
         })
       });
-      var xMax = d3.max(data, function(c) {
-        return d3.max(c.values, function(d) {
+      var xMax = d3.max(data, function (c) {
+        return d3.max(c.values, function (d) {
           return d.time;
         })
       });
@@ -54,18 +55,18 @@ function realTimeLineChart() {
         -15,
         15
       ]);
-      z.domain(data.map(function(c) {
+      z.domain(data.map(function (c) {
         return c.label;
       }));
 
       //lineArr=[];
       var line = d3.line()
         .curve(d3.curveLinear)
-        .x(function(d) {
+        .x(function (d) {
           return x(d.time);
         })
-        .y(function(d) {
-          if (d.value[0] >= d.value[1] && d.value[1] >= d.value[2]) {} else {
+        .y(function (d) {
+          if (d.value[0] >= d.value[1] && d.value[1] >= d.value[2]) { } else {
             appendToLineArr(d.time);
           }
           return y(d.value);
@@ -75,9 +76,11 @@ function realTimeLineChart() {
 
       var svg = d3.select(this).selectAll("svg").data([data]);
       var gEnter = svg.enter().append("svg").append("g");
+  
+     
 
-      gEnter.append("g").attr("class", "axis x");
-      gEnter.append("g").attr("class", "axis y");
+      var xAxis = gEnter.append("g").attr("class", "axis x");
+      var yAxis = gEnter.append("g").attr("class", "axis y");
       gEnter.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -90,6 +93,46 @@ function realTimeLineChart() {
         .append("path")
         .attr("class", "data");
 
+       var sheepSelect =  document.getElementById("selectAnimal").value;
+        gEnter.append("text")
+        .attr("class", "chartTitle")
+        .attr("x", (width / 2)+80)
+        .attr("y", -5)
+        .style("font-size", "14px")
+        .text(function(d) {
+          var text = "Time series Accelerometer readings of "+sheepSelect;
+          return text;
+        });
+
+        // chart1.xTitle("Time");
+        // chart1.yTitle("X,Y,Z readings of accelerometer against time");
+        // chart1.title(;
+      xAxis.append("text")
+        .attr("class", "title")
+        .attr("x", (width / 2)+80)
+        .attr("y", 10)
+        .attr("dy", ".71em")
+        .style("font-size", "14px")
+        .text(function (d) {
+          var text ="Time";
+          return text;
+        });
+
+        // in y axis group, add y axis title
+    yAxis.append("text")
+    .attr("class", "title")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -height / 2)
+    .attr("y", -margin.left + 15) //-35
+    .attr("dy", ".71em")
+    .text(function(d) {
+      var text = "Accelerometer readings";
+      return text;
+    });
+
+
+
+
       // console.log(lineArr);
       var con_line_g = gEnter.append("g");
       var con_line = con_line_g.selectAll("line")
@@ -99,11 +142,11 @@ function realTimeLineChart() {
 
       con_line
         .style("stroke", "red")
-        .attr("x1", function(d) {
+        .attr("x1", function (d) {
           return d;
         }) // x position of the first end of the line
         .attr("y1", y(15)) // y position of the first end of the line
-        .attr("x2", function(d) {
+        .attr("x2", function (d) {
           return d
         }) // x position of the second end of the line
         .attr("y2", y(-15));
@@ -120,11 +163,11 @@ function realTimeLineChart() {
       legendEnter.selectAll("text")
         .data(data).enter()
         .append("text")
-        .attr("y", function(d, i) {
+        .attr("y", function (d, i) {
           return (i * 20) + 25;
         })
         .attr("x", 5)
-        .attr("fill", function(d) {
+        .attr("fill", function (d) {
           return z(d.label);
         });
 
@@ -149,7 +192,7 @@ function realTimeLineChart() {
 
       g.selectAll("g path.data")
         .data(data)
-        .style("stroke", function(d) {
+        .style("stroke", function (d) {
           return z(d.label);
         })
         .style("stroke-width", 1)
@@ -161,7 +204,7 @@ function realTimeLineChart() {
 
       g.selectAll("g .legend text")
         .data(data)
-        .text(function(d) {
+        .text(function (d) {
           return d.label.toUpperCase();
           // + ": " + d.values[d.values.length - 1].value;
         });
@@ -170,7 +213,7 @@ function realTimeLineChart() {
       function tick() {
         if (halted) return;
         d3.select(this)
-          .attr("d", function(d) {
+          .attr("d", function (d) {
             return line(d.values);
           })
           .attr("transform", null);
@@ -184,40 +227,61 @@ function realTimeLineChart() {
     });
   }
 
-  chart.margin = function(_) {
+  chart.margin = function (_) {
     if (!arguments.length) return margin;
     margin = _;
     return chart;
   };
 
-  chart.width = function(_) {
+  chart.width = function (_) {
     if (!arguments.length) return width;
     width = _;
     return chart;
   };
 
-  chart.height = function(_) {
+  chart.height = function (_) {
     if (!arguments.length) return height;
     height = _;
     return chart;
   };
 
-  chart.color = function(_) {
+  chart.color = function (_) {
     if (!arguments.length) return color;
     color = _;
     return chart;
   };
 
-  chart.duration = function(_) {
+  chart.duration = function (_) {
     if (!arguments.length) return duration;
     duration = _;
     return chart;
   };
 
   // halt
-  chart.halt = function(_) {
+  chart.halt = function (_) {
     if (arguments.length == 0) return halted;
     halted = _;
+    return chart;
+  }
+
+  // chart title
+  chart.title = function (_) {
+    if (arguments.length == 0) return chartTitle;
+    chartTitle = _;
+    return chart;
+  }
+
+  // x axis title
+  chart.xTitle = function (_) {
+    if (arguments.length == 0) return xTitle;
+    xTitle = _;
+    return chart;
+  }
+
+  // y axis title
+  chart.yTitle = function (_) {
+    if (arguments.length == 0) return yTitle;
+    yTitle = _;
     return chart;
   }
 
