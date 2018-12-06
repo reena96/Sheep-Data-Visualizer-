@@ -95,7 +95,7 @@ function realTimeLineChart() {
         .append("path")
         .attr("class", "data");
 
-        console.log(lineArr);
+        // console.log(lineArr);
         var con_line_g=gEnter.append("g");
         var con_line=  con_line_g.selectAll("line")
         .data([lineArr])
