@@ -101,7 +101,7 @@ var pause_btn, play_btn;
     var sheepSystem1 = new SheepSystem();
     sheepSystem1.initialize("2");
     sheep1 = sheepSystem1.getSheepSystem();
-    sleep(100).then(() => {
+    sleep(10).then(() => {
       var sheepSystem2 = new SheepSystem();
       sheepSystem2.initialize("3");
       sheep2 = sheepSystem2.getSheepSystem();
@@ -294,6 +294,8 @@ function define_data() {
 }
 
 function drawActivityGraph(data1, data2, sheepSelected, length) {
+
+  var act_width = d3.select('#activity-chart-div').node().clientWidth;
   chart = realTimeChartMulti()
     // .title("Time Series Activity Chart")
     .yTitle("Sheep Activity")
@@ -302,7 +304,6 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
     .border(true)
     .width(act_width)
     .height(250);
-
 
   // console.log(data1);
   // console.log(data2);
@@ -313,7 +314,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
   }
 
   // invoke the chart
-  var chartDiv = d3v3.select("#viewDiv").append("div")
+  var chartDiv = d3v3.select("#activity-chart-div").append("div")
     .attr("id", "chartDiv");
 
   // event handler for halt checkbox
@@ -576,7 +577,7 @@ function moveSheep(data1, data2, sliderVal, initialize) {
   if (document.getElementById("both").selected == true) {
     // console.log("Move Sheep");
     //console.log(count);
-    sleep(100).then(() => {
+    sleep(10).then(() => {
       if (initialize == 1) {
         //console.log("0");
         dataset1 = data1;
@@ -706,7 +707,7 @@ function moveSheepAlone(data1, sliderVal, initialize) {
   if (paused) return;
   if (document.getElementById("sheep2").selected == true || document.getElementById("sheep3").selected == true) { // (document.getElementById("sheep3").selected == true)  {
     console.log("Move Sheep Alone");
-    sleep(100).then(() => {
+    sleep(10).then(() => {
       // Do something after the sleep!
       if (initialize == 1) {
         dataset1 = data1;
@@ -824,11 +825,11 @@ function updateData(dataset1, dataset2, select) {
 
   }
 
-  var timer_time = new Date(+dataset1[count].TIME * 1000);
-  // new Date(+dataset1[count].TIME * 1000);
-  //  Fri Dec 02 2016 14:03:52 GMT+0530 (IST)
-  // console.log("timer_time");
-  // console.log(timer_time);
+  var d = new Date(+dataset1[count].TIME * 1000);
+  var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+  var nd = new Date(utc + (3600000 * 3));
+  var timer_time = nd.toLocaleString();
+  // var timer_time = new Date(nd);
 
   d3.select("#timer").text(timer_time);
   //count=count+1;

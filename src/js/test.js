@@ -9,7 +9,7 @@ var chart = realTimeChartMulti()
     .height(350);
 
 // invoke the chart
-var chartDiv = d3v3.select("#viewDiv").append("div")
+var chartDiv = d3v3.select("#activity-chart-div").append("div")
     .attr("id", "chartDiv")
     .call(chart);
 

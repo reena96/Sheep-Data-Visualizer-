@@ -11,9 +11,7 @@ function realTimeLineChart() {
     height = 200,
     duration = 500,
     color = d3.schemeCategory10,
-
     halted = false;
-
 
   function chart(selection) {
     lineArr = [];
@@ -71,8 +69,6 @@ function realTimeLineChart() {
           }
           return y(d.value);
         });
-
-
       // console.log(data.length);
       // console.log(lineArr.length);
 
@@ -227,7 +223,6 @@ function realTimeLineChart() {
     //console.log(lineArr);
     lineArr.push(value);
     // sleep(100).then(() => {});
-
   }
 
   function sleep(ms) {
