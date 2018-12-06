@@ -41,7 +41,52 @@
 </head>
 
 <body onload="App.start();" style="background: rgb(138,140,191); background: rgb(207,219,219); background: #e1e1e1; ">
-  <div class="container-fluid px-0">
+
+  <div class="carousel-container sticky-top" id="splash-div" style="z-index:1.5">
+    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselExampleCaptions" data-slide-to="0" class=""></li>
+        <li data-target="#carouselExampleCaptions" data-slide-to="1" class=""></li>
+        <li data-target="#carouselExampleCaptions" data-slide-to="2" class="active"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100 h-100" data-src="holder.js/800x400?auto=yes&amp;bg=777&amp;fg=555&amp;text=First slide" alt="First slide [800x400]" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1678342e3d6%20text%20%7B%20fill%3A%23555%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1678342e3d6%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22285.45833587646484%22%20y%3D%22216.2%22%3EFirst%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+            data-holder-rendered="true">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>First slide label</h5>
+            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100 h-100" data-src="holder.js/800x400?auto=yes&amp;bg=666&amp;fg=444&amp;text=Second slide" alt="Second slide [800x400]" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1678342e3de%20text%20%7B%20fill%3A%23444%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1678342e3de%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23666%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22246.85833740234375%22%20y%3D%22216.2%22%3ESecond%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+            data-holder-rendered="true">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Second slide label</h5>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100 h-100" data-src="holder.js/800x400?auto=yes&amp;bg=555&amp;fg=333&amp;text=Third slide" alt="Third slide [800x400]" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1678342e3e0%20text%20%7B%20fill%3A%23333%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1678342e3e0%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23555%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22276.5500030517578%22%20y%3D%22216.2%22%3EThird%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+            data-holder-rendered="true">
+          <div class="carousel-caption d-none d-md-block">
+            <a id="start-viz" href="#"> <i class="d-block fas fa-play-circle fa-10x" style="z-index:1.5"></i></a>
+            <h5>Third slide label</h5>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+  <div class="container-fluid px-0" id="visualization-div">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-purple-dark ">
       <a class="navbar-brand" href="#">
         <img class="mr-2" src="./assets/images/cute-sheep.png" />
@@ -74,6 +119,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a id="reset" class="nav-link sidenav-link" href="#">
+            <i class="fas fa-sync"></i>
+            <span class="fil-text">Reset Filters</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link sidenav-link" href="#">
             <i class="fa fa-tachometer "></i>
             <span class="badge badge-pill badge-warning" id="rate"></span>
@@ -96,7 +147,7 @@
             </div>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item col-md-6">
           <a class="nav-link sidenav-link" href="#">
             <i class="far fa-clock "></i>
             <span class="fil-text ">Time Interval</span>
@@ -105,12 +156,7 @@
             <input id="StartTime" type="range" min="1534395958" max="1534402801" value="1534395958" class="slider mt-2" />
           </div>
         </li>
-        <li class="nav-item">
-          <a id="reset" class="nav-link sidenav-link" href="#">
-            <i class="fas fa-sync"></i>
-            <span class="fil-text">Reset Filters</span>
-          </a>
-        </li>
+
       </ul>
     </div>
     <div class="main-content px-2 pb-5" style="background: rgb(207,219,219);background: #e1e1e1;">
@@ -122,7 +168,7 @@
                 <b><span class="timer" id="timer"> 1:45 PM </span><span> GMT+03:00 Kenya</span></b>
               </span>
             </div>
-            <div id="scene" class="world">
+            <div id="scene" class="world"><i class="text-dark fa fa-info-circle pull-right mx-2" data-toggle="tooltip" data-html="true" title="Sharan Sharan"></i>
             </div>
           </div>
         </div>
@@ -130,7 +176,7 @@
           <div class="card">
             <!-- <div class="col-md-12" id="" style="min-height:100px;"> sai </div> -->
             <div class="title bg-dark text-light text-center py-2" id="accTitle">
-              Time Series for Accelerometer
+              Time Series for Accelerometer <i class="fa fa-info-circle pull-right mx-2" data-toggle="tooltip" data-html="true" title="Sharan Sharan"></i>
             </div>
             <hr class="my-0" />
             <div class="col-md-12 mb-2 px-3" id="chart1"> </div>
@@ -143,7 +189,7 @@
         <div id="activity_chart" class="col-md-8 px-2 pl-4 text-dark ">
           <div class="card">
             <div class=" title bg-dark text-light text-center py-2" id="actTitle">
-              Time Series for Activity
+              Time Series for Activity <i class="fa fa-info-circle pull-right mx-2" data-toggle="tooltip" data-html="true" title="Sharan Sharan"></i>
             </div>
             <div class="col-md-12 mb-3">
               <!-- <input id="halt" type="checkbox" class="form-check-input ml-3" name="halt" value="halt" />
@@ -169,7 +215,7 @@
         <div id="path_graph" class="col-md-4 px-2 pr-4 text-dark ">
           <div class="card">
             <div class="title bg-dark text-light text-center py-2" id="actTitle">
-              Path of the Sheep
+              Path of the Sheep <i class="fa fa-info-circle pull-right mx-2" data-toggle="tooltip" data-html="true" title="Sharan Sharan"></i>
             </div>
             <div class="col-md-12 py-2">
               </br>
@@ -180,7 +226,7 @@
       </div>
     </div>
   </div>
-  </div>
+
 
 </body>
 <script>
@@ -199,6 +245,8 @@
       $(".filter-input").show();
     }
   });
+
+  // $('#visualization-div').hide();
 </script>
 
 </html>

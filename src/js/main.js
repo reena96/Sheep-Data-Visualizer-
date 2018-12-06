@@ -427,6 +427,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 
   });
 
+  play_btn.style("opacity", 0.2);
   d3v3.select("#play").on("click", function() {
     // var state = d3v3.select(this).property("checked");
     if (paused == true) {
@@ -440,6 +441,14 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
       define_data();
     }
 
+  });
+
+  $("#start-viz").click(function() {
+    $('#splash-div').hide(500);
+    sleep(500).then(() => {
+      count = 0;
+      define_data();
+    });
   });
 
   chartDiv.call(chart);
