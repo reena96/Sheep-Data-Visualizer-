@@ -18,30 +18,44 @@ var path_svgContainer;
 var path_rectangle;
 var g;
 var x, y, xAxis, yAxis, gX, gY, line;
-var colorDictMain = {
-  "stand up": "#068b0c", // dark green
-  "stand down": "#04f10e", // light green
-  "walk up": "#1B07AD", // dark blue
-  "walk down": "#04B5FC", // light blue
-  "ramble up": "#FC04E9", // dark pink
-  "ramble down": "#FFB6C1", // light pink
-  "trot": "#cc6600", // brown
-  "canter_right lead": "FCDE04", // dark yellow
-  "canter_left lead": "#FFFF99", // Light yellow
-  "canter_unk": "#cc0000", // red
+var colorDict = {
+  "stand up": "#009292", // dark green
+  "stand down": "#8dd3c7", // light green
+  "walk up": "#ff6db6", // dark blue
+  "walk down": "#ffb6db", // light blue
+  "ramble up": "#490092", // dark pink
+  "ramble down": "#b66dff", // light pink
+  "trot": "#6db6ff", // brown
+  "canter_right lead": "#24ff24", // dark yellow
+  "canter_left lead": "#ffff6d", // Light yellow
+  "canter_unk": "#db6d00", // red
   "Unknown": "black"
 };
+// var colorDict = {
+//   "stand up": "#068b0c", // dark green
+//   "stand down": "#04f10e", // light green
+//   "walk up": "#1B07AD", // dark blue
+//   "walk down": "#04B5FC", // light blue
+//   "ramble up": "#FC04E9", // dark pink
+//   "ramble down": "#FFB6C1", // light pink
+//   "trot": "#cc6600", // brown
+//   "canter_right lead": "FCDE04", // dark yellow
+//   "canter_left lead": "#FFFF99", // Light yellow
+//   "canter_unk": "#cc0000", // red
+//   "Unknown": "black"
+// };
+
 var colorDict = {
-  "stand up": "#068b0c", // dark green
-  "stand down": "#04f10e", // light green
-  "walk up": "#1B07AD", // dark blue
-  "walk down": "#04B5FC", // light blue
-  "ramble up": "#FC04E9", // dark pink
-  "ramble down": "#FFB6C1", // light pink
-  "trot": "#cc6600", // brown
-  "canter_right lead": "FCDE04", // dark yellow
-  "canter_left lead": "#FFFF99", // Light yellow
-  "canter_unk": "#cc0000", // red
+  "stand up": "#009292", // dark green
+  "stand down": "#8dd3c7", // light green
+  "walk up": "#ff6db6", // dark blue
+  "walk down": "#ffb6db", // light blue
+  "ramble up": "#490092", // dark pink
+  "ramble down": "#b66dff", // light pink
+  "trot": "#6db6ff", // brown
+  "canter_right lead": "#24ff24", // dark yellow
+  "canter_left lead": "#ffff6d", // Light yellow
+  "canter_unk": "#db6d00", // red
   "Unknown": "black"
 };
 var chart;

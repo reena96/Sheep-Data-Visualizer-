@@ -76,8 +76,8 @@ function realTimeLineChart() {
 
       var svg = d3.select(this).selectAll("svg").data([data]);
       var gEnter = svg.enter().append("svg").append("g");
-  
-     
+
+
 
       var xAxis = gEnter.append("g").attr("class", "axis x");
       var yAxis = gEnter.append("g").attr("class", "axis y");
@@ -93,42 +93,43 @@ function realTimeLineChart() {
         .append("path")
         .attr("class", "data");
 
-       var sheepSelect =  document.getElementById("selectAnimal").value;
-        gEnter.append("text")
+      var sheepSelect = document.getElementById("selectAnimal").value;
+      
+      gEnter.append("text")
         .attr("class", "chartTitle")
-        .attr("x", (width / 2)+80)
+        .attr("x", (width / 2) + 80)
         .attr("y", -5)
         .style("font-size", "14px")
-        .text(function(d) {
-          var text = "Time series Accelerometer readings of "+sheepSelect;
+        .text(function (d) {
+          var text = "Time series Accelerometer readings of " + sheepSelect;
           return text;
         });
 
-        // chart1.xTitle("Time");
-        // chart1.yTitle("X,Y,Z readings of accelerometer against time");
-        // chart1.title(;
+      // chart1.xTitle("Time");
+      // chart1.yTitle("X,Y,Z readings of accelerometer against time");
+      // chart1.title(;
       xAxis.append("text")
         .attr("class", "title")
-        .attr("x", (width / 2)+80)
+        .attr("x", (width / 2) + 80)
         .attr("y", 10)
         .attr("dy", ".71em")
         .style("font-size", "14px")
         .text(function (d) {
-          var text ="Time";
+          var text = "Time";
           return text;
         });
 
-        // in y axis group, add y axis title
-    yAxis.append("text")
-    .attr("class", "title")
-    .attr("transform", "rotate(-90)")
-    .attr("x", -height / 2)
-    .attr("y", -margin.left + 15) //-35
-    .attr("dy", ".71em")
-    .text(function(d) {
-      var text = "Accelerometer readings";
-      return text;
-    });
+      // in y axis group, add y axis title
+      yAxis.append("text")
+        .attr("class", "title")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -margin.left + 15) //-35
+        .attr("dy", ".71em")
+        .text(function (d) {
+          var text = "Accelerometer readings";
+          return text;
+        });
 
 
 
