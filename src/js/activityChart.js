@@ -1,6 +1,6 @@
 "use strict";
 var c = 0;
-var act_width = d3.select('#viewDiv').node().clientWidth;
+var act_width = d3.select('#activity-chart-div').node().clientWidth;
 var chart = realTimeChartMulti()
   // .title("Time Series Activity Chart")
   .yTitle("Sheep Activity")
@@ -11,7 +11,7 @@ var chart = realTimeChartMulti()
   .height(250);
 
 // invoke the chart
-var chartDiv = d3v3.select("#viewDiv").append("div")
+var chartDiv = d3v3.select("#activity-chart-div").append("div")
   .attr("id", "chartDiv")
   .call(chart);
 

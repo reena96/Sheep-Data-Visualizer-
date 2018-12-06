@@ -1,4 +1,3 @@
-
 function realTimeLineChart() {
   var lineArr;
   d3.selectAll("converge_lines").remove();
@@ -12,12 +11,10 @@ function realTimeLineChart() {
     height = 200,
     duration = 500,
     color = d3.schemeCategory10,
-
     halted = false;
 
-
   function chart(selection) {
-    lineArr=[];
+    lineArr = [];
     if (halted) return;
 
     selection.each(function(data) {
@@ -62,21 +59,18 @@ function realTimeLineChart() {
 
       //lineArr=[];
       var line = d3.line()
-        .curve(d3.curveBasis)
+        .curve(d3.curveLinear)
         .x(function(d) {
           return x(d.time);
         })
         .y(function(d) {
-          if (d.value[0]>=d.value[1] && d.value[1]>=d.value[2]){}
-          else{
+          if (d.value[0] >= d.value[1] && d.value[1] >= d.value[2]) {} else {
             appendToLineArr(d.time);
           }
           return y(d.value);
         });
-
-
-        // console.log(data.length);
-        // console.log(lineArr.length);
+      // console.log(data.length);
+      // console.log(lineArr.length);
 
       var svg = d3.select(this).selectAll("svg").data([data]);
       var gEnter = svg.enter().append("svg").append("g");
@@ -95,18 +89,22 @@ function realTimeLineChart() {
         .append("path")
         .attr("class", "data");
 
-        // console.log(lineArr);
-        var con_line_g=gEnter.append("g");
-        var con_line=  con_line_g.selectAll("line")
+      // console.log(lineArr);
+      var con_line_g = gEnter.append("g");
+      var con_line = con_line_g.selectAll("line")
         .data([lineArr])
         .enter()
         .append("line");
 
-        con_line
+      con_line
         .style("stroke", "red")
-        .attr("x1", function(d){return d;})    // x position of the first end of the line
-        .attr("y1", y(15))      // y position of the first end of the line
-        .attr("x2",  function(d){return d})     // x position of the second end of the line
+        .attr("x1", function(d) {
+          return d;
+        }) // x position of the first end of the line
+        .attr("y1", y(15)) // y position of the first end of the line
+        .attr("x2", function(d) {
+          return d
+        }) // x position of the second end of the line
         .attr("y2", y(-15));
 
 
@@ -220,11 +218,11 @@ function realTimeLineChart() {
     halted = _;
     return chart;
   }
-  function appendToLineArr(value){
+
+  function appendToLineArr(value) {
     //console.log(lineArr);
     lineArr.push(value);
     // sleep(100).then(() => {});
-
   }
 
   function sleep(ms) {
@@ -232,11 +230,4 @@ function realTimeLineChart() {
   }
 
   return chart;
-}
-function getTimeFromDate(timestamp) {
-  var date = new Date(timestamp * 1000);
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var seconds = date.getSeconds();
-  return pad(hours) + ":" + pad(minutes) + ":" + pad(seconds)
 }

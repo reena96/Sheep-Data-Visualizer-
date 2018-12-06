@@ -42,7 +42,7 @@
 
 <body onload="App.start();" style="background: rgb(138,140,191); background: rgb(207,219,219); background: #e1e1e1; ">
   <div class="container-fluid px-0">
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark ">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-purple-dark ">
       <a class="navbar-brand" href="#">
         <img class="mr-2" src="./assets/images/cute-sheep.png" />
         SheepBaboons
@@ -59,46 +59,34 @@
         </li>
       </ul>
     </nav>
-    <div class="main-content pb-5" style="background: rgb(207,219,219);">
-      <div id="sidenav" class="bg-dark">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="toggle-side-menu nav-link" href="#">
-              <span class="fil-text">
-                <i class="fas fa-sliders-h"></i>
-                <span class="col-md-6 px-0 ">Filters</span>
-                <i class="fas fa-chevron-left left-chevron px-0 py-1" style="float:right"></i>
-              </span>
-              <i class="fas fa-sliders-h right-chevron px-0 py-1"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a id = "play" class="nav-link " href="#">
-              <i class="fas fa-play-circle"></i>
-              <span class="fil-text"> Play </span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a id = "pause" class="nav-link " href="#">
-              <i class="fas fa-pause-circle "></i>
-              <span class="fil-text"> Pause </span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="#">
-              <i class="fa fa-tachometer "></i>
-              <span class="badge badge-pill badge-warning" id="rate"></span>
-              <span class="fil-text">Sample Rate</span>
-            </a>
-            <div class="filter-input col-md-12">
-              <input id="sampleRate" type="range" min="1" max="10" value="1" class="slider mt-2" />
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="fas fa-dog "></i>
-              <span class="fil-text ">Select Sheep</span>
-            </a>
+    <div id="sidenav" class="sticky-top bg-dark">
+      <ul class="nav">
+        <li class="nav-item">
+          <a id="play" class="nav-link " href="#">
+            <i class="fas fa-play-circle"></i>
+            <span class="fil-text"> Play </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a id="pause" class="nav-link sidenav-link" href="#">
+            <i class="fas fa-pause-circle"></i>
+            <span class="fil-text"> Pause </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link sidenav-link" href="#">
+            <i class="fa fa-tachometer "></i>
+            <span class="badge badge-pill badge-warning" id="rate"></span>
+            <span class="fil-text">Sample Rate</span>
+          </a>
+          <div class="filter-input col-md-12">
+            <input id="sampleRate" type="range" min="1" max="10" value="1" class="slider mt-2" />
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link sidenav-link" href="#">
+            <i class="fas fa-dog "></i>
+            <span class="fil-text ">Select Sheep</span>
             <div class="col-md-12 filter-input">
               <select id="selectAnimal" class="form-control">
                 <option id="both" selected>Both </option>
@@ -106,30 +94,32 @@
                 <option id="sheep3"> Sheep ID3 </option>
               </select>
             </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="far fa-clock "></i>
-              <span class="fil-text ">Time Interval</span>
-            </a>
-            <div class="filter-input col-md-12">
-              <input id="StartTime" type="range" min="1534395958" max="1534402801" value="1534395958" class="slider mt-2" />
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link " href="#">
-              <i class="fas fa-sync"></i>
-              <span class="fil-text">Reset Filters</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link sidenav-link" href="#">
+            <i class="far fa-clock "></i>
+            <span class="fil-text ">Time Interval</span>
+          </a>
+          <div class="filter-input col-md-12">
+            <input id="StartTime" type="range" min="1534395958" max="1534402801" value="1534395958" class="slider mt-2" />
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link sidenav-link" href="#">
+            <i class="fas fa-sync"></i>
+            <span class="fil-text">Reset Filters</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="main-content px-2 pb-5" style="background: rgb(207,219,219);background: #e1e1e1;">
       <div class="row mt-2">
         <div class="fieldDiv col-md-8 px-2 pl-4">
           <div class="card">
             <div>
-              <span class="btn btn-light pull-right my-2 mx-2" style="z-index:1.5;position: fixed;">
-                <span>Current Time :</span> <span class="timer" id="timer"> 1:45 PM </span>
+              <span class="btn btn-light pull-right my-2 mx-2 disabled " style="z-index:1.5;position: fixed;">
+                <b><span class="timer" id="timer"> 1:45 PM </span><span> GMT+03:00 Kenya</span></b>
               </span>
             </div>
             <div id="scene" class="world">
@@ -137,9 +127,9 @@
           </div>
         </div>
         <div class="graphDiv col-md-4 px-2 pr-4">
-          <div id="graphWorld" class="card gWorld">
+          <div class="card">
             <!-- <div class="col-md-12" id="" style="min-height:100px;"> sai </div> -->
-            <div class="title bg-warning text-dark text-center py-2" id="chart1Title">
+            <div class="title bg-dark text-light text-center py-2" id="accTitle">
               Time Series for Accelerometer
             </div>
             <hr class="my-0" />
@@ -150,36 +140,36 @@
         </div>
       </div>
       <div class="row mt-3">
-        <div id="time_series" class="col-md-8 px-2 pl-4 text-dark ">
+        <div id="activity_chart" class="col-md-8 px-2 pl-4 text-dark ">
           <div class="card">
-            <div class=" title bg-light text-dark text-center py-2" id="actTitle">
+            <div class=" title bg-dark text-light text-center py-2" id="actTitle">
               Time Series for Activity
             </div>
             <div class="col-md-12 mb-3">
-              <input id="halt" type="checkbox" class="form-check-input ml-3" name="halt" value="halt" />
-              <label class="form-check-label ml-5" for="halt"> Check the box to halt the graph movement</label>
+              <!-- <input id="halt" type="checkbox" class="form-check-input ml-3" name="halt" value="halt" />
+              <label class="form-check-label ml-5" for="halt"> Check the box to halt the graph movement</label> -->
               <div class="col-md-12">
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#068b0c"> </i> &nbsp Stand up </span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#04f10e"> </i> &nbsp Stand down</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#1B07AD"> </i> &nbsp walk up</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#04B5FC"> </i> &nbsp Walk down</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FC04E9"> </i> &nbsp Ramble up</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FFB6C1"> </i> &nbsp Ramble down</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#cc6600"> </i> &nbsp Trot </span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FCDE04"> </i> &nbsp Canter right lead</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#FFFF99"> </i> &nbsp Canter left lead</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:#cc0000"> </i> &nbsp Canter unk</span>
-                <span class="btn btn-light px-2 mb-1"><i class="badge-pill" style="background:black"> </i> &nbsp No Activity</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#068b0c"> </i> &nbsp Stand up </span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#04f10e"> </i> &nbsp Stand down</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#1B07AD"> </i> &nbsp walk up</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#04B5FC"> </i> &nbsp Walk down</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#FC04E9"> </i> &nbsp Ramble up</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#FFB6C1"> </i> &nbsp Ramble down</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#cc6600"> </i> &nbsp Trot </span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#FCDE04"> </i> &nbsp Canter right lead</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#FFFF99"> </i> &nbsp Canter left lead</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:#cc0000"> </i> &nbsp Canter unk</span>
+                <span class="btn btn-light disabled px-2 mb-1"><i class="badge-pill" style="background:black"> </i> &nbsp No Activity</span>
               </div>
-              <div id="viewDiv"></div>
+              <div id="activity-chart-div"></div>
             </div>
           </div>
         </div>
         <!-- <div id="path" class="col-md-4 pb-2 pt-4" style="height:400px;"></div> -->
         <div id="path_graph" class="col-md-4 px-2 pr-4 text-dark ">
           <div class="card">
-            <div class="title bg-light text-dark text-center py-2" id="actTitle">
-              Path of the Sheeps
+            <div class="title bg-dark text-light text-center py-2" id="actTitle">
+              Path of the Sheep
             </div>
             <div class="col-md-12 py-2">
               </br>
@@ -192,66 +182,21 @@
   </div>
   </div>
 
-  <!-- <center>
-      <div class="row" id="activity_time"></div>
-      <section id="time_series" class="col-md-12 pb-2 pt-4" style="background: rgb(138,140,191);height:100px;">
-        <input id="halt" type="checkbox" name="halt" value="halt" style="margin-bottom: 2px" /> Check the box to halt
-        <div id="viewDiv" style="margin:0 auto;"></div>
-      </section>
-    </center> -->
-
-  <!-- <div class="row">
-      <section id="path" style="background: rgb(138,140,191);height:350px;">
-      </section>
-    </div>
-    <div class="row">
-      <section id="footer" style="background: rgb(138,140,191);height:100px;">
-      </section>
-    </div> -->
 </body>
 <script>
   var slider = document.getElementById("sampleRate");
   var output = document.getElementById("rate");
   output.innerHTML = slider.value;
 
-  $(".left-chevron").hide();
   $(".fil-text").hide();
   $(".filter-input").hide();
-  $(".toggle-side-menu").click(function() {
-    if ($(".left-chevron").is(":visible")) {
-      $(".left-chevron").hide();
-      $(".right-chevron").show();
+  $(".sidenav-link").click(function() {
+    if ($(".fil-text").is(":visible")) {
       $(".fil-text").hide();
       $(".filter-input").hide();
-      $("#sidenav").css({
-        'width': '60px'
-      }, 'fast');
-      // $.when($("#sidenav").css({
-      //   'width': '60px'
-      // }, 'fast')).then(function() {
-      //   $(".fil-text").show(200);
-      //   $(".filter-input").show(200);
-      // });
-      // $(".main-content ").css({
-      //   'margin-left': '60px'
-      // });
     } else {
-      // $("#sidenav").css({
-      //   'width': '200px'
-      // }, 'fast');
-      $(".left-chevron").show();
-      $(".right-chevron").hide();
-      // $(".fil-text").show(200);
-      // $(".filter-input").show(200);
-      $.when($("#sidenav").css({
-        'width': '200px'
-      }, 'fast')).then(function() {
-        $(".fil-text").show(200);
-        $(".filter-input").show(200);
-      });
-      // $(".main-content ").css({
-      //   'margin-left': '200px'
-      // });
+      $(".fil-text").show();
+      $(".filter-input").show();
     }
   });
 </script>
