@@ -52,6 +52,11 @@ body {
   opacity: 1;
 }
 
+.bg-purple-dark {
+  /* background: #9A96E8; */
+  background: rgb(138, 140, 191);
+}
+
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -131,7 +136,7 @@ body {
 #sidenav {
   height: 100%;
   width: auto;
-  position: fixed;
+  /* position: fixed; */
   z-index: 1;
   top: 59px;
   left: 0;
@@ -146,7 +151,7 @@ a:hover: {
 }
 
 .world {
-  background-color: #fff;
+  background-color: #cfdbdb;
   margin: 0px;
 }
 
@@ -212,7 +217,7 @@ a:hover: {
 .main-content {
   position: relative;
   overflow: hidden;
-  margin-left: 60px;
+  /* margin-left: 60px; */
   margin-top: 0px;
   min-height: 800px;
 }

@@ -18,7 +18,9 @@ var Scene = function(options) {
   // height = window.innerHeight;
 
   // create the scene
-  self.scene = new Physijs.Scene({fixedTimeStep: 1 / 60});
+  self.scene = new Physijs.Scene({
+    fixedTimeStep: 1 / 60
+  });
 
   // setup the camera
   self.camera = new THREE.PerspectiveCamera(0.065, width / height, 0.1, 100);
@@ -33,15 +35,15 @@ var Scene = function(options) {
   // light.position.set(0, 2, 20);
   // light.lookAt(0, 0, 0);
   // Add a directional light to show off the objects
-  const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.9);
+  const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
   self.scene.add(light);
 
-  const directLight1 = new THREE.DirectionalLight(0xffd798, 0.8);
+  const directLight1 = new THREE.DirectionalLight(0xffffff, 1);
   directLight1.castShadow = true;
   directLight1.position.set(9.5, 8.2, 8.3);
   self.scene.add(directLight1);
 
-  const directLight2 = new THREE.DirectionalLight(0xc9ceff, 0.5);
+  const directLight2 = new THREE.DirectionalLight(0xffffff, 1);
   directLight2.castShadow = true;
   directLight2.position.set(-15.8, 5.2, 8);
   self.scene.add(directLight2);

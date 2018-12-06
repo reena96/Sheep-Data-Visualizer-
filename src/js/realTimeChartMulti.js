@@ -68,7 +68,8 @@ function realTimeChartMulti() {
 
     // compute dimension of main and nav charts, and offsets
     var marginTop = margin.top + chartTitleDim;
-    height = svgHeight - marginTop - margin.bottom - chartTitleDim - xTitleDim - xAxisDim - navChartDim + 30;
+    // height = svgHeight - marginTop - margin.bottom - chartTitleDim - xTitleDim - xAxisDim - navChartDim + 30;
+    height = svgHeight - marginTop - margin.bottom - chartTitleDim - xTitleDim - xAxisDim + 30;
     heightNav = navChartDim - margin.topNav - margin.bottomNav;
     var marginTopNav = svgHeight - margin.bottom - heightNav - margin.topNav;
     width = svgWidth - margin.left - margin.right;

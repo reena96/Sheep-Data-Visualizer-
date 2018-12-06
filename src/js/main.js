@@ -37,7 +37,7 @@ var sheepSelected = 0;
 var playingCharts = 0;
 var pause_btn, play_btn;
 
-(function () {
+(function() {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
@@ -53,7 +53,7 @@ var pause_btn, play_btn;
 
   //load a text file and output the result to the console
   /* Entry point of the application */
-  App.start = function () {
+  App.start = function() {
     // create a new scene
     App.scene = new Scene({
       container: "scene"
@@ -116,7 +116,7 @@ var pause_btn, play_btn;
       //Ground
       var ground_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial({
-          color: "#708090"
+          color: "#cfdbdb"
         }), 0, .9 // low restitution
       );
       ground_material.side = THREE.DoubleSide;
@@ -132,7 +132,7 @@ var pause_btn, play_btn;
       define_data();
       //console.log();
       var animal_select = document.getElementById("selectAnimal")
-      animal_select.addEventListener("click", function () {
+      animal_select.addEventListener("click", function() {
         console.log("Animals Select Input");
         var startTimeInput = document.getElementById("StartTime");
         count = startTimeInput.value - 1534395958;
@@ -145,7 +145,7 @@ var pause_btn, play_btn;
 
 
       var startTimeInput = document.getElementById("StartTime");
-      startTimeInput.oninput = function () {
+      startTimeInput.oninput = function() {
         path_svgContainer.selectAll("circle").remove();
         console.log("Start Time Slider");
         console.log(startTimeInput.value);
@@ -161,7 +161,7 @@ var pause_btn, play_btn;
           chart2.halt(paused);
           playingCharts = 2;
         }
-    
+
         define_data();
       }
 
@@ -180,7 +180,6 @@ function define_data() {
   path_svgContainer.selectAll("circle").remove();
   lineArr1 = [];
   lineArr2 = [];
-
 
   //console.log("define_data");
   var length = 0;
@@ -202,7 +201,7 @@ function define_data() {
       output.innerHTML = slider.value;
       //console.log(output.innerHTML);
 
-      slider.oninput = function () {
+      slider.oninput = function() {
         console.log("Sample Rate Slider");
         output.innerHTML = this.value;
         var startTimeInput = document.getElementById("StartTime");
@@ -238,8 +237,7 @@ function define_data() {
         drawLineGraphAcc(data1, data2, 2);
         length = data1.length;
         drawActivityGraph(data1, data2, 0, length);
-      } 
-      else {
+      } else {
         playingCharts = 0;
       }
     }
@@ -268,7 +266,7 @@ function define_data() {
       output.innerHTML = slider.value;
       //console.log(output.innerHTML);
 
-      slider.oninput = function () {
+      slider.oninput = function() {
         output.innerHTML = this.value;
 
         console.log("Slider Value now");
@@ -297,13 +295,13 @@ function define_data() {
 
 function drawActivityGraph(data1, data2, sheepSelected, length) {
   chart = realTimeChartMulti()
-    .title("Time Series Activity Chart")
+    // .title("Time Series Activity Chart")
     .yTitle("Sheep Activity")
     .xTitle("Time")
     .yDomain(["Sheep ID2", "Sheep ID3"]) // initial y domain (note array)
     .border(true)
-    .width(900)
-    .height(340);
+    .width(act_width)
+    .height(250);
 
 
   // console.log(data1);
@@ -322,7 +320,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 
   pause_btn = d3v3.select("#pause");
   play_btn = d3v3.select("#play");
-  pause_btn.on("click", function () {
+  pause_btn.on("click", function() {
     // var state = d3v3.select(this).property("checked");
     if (paused == false) {
       paused = true;
@@ -337,7 +335,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 
   });
 
-  d3v3.select("#play").on("click", function () {
+  d3v3.select("#play").on("click", function() {
     // var state = d3v3.select(this).property("checked");
     if (paused == true) {
       paused = false;
@@ -360,8 +358,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
       createSample(data1, idx, chart, 2);
       createSample(data2, idx, chart, 3);
     }
-  }
-  else {
+  } else {
     for (let idx = count; idx < length; idx++) {
       chart.yDomain([sheepID + sheepSelected]); // initial y domain (note array)
       // chartDiv.call(chart);
@@ -370,7 +367,6 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
   }
 
 }
-
 
 function createSample(data, index, chart, actor) {
 
@@ -384,7 +380,7 @@ function createSample(data, index, chart, actor) {
     var action = data[index].activity + "";
     // console.log(action);
     var color = colorDict[action];
-  
+
 
     var j = 0;
     // create new data item
@@ -399,7 +395,7 @@ function createSample(data, index, chart, actor) {
       category: "Sheep ID" + actor,
       //type: shapes[Math.round(Math.random() * (shapes.length - 1))], // the module currently doesn't support dynamically changed svg types (need to add key function to data, or method to dynamically replace svg object – tbd)
       type: "rect",
-      size: 70,
+      size: 50,
     };
     // console.log(obj);
     // send the datum to the chart
@@ -587,9 +583,7 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         dataset2 = data2;
         sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
         sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
-
         initialize = 0;
-
       }
 
       if (count > 0) {
