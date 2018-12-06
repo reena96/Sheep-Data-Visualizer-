@@ -193,7 +193,7 @@ class Sheep {
           bevelSegments: 5
         });
         var textMaterial = new THREE.MeshPhongMaterial({
-          color: "white"
+          color: "black"
         });
 
         var mesh = new THREE.Mesh(geometry, textMaterial);
