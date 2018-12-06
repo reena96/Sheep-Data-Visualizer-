@@ -110,7 +110,7 @@ function realTimeLineChart() {
 
       var legendEnter = gEnter.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(450,-30)");
+        .attr("transform", "translate(150,0)");
       legendEnter.append("rect")
         .attr("width", 50)
         .attr("height", 75)
@@ -161,7 +161,8 @@ function realTimeLineChart() {
       g.selectAll("g .legend text")
         .data(data)
         .text(function(d) {
-          return d.label.toUpperCase() + ": " + d.values[d.values.length - 1].value;
+          return d.label.toUpperCase();
+          // + ": " + d.values[d.values.length - 1].value;
         });
 
       // For transitions https://bl.ocks.org/mbostock/1642874

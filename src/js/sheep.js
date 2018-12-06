@@ -27,8 +27,6 @@ var long = {};
 var timestamp = {};
 
 
-
-
 var scene;
 
 var colmaterial;
@@ -48,12 +46,8 @@ function init() {
 
   height = window.innerHeight;
 
-
   drawSheep();
   console.log(scene);
-
-
-
 }
 
 function addLights() {
@@ -74,12 +68,8 @@ function addLights() {
 function drawSheep() {
   sheep = new Sheep();
 
-
   scene.add(sheep.group);
   //console.log(scene);
-
-
-
 }
 
 function drawCloud() {
@@ -131,7 +121,6 @@ function rad(degrees) {
 
 function animate() {
   requestAnimationFrame(animate);
-
   render();
 }
 
