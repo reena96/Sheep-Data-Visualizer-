@@ -32,7 +32,7 @@ var colorDict = {
   "Unknown": "black"
 };
 var chart;
-var paused = false;
+var paused = true;
 var sheepSelected = 0;
 var playingCharts = 0;
 var pause_btn, play_btn;
@@ -110,6 +110,7 @@ var pause_btn, play_btn;
       sheep1.scale.set(0.000625, 0.000625, 0.000625);
       sheep2.scale.set(0.000625, 0.000625, 0.000625);
 
+      console.log(sheep1);
 
       App.scene.addObject(sheep1);
       App.scene.addObject(sheep2);
@@ -370,6 +371,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 }
 
 var d, kenyaDate;
+
 function getKenyaTime(timestamp) {
   d = new Date(timestamp * 1000);
   kenyaDate = new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (3600000 * 3));
@@ -586,8 +588,10 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         //console.log("0");
         dataset1 = data1;
         dataset2 = data2;
-        sheep1.children[0].children[1].children[2].material.color.set(colorDict[(dataset1[count]['activity'])]);
-        sheep2.children[0].children[1].children[2].material.color.set(colorDict[(dataset2[count]['activity'])]);
+        sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+        sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+        sheep1.children[0].children[2].children[0].material.color.set(getActivityColor(dataset1[count]['activity']));
+        sheep2.children[0].children[2].children[0].material.color.set(getActivityColor(dataset2[count]['activity']));
         initialize = 0;
       }
 
@@ -622,8 +626,10 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         //
         //   sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
         // }
-        sheep1.children[0].children[1].children[2].material.color.set(colorDict[dataset1[count]['activity']]);
-        sheep2.children[0].children[1].children[2].material.color.set(colorDict[dataset2[count]['activity']]);
+        sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+        sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+        sheep1.children[0].children[2].children[0].material.color.set(getActivityColor(dataset1[count]['activity']));
+        sheep2.children[0].children[2].children[0].material.color.set(getActivityColor(dataset2[count]['activity']));
         //  App.scene.render();
       }
       if (dataset1[count]['Latitude'] != "") {
@@ -664,7 +670,6 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         sheep2.visible = false;
       }
 
-
       count = count + 1;
       //console.log(count);
       updateData(dataset1, dataset2, 2);
@@ -680,11 +685,9 @@ function removePathsFromScene() {
 
   var i;
   //console.log(remove_path);
-
   for (i = 0; i < remove_path.length; i++) {
     App.scene.remove(App.scene.findobj(remove_path[i]));
   }
-
 }
 
 function getDirection(data) {
@@ -735,7 +738,6 @@ function moveSheepAlone(data1, sliderVal, initialize) {
           App.scene.addObject(circle1);
           remove_path.push(circle1.name);
         }
-
       }
 
       if (dataset1[count]['Latitude'] != "") {
@@ -757,12 +759,11 @@ function moveSheepAlone(data1, sliderVal, initialize) {
         .attr("r", 2)
         .style("fill", "#d95f02");
 
-
-      sheep1.children[0].children[1].children[2].material.color.set(colorDict[dataset1[count]['activity']]);
+      sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+      sheep1.children[0].children[2].children[0].material.color.set(getActivityColor(dataset1[count]['activity']));
 
       //console.log(sheep1.position);
       App.scene.lookAt(sheep1.position);
-
 
       count = count + 1;
       //console.log(count);
@@ -849,7 +850,6 @@ function getTimeFromDate(timestamp) {
   var time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
   return time;
 }
-
 
 function zoom() {
   g.attr("transform", d3.event.transform);
