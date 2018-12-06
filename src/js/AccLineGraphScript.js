@@ -32,7 +32,8 @@ function realTimeLineChart() {
       // console.log(data);
 
       var t = d3.transition().duration(duration).ease(d3.easeLinear),
-        x = d3.scaleLinear().rangeRound([0, width - margin.left - margin.right]),
+        // x = d3.scaleLinear().rangeRound([0, width - margin.left - margin.right]),
+        x = d3.scaleTime().rangeRound([0, width - margin.left - margin.right]),
         y = d3.scaleLinear().rangeRound([height - margin.top - margin.bottom, 0]),
         z = d3.scaleOrdinal(color);
 

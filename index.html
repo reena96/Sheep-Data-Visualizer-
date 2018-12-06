@@ -106,7 +106,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link sidenav-link" href="#">
+          <a id="reset" class="nav-link sidenav-link" href="#">
             <i class="fas fa-sync"></i>
             <span class="fil-text">Reset Filters</span>
           </a>
@@ -187,13 +187,15 @@
   var slider = document.getElementById("sampleRate");
   var output = document.getElementById("rate");
   output.innerHTML = slider.value;
+  
 
+  
   $(".fil-text").hide();
   $(".filter-input").hide();
   $(".sidenav-link").click(function() {
     if ($(".fil-text").is(":visible")) {
-      $(".fil-text").hide();
-      $(".filter-input").hide();
+      // $(".fil-text").hide();
+      // $(".filter-input").hide();
     } else {
       $(".fil-text").show();
       $(".filter-input").show();
