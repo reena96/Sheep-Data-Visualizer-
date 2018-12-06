@@ -101,7 +101,7 @@ var pause_btn, play_btn;
     var sheepSystem1 = new SheepSystem();
     sheepSystem1.initialize("2");
     sheep1 = sheepSystem1.getSheepSystem();
-    sleep(10).then(() => {
+    sleep(200).then(() => {
       var sheepSystem2 = new SheepSystem();
       sheepSystem2.initialize("3");
       sheep2 = sheepSystem2.getSheepSystem();
