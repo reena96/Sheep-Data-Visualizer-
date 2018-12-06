@@ -18,6 +18,19 @@ var path_svgContainer;
 var path_rectangle;
 var g;
 var x, y, xAxis, yAxis, gX, gY, line;
+var colorDictMain = {
+  "stand up": "#068b0c", // dark green
+  "stand down": "#04f10e", // light green
+  "walk up": "#1B07AD", // dark blue
+  "walk down": "#04B5FC", // light blue
+  "ramble up": "#FC04E9", // dark pink
+  "ramble down": "#FFB6C1", // light pink
+  "trot": "#cc6600", // brown
+  "canter_right lead": "FCDE04", // dark yellow
+  "canter_left lead": "#FFFF99", // Light yellow
+  "canter_unk": "#cc0000", // red
+  "Unknown": "black"
+};
 var colorDict = {
   "stand up": "#068b0c", // dark green
   "stand down": "#04f10e", // light green
@@ -38,7 +51,7 @@ var playingCharts = 0;
 var pause_btn, play_btn;
 
 
-(function () {
+(function() {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
@@ -54,7 +67,7 @@ var pause_btn, play_btn;
 
   //load a text file and output the result to the console
   /* Entry point of the application */
-  App.start = function () {
+  App.start = function() {
     // create a new scene
     App.scene = new Scene({
       container: "scene"
@@ -96,15 +109,14 @@ var pause_btn, play_btn;
       .call(yAxis)
 
 
-
     // initialize the FIELD system
 
     var sheepSystem1 = new SheepSystem();
-    sheepSystem1.initialize("2");
+    sheepSystem1.initialize("2", "#d95f02");
     sheep1 = sheepSystem1.getSheepSystem();
     sleep(200).then(() => {
       var sheepSystem2 = new SheepSystem();
-      sheepSystem2.initialize("3");
+      sheepSystem2.initialize("3", "#7570b3");
       sheep2 = sheepSystem2.getSheepSystem();
 
 
@@ -133,7 +145,7 @@ var pause_btn, play_btn;
       define_data();
       //console.log();
       var animal_select = document.getElementById("selectAnimal")
-      animal_select.addEventListener("click", function () {
+      animal_select.addEventListener("click", function() {
         console.log("Animals Select Input");
         var startTimeInput = document.getElementById("StartTime");
         count = startTimeInput.value - 1534395958;
@@ -146,7 +158,7 @@ var pause_btn, play_btn;
 
 
       var startTimeInput = document.getElementById("StartTime");
-      startTimeInput.oninput = function () {
+      startTimeInput.oninput = function() {
         path_svgContainer.selectAll("circle").remove();
         console.log("Start Time Slider");
         console.log(startTimeInput.value);
@@ -167,7 +179,7 @@ var pause_btn, play_btn;
       }
 
       var reset_btn = d3v3.select("#reset");
-      reset_btn.on("click", function () {
+      reset_btn.on("click", function() {
         // sample rate reset
         var slider = document.getElementById("sampleRate");
         var output = document.getElementById("rate");
@@ -232,7 +244,7 @@ function define_data() {
 
       // Sampling Data
 
-      slider.oninput = function () {
+      slider.oninput = function() {
         output.innerHTML = this.value;
         var startTimeInput = document.getElementById("StartTime");
 
@@ -297,7 +309,7 @@ function define_data() {
       output.innerHTML = slider.value;
       //console.log(output.innerHTML);
 
-      slider.oninput = function () {
+      slider.oninput = function() {
         output.innerHTML = this.value;
 
         console.log("Slider Value now");
@@ -352,10 +364,56 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
     .attr("id", "chartDiv");
 
   // event handler for halt checkbox
+  var color_id = "";
+  var color_selected = false;
+  $(".act-color").click(function() {
+    color_id = '#' + $(this).attr("id");
+    // if ($(color_id).hasClass("active")) {
+    //   alert($(color_id).attr('class'));
+    //   $(color_id).removeClass("active");
+    //   alert($(color_id).attr('class'));
+    // } else {
+    //   alert($(color_id).attr('class'));
+    //   $(color_id).addClass("active");
+    //   alert($(color_id).attr('class'));
+    // }
+    $(this).toggleClass("active");
+    color_id = $(this).attr("id");
+    color_id = color_id.replace("-", " ");
+    changeColor(color_id);
+  });
+
+  var FilteredColors = {};
+
+  function changeColor(color_id) {
+    if (!color_selected) {
+      color_selected = true;
+      for (var key in colorDict) {
+        colorDict[key] = "#efefef";
+      }
+    }
+    if (color_id in FilteredColors) {
+      delete FilteredColors[color_id];
+      colorDict[color_id] = "#efefef";
+    } else {
+      FilteredColors[color_id] = colorDictMain[color_id];
+      colorDict[color_id] = colorDictMain[color_id];
+    }
+    if ($.isEmptyObject(FilteredColors)) {
+      // colorDict = colorDictMain;
+      // for (var key in colorDict) {
+      //   colorDict[key] = colorDict[key];
+      // }
+      colorDict = $.extend({}, colorDictMain);
+      color_selected = false;
+    }
+    define_data();
+    // console.log(colorDict);
+  }
 
   pause_btn = d3v3.select("#pause");
   play_btn = d3v3.select("#play");
-  pause_btn.on("click", function () {
+  pause_btn.on("click", function() {
     // var state = d3v3.select(this).property("checked");
     if (paused == false) {
       paused = true;
@@ -369,7 +427,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 
   });
 
-  d3v3.select("#play").on("click", function () {
+  d3v3.select("#play").on("click", function() {
     // var state = d3v3.select(this).property("checked");
     if (paused == true) {
       paused = false;
@@ -419,7 +477,6 @@ function createSample(data, index, chart, actor) {
     var action = data[index].activity + "";
     // console.log(action);
     var color = colorDict[action];
-
 
     var j = 0;
     // create new data item
@@ -576,6 +633,8 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         dataset2 = data2;
         sheep1.children[0].children[1].children[2].material.color.set(colorDict[(dataset1[count]['activity'])]);
         sheep2.children[0].children[1].children[2].material.color.set(colorDict[(dataset2[count]['activity'])]);
+        sheep1.children[0].children[2].children[0].material.color.set(colorDict[(dataset1[count]['activity'])]);
+        sheep2.children[0].children[2].children[0].material.color.set(colorDict[(dataset2[count]['activity'])]);
         initialize = 0;
       }
 
@@ -612,6 +671,8 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         // }
         sheep1.children[0].children[1].children[2].material.color.set(colorDict[dataset1[count]['activity']]);
         sheep2.children[0].children[1].children[2].material.color.set(colorDict[dataset2[count]['activity']]);
+        sheep1.children[0].children[2].children[0].material.color.set(colorDict[dataset1[count]['activity']]);
+        sheep2.children[0].children[2].children[0].material.color.set(colorDict[dataset2[count]['activity']]);
         //  App.scene.render();
       }
       if (dataset1[count]['Latitude'] != "") {
@@ -745,12 +806,11 @@ function moveSheepAlone(data1, sliderVal, initialize) {
         .attr("r", 2)
         .style("fill", "#d95f02");
 
-
       sheep1.children[0].children[1].children[2].material.color.set(colorDict[dataset1[count]['activity']]);
+      sheep1.children[0].children[2].children[0].material.color.set(colorDict[dataset1[count]['activity']]);
 
       //console.log(sheep1.position);
       App.scene.lookAt(sheep1.position);
-
 
       count = count + 1;
       //console.log(count);
@@ -758,7 +818,6 @@ function moveSheepAlone(data1, sliderVal, initialize) {
       // for (var j = 0; j < 100000000; j++) {}
       window.requestAnimationFrame(moveSheepAlone);
     });
-
   }
 }
 
@@ -767,7 +826,6 @@ function changeAnimals() {
   var startTimeInput = document.getElementById("StartTime");
   count = startTimeInput.value - 1534395958;
   define_data();
-
 }
 
 function updateData(dataset1, dataset2, select) {
