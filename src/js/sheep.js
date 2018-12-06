@@ -253,6 +253,25 @@ class Sheep {
     //  coltorus.rotation.y = rad(45);
     head.add(coltorus);
     //console.log(coltorus);
+    var trigeometry = new THREE.Geometry();
+    var v1 = new THREE.Vector3(0,-1.5,0);   // Vector3 used to specify position
+    var v2 = new THREE.Vector3(6,-1.5,4);
+    var v3 = new THREE.Vector3(4,-1.5,6);   // 2d = all vertices in the same plane.. z = 0
+
+    // add new geometry based on the specified positions
+    trigeometry.vertices.push(v1);
+    trigeometry.vertices.push(v2);
+    trigeometry.vertices.push(v3);
+
+    trigeometry.faces.push(new THREE.Face3(0, 2, 1));
+    var redMat = new THREE.MeshBasicMaterial({color: "grey"});
+
+    var triangle = new THREE.Mesh(trigeometry, redMat);
+    triangle.position.set(0,-1,0);
+    triangle.rotation.set(rad(0),rad(-45),rad(0));
+    triangle.transparent=true;
+    triangle.scale.set(1,2,1)
+    head.add(triangle) ;
 
     const woolGeometry = new THREE.BoxGeometry(0.84, 0.46, 0.9);
     const wool = new Physijs.BoxMesh(woolGeometry, this.woolMaterial);
