@@ -144,7 +144,7 @@ var pause_btn, play_btn;
       App.scene.render();
       define_data();
       //console.log();
-      var animal_select = document.getElementById("selectAnimal")
+      var animal_select = document.getElementById("selectAnimal");
       animal_select.addEventListener("click", function() {
         console.log("Animals Select Input");
         var startTimeInput = document.getElementById("StartTime");
