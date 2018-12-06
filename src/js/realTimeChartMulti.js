@@ -473,7 +473,7 @@ function realTimeChartMulti() {
         // refresh svg
         refresh();
 
-      }, 2)
+      }, 200)
 
     // end setInterval function
 

@@ -37,7 +37,8 @@ var sheepSelected = 0;
 var playingCharts = 0;
 var pause_btn, play_btn;
 
-(function() {
+
+(function () {
 
   // setup the pointer to the scope 'this' variable
   var self = this;
@@ -53,7 +54,7 @@ var pause_btn, play_btn;
 
   //load a text file and output the result to the console
   /* Entry point of the application */
-  App.start = function() {
+  App.start = function () {
     // create a new scene
     App.scene = new Scene({
       container: "scene"
@@ -132,7 +133,7 @@ var pause_btn, play_btn;
       define_data();
       //console.log();
       var animal_select = document.getElementById("selectAnimal")
-      animal_select.addEventListener("click", function() {
+      animal_select.addEventListener("click", function () {
         console.log("Animals Select Input");
         var startTimeInput = document.getElementById("StartTime");
         count = startTimeInput.value - 1534395958;
@@ -145,7 +146,7 @@ var pause_btn, play_btn;
 
 
       var startTimeInput = document.getElementById("StartTime");
-      startTimeInput.oninput = function() {
+      startTimeInput.oninput = function () {
         path_svgContainer.selectAll("circle").remove();
         console.log("Start Time Slider");
         console.log(startTimeInput.value);
@@ -164,6 +165,40 @@ var pause_btn, play_btn;
 
         define_data();
       }
+
+      var reset_btn = d3v3.select("#reset");
+      reset_btn.on("click", function () {
+        // sample rate reset
+        var slider = document.getElementById("sampleRate");
+        var output = document.getElementById("rate");
+        output.innerHTML = slider.value;
+        slider.value = 1;
+        output.innerHTML = slider.value;
+
+        // time interval reset
+        var startTimeInput = document.getElementById("StartTime");
+        startTimeInput.value = 1534395958;
+        paused = false;
+        sheepSelected = 0;
+        count = 0;
+
+        // play, pause reset
+        paused = false;
+        pause_btn.style("opacity", 1);
+        play_btn.style("opacity", 1);
+
+        // animal select reset
+        var animal_select = document.getElementById("selectAnimal")
+        animal_select.value = "Both";
+
+        playingCharts = 0;
+
+        //data from beginning
+        count = 0;
+        define_data();
+
+      });
+
 
 
     })
@@ -196,13 +231,8 @@ function define_data() {
       }
 
       // Sampling Data
-      var slider = document.getElementById("sampleRate");
-      var output = document.getElementById("rate");
-      output.innerHTML = slider.value;
-      //console.log(output.innerHTML);
 
-      slider.oninput = function() {
-        console.log("Sample Rate Slider");
+      slider.oninput = function () {
         output.innerHTML = this.value;
         var startTimeInput = document.getElementById("StartTime");
 
@@ -217,13 +247,14 @@ function define_data() {
         d3.select("svg").remove();
         var sampledData1 = sampleData(data1, sliderVal);
         var sampledData2 = sampleData(data2, sliderVal);
+        length = sampledData1.length;
+        drawActivityGraph(sampledData1, sampledData2, 0, length);
         drawLineGraphAcc(sampledData1, sampledData2, 1);
         console.log("Here1");
         removePathsFromScene();
         remove_path = [];
         moveSheep(sampledData1, sampledData2, sliderVal, 1);
-        length = sampledData1.length;
-        drawActivityGraph(sampledData1, sampledData2, 0, length);
+
 
       }
 
@@ -234,9 +265,9 @@ function define_data() {
       moveSheep(data1, data2, 5, 1);
 
       if (playingCharts != 2) {
-        drawLineGraphAcc(data1, data2, 2);
         length = data1.length;
         drawActivityGraph(data1, data2, 0, length);
+        drawLineGraphAcc(data1, data2, 2);
       } else {
         playingCharts = 0;
       }
@@ -266,7 +297,7 @@ function define_data() {
       output.innerHTML = slider.value;
       //console.log(output.innerHTML);
 
-      slider.oninput = function() {
+      slider.oninput = function () {
         output.innerHTML = this.value;
 
         console.log("Slider Value now");
@@ -283,15 +314,18 @@ function define_data() {
       remove_path = [];
       moveSheepAlone(data1, 5, 1);
       if (playingCharts != 2) {
-        drawLineGraphAcc(data1, null, 1);
         length = data1.length;
         drawActivityGraph(data1, null, sheepSelected, length);
+        drawLineGraphAcc(data1, null, 1);
+
+
       } else {
         playingCharts = 0;
       }
     }
   }
 }
+
 
 function drawActivityGraph(data1, data2, sheepSelected, length) {
 
@@ -321,7 +355,7 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 
   pause_btn = d3v3.select("#pause");
   play_btn = d3v3.select("#play");
-  pause_btn.on("click", function() {
+  pause_btn.on("click", function () {
     // var state = d3v3.select(this).property("checked");
     if (paused == false) {
       paused = true;
@@ -333,10 +367,9 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
       playingCharts = 0;
     }
 
-
   });
 
-  d3v3.select("#play").on("click", function() {
+  d3v3.select("#play").on("click", function () {
     // var state = d3v3.select(this).property("checked");
     if (paused == true) {
       paused = false;
@@ -373,7 +406,7 @@ var d, kenyaDate;
 
 function getKenyaTime(timestamp) {
   d = new Date(timestamp * 1000);
-  kenyaDate = new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (3600000 * 3));
+  kenyaDate = new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (3600000 * 4));
   return kenyaDate;
 }
 
@@ -409,52 +442,6 @@ function createSample(data, index, chart, actor) {
 
   }
 }
-
-// function updateActivityData(dataset1, dataset2, select) {
-
-//   //console.log(dataset[count]);
-//   if (select == 2) {
-//     var actData1 = {
-//       //time: now,
-//       time: Number(dataset1[count].TIME),
-//       color: color,
-//       opacity: 1,
-//       category: "Sheep ID" + actor,
-//       //type: shapes[Math.round(Math.random() * (shapes.length - 1))], // the module currently doesn't support dynamically changed svg types (need to add key function to data, or method to dynamically replace svg object – tbd)
-//       type: "rect",
-//       size: 70,
-//     };
-//     var actData2 = {
-//       //time: now,
-//       time: dataset2[count].TIME,
-//     };
-
-//     actArr1.push(actData1);
-//     if (actArr1.length > 30) {
-//       actArr1.shift();
-//     }
-//     d3.select("#chart1").datum(actArr1).call(chart1);
-
-//     actArr2.push(actData2);
-//     if (actArr2.length > 30) {
-//       actArr2.shift();
-//     }
-
-//     d3.select("#chart2").datum(actArr2).call(chart2);
-//   } else {
-//     var actData1 = {
-//       //time: now,
-//       time: dataset1[count].TIME,
-//     };
-//     actArr1.push(actData1);
-//     if (lineArr1.length > 30) {
-//       actArr1.shift();
-//     }
-//     d3.select("#chart1").datum(actArr1).call(chart1);
-
-//   }
-//   //count=count+1;
-// }
 
 function sampleData(arr, n) {
   var result = [];
@@ -833,7 +820,7 @@ function updateData(dataset1, dataset2, select) {
     d3.select("#chart1").datum(lineArr1).call(chart1);
 
   }
-  var timer_time = getKenyaTime(dataset1[count].TIME).toLocaleString();;
+  var timer_time = getKenyaTime(dataset1[count].TIME).toLocaleString();
   d3.select("#timer").text(timer_time);
   //count=count+1;
 }
