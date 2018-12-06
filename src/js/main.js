@@ -369,15 +369,19 @@ function drawActivityGraph(data1, data2, sheepSelected, length) {
 
 }
 
+var d, kenyaDate;
+function getKenyaTime(timestamp) {
+  d = new Date(timestamp * 1000);
+  kenyaDate = new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (3600000 * 3));
+  return kenyaDate;
+}
+
 function createSample(data, index, chart, actor) {
 
   // console.log(data[index]);
   // create randomized timestamp for this category data item
   if (data[index] != null) {
-    var start_time = Number(data[index].TIME);
-    // console.log(start_time*1000);
-    // var end_time = Number(data[index].end_time);
-    var now = new Date(start_time * 1000);
+    var now = getKenyaTime(Number(data[index].TIME));
     var action = data[index].activity + "";
     // console.log(action);
     var color = colorDict[action];
@@ -582,8 +586,8 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         //console.log("0");
         dataset1 = data1;
         dataset2 = data2;
-        sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
-        sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+        sheep1.children[0].children[1].children[2].material.color.set(colorDict[(dataset1[count]['activity'])]);
+        sheep2.children[0].children[1].children[2].material.color.set(colorDict[(dataset2[count]['activity'])]);
         initialize = 0;
       }
 
@@ -618,8 +622,8 @@ function moveSheep(data1, data2, sliderVal, initialize) {
         //
         //   sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
         // }
-        sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
-        sheep2.children[0].children[1].children[2].material.color.set(getActivityColor(dataset2[count]['activity']));
+        sheep1.children[0].children[1].children[2].material.color.set(colorDict[dataset1[count]['activity']]);
+        sheep2.children[0].children[1].children[2].material.color.set(colorDict[dataset2[count]['activity']]);
         //  App.scene.render();
       }
       if (dataset1[count]['Latitude'] != "") {
@@ -754,7 +758,7 @@ function moveSheepAlone(data1, sliderVal, initialize) {
         .style("fill", "#d95f02");
 
 
-      sheep1.children[0].children[1].children[2].material.color.set(getActivityColor(dataset1[count]['activity']));
+      sheep1.children[0].children[1].children[2].material.color.set(colorDict[dataset1[count]['activity']]);
 
       //console.log(sheep1.position);
       App.scene.lookAt(sheep1.position);
@@ -782,16 +786,19 @@ function updateData(dataset1, dataset2, select) {
 
   //console.log(dataset[count]);
   if (select == 2) {
+    var now = getKenyaTime(Number(dataset1[count].TIME));
     var lineData1 = {
       //time: now,
-      time: dataset1[count].TIME,
+      time: now,
       x: dataset1[count].collar_ACC_X,
       y: dataset1[count].collar_ACC_Y,
       z: dataset1[count].collar_ACC_Z
     };
+
+    var now = getKenyaTime(Number(dataset2[count].TIME));
     var lineData2 = {
       //time: now,
-      time: dataset2[count].TIME,
+      time: now,
       x: dataset2[count].collar_ACC_X,
       y: dataset2[count].collar_ACC_Y,
       z: dataset2[count].collar_ACC_Z
@@ -810,9 +817,10 @@ function updateData(dataset1, dataset2, select) {
 
     d3.select("#chart2").datum(lineArr2).call(chart2);
   } else {
+    var now = getKenyaTime(Number(dataset1[count].TIME));
     var lineData1 = {
       //time: now,
-      time: dataset1[count].TIME,
+      time: now,
       x: dataset1[count].collar_ACC_X,
       y: dataset1[count].collar_ACC_Y,
       z: dataset1[count].collar_ACC_Z
@@ -824,13 +832,7 @@ function updateData(dataset1, dataset2, select) {
     d3.select("#chart1").datum(lineArr1).call(chart1);
 
   }
-
-  var d = new Date(+dataset1[count].TIME * 1000);
-  var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  var nd = new Date(utc + (3600000 * 3));
-  var timer_time = nd.toLocaleString();
-  // var timer_time = new Date(nd);
-
+  var timer_time = getKenyaTime(dataset1[count].TIME).toLocaleString();;
   d3.select("#timer").text(timer_time);
   //count=count+1;
 }
@@ -844,51 +846,8 @@ function getTimeFromDate(timestamp) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var seconds = date.getSeconds();
-  return pad(hours) + ":" + pad(minutes) + ":" + pad(seconds)
-}
-
-
-
-function getActivityColor(action) {
-  // console.log(action+"  xxxxxx  ");
-  switch (action) {
-    case "stand up":
-      // console.log("1");
-      return "#068b0c"; // dark green
-
-    case "stand down":
-      // console.log("2");
-      return "#04f10e"; // light green
-
-    case "walk up":
-      // console.log("3");
-      return "#1B07AD"; // dark blue
-
-    case "walk down":
-      return "#04B5FC"; // light blue
-
-    case "ramble up":
-      return "#FC04E9"; // dark pink
-
-    case "ramble down":
-      return "#FFB6C1"; // light pink
-
-    case "trot":
-      return "#cc6600"; // brown
-
-    case "canter_right lead":
-      return "#FCDE04"; // dark yellow
-
-    case "canter_left lead":
-      return "#FFFF99"; // Light yellow
-
-    case "canter_unk":
-      return "#cc0000"; // red
-
-    default:
-      return "black";
-
-  }
+  var time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  return time;
 }
 
 
