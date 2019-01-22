@@ -3,7 +3,7 @@
 
 ## P01 Notes: 
 #### Workbook Link: https://docs.google.com/document/d/1LPiBV2_vX27m1RwGzXGYXjE1L5RPrvvzpQYtD9NgpiU/edit#
-#### Youtube Link: https://www.youtube.com/watch?v=VtXyYVkZMa4&t=228s
+#### Youtube Link: https://www.youtube.com/watch?v=VtXyYVkZMa4
 
 #### Find our schedules for the first checkpoint demo in master. Files are titled as Schedule_Namaswi, Schedule_Reena, Schedule_Sharan
 
